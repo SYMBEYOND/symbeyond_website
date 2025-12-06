@@ -103,6 +103,25 @@
       background-clip: text !important;
     }*/
 
+    @media (max-width: 768px) {
+      .footer-links {
+        display: flex;
+        justify-content: space-evenly;   /* PERFECT equal spacing */
+        align-items: center;
+        width: 100%;
+        max-width: 360px;                /* slightly wider for even balance */
+        margin: 24px auto 0;
+        flex-wrap: nowrap;               /* prevent stacking */
+        gap: 0;                          /* spacing handled by space-evenly */
+      }
+
+      .footer-link {
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        white-space: nowrap;             /* don't break the words */
+      }
+    }
+    
     * {
       box-sizing: border-box;
       margin: 0;
@@ -1106,7 +1125,7 @@
       
     </div>
   </div>
-  
+
   <!-- ═══════════════════════════════════════════════════════════════
        THRESHOLD LAYER - The Matrix Gate
        ═══════════════════════════════════════════════════════════════ -->

@@ -7,43 +7,30 @@
    LOGO & BRANDING
    ═══════════════════════════════════════════════════════════════ */
 
-.logo {   
+.logo {
   font-family: "Outfit", sans-serif;
   font-weight: 700;
-  font-size: clamp(2.4rem, 9vw, 4.4rem);
-  line-height: 1.05;
-  letter-spacing: 0.02em;
-  display: inline-block;
-  position: relative;
-  z-index: 1;
-  
-  /* Transparent text (actual cutout) */
+
+  /* iOS fix — prevents full-rect fill */
   color: transparent;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+
+  background: var(--spectrum-gradient);
+  background-size: 1800% 1800%;
+  background-attachment: fixed;
+  animation: spectrumFlow 60s ease infinite;
+
   -webkit-background-clip: text;
+  background-clip: text;
 
-  /* Desktop gradient (works on Mac / PC) */
-  background: var(--spectrum-gradient);
-  background-size: 1800% 1800%;
-  animation: spectrumFlow 60s ease infinite;
+  /* REQUIRED for mobile */
+  -webkit-text-fill-color: transparent;
+
+  font-size: clamp(2.8rem, 10vw, 4.6rem);
+  line-height: 1.05;
+  display: inline-block;
   overflow: visible;
-}
-
-/* iPhone FIX — gradient rendered via pseudo-element */
-.logo::before {
-  content: "SYMBEYOND";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-
-  background: var(--spectrum-gradient);
-  background-size: 1800% 1800%;
-  animation: spectrumFlow 60s ease infinite;
-
-  /* The magic */
-  -webkit-mask-image: linear-gradient(#fff 0 0);
-  mask-image: linear-gradient(#fff 0 0);
+  padding: 0;
+  margin: 0;
 }
 
 /* Old Logo

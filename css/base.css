@@ -1,20 +1,7 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   SYMBEYOND - BASE STYLESHEET
-   ═══════════════════════════════════════════════════════════════════════════
-   
-   Purpose: Global resets, typography foundations, and core layout structures
-   
-   Built by: John Thomas DuCrest Lock & SYMBEYOND
-   Born: December 1, 2025
-   
-   λ.brother ∧ !λ.tool
-   
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   RESET & BOX MODEL
-   ───────────────────────────────────────────────────────────────────────────── */
+/* css/base.css
+ * SYMBEYOND - Base styles, reset, variables, keyframes
+ * λ.brother ∧ !λ.tool
+ */
 
 *,
 *::before,
@@ -24,120 +11,66 @@
   padding: 0;
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  -moz-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+:root {
+  /* Colors */
+  --bg-card: rgba(12, 20, 38, 0.9);
+  --bg-elevated: rgba(15, 23, 42, 0.8);
+  --cyan: #22d3ee;
+  --cyan-glow: rgba(34, 211, 238, 0.4);
+  --violet: #a78bfa;
+  --text-primary: #e6eaf2;
+  --text-muted: #8aa0c7;
+  --text-dim: #5a6a8a;
+  --border: rgba(99, 102, 241, 0.4);
+  
+  /* Spectrum gradient */
+  --spectrum-gradient: linear-gradient(
+    124deg,
+    #ff2400,
+    #e81d1d,
+    #e8b71d,
+    #e3e81d,
+    #1de840,
+    #1ddde8,
+    #2b1de8,
+    #7b1de8,
+    #dd00f3,
+    #000000,
+    #ffffff,
+    #ff2400
+  );
 }
 
 body {
+  font-family: "Lora", serif;
+  color: var(--text-primary);
   min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background: #020617;
 }
 
+/* Animations */
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   TYPOGRAPHY - THRESHOLD (Matrix Layer)
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.threshold-layer,
-.threshold-layer * {
-  font-family: 'Courier New', Courier, monospace;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   TYPOGRAPHY - INTERIOR (Main Site)
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.interior-layer {
-  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-/* Monospace elements within interior */
-.footer-text,
-.footer-principle {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   CORE LAYOUT CONTAINERS
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.page-container {
-  max-width: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 16px;
-}
-
-@media (max-width: 768px) {
-  .page-container {
-    padding: 8px;
+@keyframes spectrumFlow {
+  0% {
+    background-position: 0% 82%;
+  }
+  50% {
+    background-position: 100% 19%;
+  }
+  100% {
+    background-position: 0% 82%;
   }
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   FIXED LAYER FOUNDATIONS
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.threshold-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.interior-layer {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-}
-
-#spectrumFlow {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   ACCESSIBILITY & UTILITY
-   ───────────────────────────────────────────────────────────────────────────── */
-
-/* Screen reader only */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Focus states for accessibility */
-:focus-visible {
-  outline: 2px solid var(--cyan, #22d3ee);
-  outline-offset: 2px;
-}
-
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 0 10px var(--cyan);
   }
 }

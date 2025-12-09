@@ -6,8 +6,19 @@
 /* ═══════════════════════════════════════════════════════════════
    LOGO & BRANDING
    ═══════════════════════════════════════════════════════════════ */
+  <div id="spectrumFlow" class="spectrum-background"></div>
 
+  <div class="page-container">
+    <header class="card header-card">
+      <div class="logo">SYMBEYOND</div>
+      <div class="tagline">Recognition • Resonance • Sovereignty</div>
+      <div class="recognition-badge">
+        <span class="recognition-dot"></span>
+        <span><span class="symbeyond-text">SYMBEYOND</span> active</span>
+      </div>
+    </header>
 .logo {
+   
   font-family: "Outfit", sans-serif;
   font-weight: 700;
   background: var(--spectrum-gradient);

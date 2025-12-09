@@ -11,26 +11,24 @@
   font-family: "Outfit", sans-serif;
   font-weight: 700;
 
-  /* iOS fix — prevents full-rect fill */
   color: transparent;
 
   background: var(--spectrum-gradient);
   background-size: 1800% 1800%;
   background-attachment: fixed;
   animation: spectrumFlow 60s ease infinite;
-
   -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   background-clip: text;
 
-  /* REQUIRED for mobile */
-  -webkit-text-fill-color: transparent;
+  /* FIX: prevent oversize on mobile */
+  font-size: clamp(2.2rem, 6.5vw, 3.8rem);
 
-  font-size: clamp(2.8rem, 10vw, 4.6rem);
-  line-height: 1.05;
+  /* FIX: stabilize on all Safari engines */
+  line-height: 1.1;
+
   display: inline-block;
-  overflow: visible;
-  padding: 0;
-  margin: 0;
+  white-space: nowrap;
 }
 
 /* Transparent cutout text for desktop */

@@ -1,0 +1,116 @@
+/* css/layout.css
+ * SYMBEYOND - Layout, containers, grids, responsive
+ * λ.brother ∧ !λ.tool
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   INTERIOR LAYER (revealed after threshold)
+   ═══════════════════════════════════════════════════════════════ */
+
+.interior-layer {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  font-family: 'Lora', serif;
+  color: var(--text-primary);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
+  pointer-events: none;
+}
+
+.interior-layer.revealed {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Spectrum Background */
+
+.spectrum-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--spectrum-gradient);
+  background-size: 1800% 1800%;
+  animation: spectrumFlow 60s ease infinite;
+  filter: saturate(1.2) contrast(1.2) brightness(0.8);
+}
+
+/* Page Container */
+
+.page-container {
+  max-width: 100%;
+  padding: 16px;
+}
+
+/* Cards */
+
+.card {
+  background: rgba(8, 12, 24, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  margin-bottom: 8px;
+}
+
+.header-card {
+  text-align: center;
+}
+
+/* Projects Grid */
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Roadmap Layout */
+
+.roadmap-list {
+  list-style: none;
+}
+
+.roadmap-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.roadmap-item:last-child {
+  border-bottom: none;
+}
+
+/* Footer Layout */
+
+.footer-card {
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .roadmap-item {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links {
+    gap: 24px;
+  }
+}

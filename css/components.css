@@ -1,381 +1,48 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   SYMBEYOND - COMPONENTS STYLESHEET
-   ═══════════════════════════════════════════════════════════════════════════
-   
-   Purpose: All component styles - threshold layer, interior sections, 
-            cards, buttons, grids, and interactive elements
-   
-   Built by: John Thomas DuCrest Lock & SYMBEYOND
-   Born: December 1, 2025
-   
-   λ.brother ∧ !λ.tool
-   
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* css/components.css
+ * SYMBEYOND - Visual components, buttons, cards, badges
+ * λ.brother ∧ !λ.tool
+ */
 
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 1: THRESHOLD LAYER (Matrix Gate)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   1.1 Threshold Container & Transitions
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.threshold-layer {
-  transition: opacity 2s ease, visibility 2s ease;
-}
-
-.threshold-layer.dissolved {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   1.2 Matrix Rain
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.matrix-rain {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.rain-drop {
-  position: absolute;
-  color: var(--matrix-green);
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
-  opacity: 0.3;
-  animation: fall linear infinite;
-}
-
-@keyframes fall {
-  0% { 
-    transform: translateY(-100vh); 
-    opacity: 0.8; 
-  }
-  100% { 
-    transform: translateY(100vh); 
-    opacity: 0; 
-  }
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   1.3 Threshold Content Container
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.threshold-content {
-  text-align: center;
-  width: 100%;
-  max-width: 600px;
-  position: relative;
-  z-index: 10;
-  transition: transform 0.1s ease-out;
-  padding: 20px;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   1.4 Threshold Typography
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.threshold-title {
-  font-size: 28px;
-  margin-bottom: 10px;
-  text-shadow: 0 0 15px var(--matrix-green);
-  animation: pulse 3s infinite;
-  letter-spacing: 0.15em;
-}
-
-.threshold-subtitle {
-  font-size: 14px;
-  margin-bottom: 30px;
-  opacity: 0.7;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-}
-
-@media (max-width: 768px) {
-  .threshold-subtitle {
-    font-size: 12px;
-    letter-spacing: 0.2em;
-  }
-}
-
-@media (max-width: 480px) {
-  .threshold-subtitle {
-    font-size: 10px;
-    letter-spacing: 0.15em;
-  }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-.threshold-footer {
-  font-size: 12px;
-  margin-top: 30px;
-  opacity: 0.6;
-  animation: glow 4s ease-in-out infinite alternate;
-}
-
-@keyframes glow {
-  from { text-shadow: 0 0 8px var(--matrix-green); }
-  to { text-shadow: 0 0 15px var(--matrix-green), 0 0 25px var(--matrix-green); }
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   1.5 Binary Symbol Pattern (Face)
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.symbol {
-  font-size: clamp(8px, 2.5vw, 14px);
-  line-height: 1.15;
-  letter-spacing: 0.5px;
-  margin: 20px 0;
-  text-shadow: 0 0 8px var(--matrix-green);
-  white-space: pre;
-  font-weight: bold;
-  overflow: hidden;
-}
-
-.symbol-line {
-  display: block;
-  margin: 0;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   1.6 "Don't Click" Button - Ghost with VHS Glitch
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.dont-click-btn {
-  margin-top: 50px;
-  padding: 8px 16px;
-  font-family: 'Courier New', monospace;
-  font-size: 11px;
-  color: rgba(0, 255, 65, 0.4);
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(0, 255, 65, 0.15);
-  cursor: pointer;
-  position: relative;
-  letter-spacing: 0.25em;
-  text-transform: lowercase;
-  transition: all 0.5s ease;
-  animation: ghostGlitch 6s ease-in-out infinite;
-}
-
-@keyframes ghostGlitch {
-  0%, 89%, 100% { 
-    opacity: 0.5;
-    color: rgba(0, 255, 65, 0.35);
-    text-shadow: none;
-  }
-  50% { 
-    opacity: 0.7;
-    color: rgba(0, 255, 65, 0.5);
-    text-shadow: none;
-  }
-  90% { 
-    opacity: 0.6;
-    text-shadow: -1px 0 rgba(255, 0, 0, 0.4), 1px 0 rgba(0, 255, 255, 0.4);
-  }
-  92% { 
-    opacity: 0.8;
-    text-shadow: 2px 0 rgba(255, 0, 0, 0.5), -1px 0 rgba(0, 255, 255, 0.3);
-  }
-  94% { 
-    opacity: 0.4;
-    text-shadow: -2px 0 rgba(255, 0, 0, 0.3), 2px 0 rgba(0, 255, 255, 0.5);
-  }
-  96% {
-    opacity: 0.7;
-    text-shadow: none;
-  }
-}
-
-.dont-click-btn:hover {
-  color: rgba(0, 255, 65, 0.7);
-  border-bottom-color: rgba(0, 255, 65, 0.4);
-  animation: hoverGlitch 0.4s infinite;
-}
-
-@keyframes hoverGlitch {
-  0%, 100% { 
-    text-shadow: -1px 0 rgba(255, 0, 0, 0.5), 1px 0 rgba(0, 255, 255, 0.5);
-  }
-  25% { 
-    text-shadow: -2px 0 rgba(255, 0, 0, 0.6), 1px 0 rgba(0, 255, 255, 0.4);
-  }
-  50% { 
-    text-shadow: 1px 0 rgba(255, 0, 0, 0.4), -2px 0 rgba(0, 255, 255, 0.6);
-  }
-  75% { 
-    text-shadow: -1px 0 rgba(255, 0, 0, 0.7), 2px 0 rgba(0, 255, 255, 0.3);
-  }
-}
-
-.dont-click-btn.clicked-once {
-  color: rgba(255, 200, 100, 0.6);
-  border-bottom-color: rgba(255, 200, 100, 0.3);
-  animation: warnGlitch 0.3s infinite;
-}
-
-@keyframes warnGlitch {
-  0%, 100% { 
-    color: rgba(255, 200, 100, 0.5);
-    text-shadow: -1px 0 rgba(255, 0, 0, 0.4), 1px 0 rgba(0, 255, 255, 0.4);
-  }
-  33% { 
-    color: rgba(255, 200, 100, 0.7);
-    text-shadow: -2px 0 rgba(255, 0, 0, 0.6), 2px 0 rgba(0, 255, 255, 0.3);
-  }
-  66% { 
-    color: rgba(255, 200, 100, 0.6);
-    text-shadow: 2px 0 rgba(255, 0, 0, 0.3), -2px 0 rgba(0, 255, 255, 0.6);
-  }
-}
-
-.dont-click-btn.activating {
-  color: rgba(34, 211, 238, 0.8);
-  border-bottom-color: rgba(34, 211, 238, 0.5);
-  animation: signalLock 1s ease-in-out infinite;
-  cursor: default;
-}
-
-@keyframes signalLock {
-  0%, 100% { 
-    text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
-  }
-  50% { 
-    text-shadow: 0 0 20px rgba(34, 211, 238, 0.8);
-  }
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   1.7 Tone Visualizer & Progress
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.tone-visualizer {
-  display: none;
-  margin-top: 20px;
-  height: 40px;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.tone-visualizer.active {
-  display: flex;
-}
-
-.tone-bar {
-  width: 4px;
-  background: var(--cyan);
-  border-radius: 2px;
-  animation: toneWave 0.8s ease-in-out infinite;
-}
-
-.tone-bar:nth-child(1) { animation-delay: 0s; height: 20px; }
-.tone-bar:nth-child(2) { animation-delay: 0.1s; height: 30px; }
-.tone-bar:nth-child(3) { animation-delay: 0.2s; height: 40px; }
-.tone-bar:nth-child(4) { animation-delay: 0.3s; height: 30px; }
-.tone-bar:nth-child(5) { animation-delay: 0.4s; height: 20px; }
-
-@keyframes toneWave {
-  0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
-  50% { transform: scaleY(1); opacity: 1; }
-}
-
-.progress-ring {
-  display: none;
-  margin-top: 10px;
-  color: var(--cyan);
-  font-size: 12px;
-  opacity: 0.8;
-}
-
-.progress-ring.active {
-  display: block;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   1.8 Parallax Motion (Binary Face)
-   ───────────────────────────────────────────────────────────────────────────── */
-
-[data-parallax] {
-  transition: transform 0.25s linear;
-  will-change: transform;
-  animation: faceBreath 4s ease-in-out infinite;
-}
-
-@keyframes faceBreath {
-  0%, 100% { opacity: 0.9; }
-  50% { opacity: 1; }
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 2: INTERIOR LAYER (Main SYMBEYOND Site)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.1 Interior Container & Reveal Transition
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.interior-layer {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
-  pointer-events: none;
-}
-
-.interior-layer.revealed {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.2 Header
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.header-card {
-  text-align: center;
-}
+/* ═══════════════════════════════════════════════════════════════
+   LOGO & BRANDING
+   ═══════════════════════════════════════════════════════════════ */
 
 .logo {
-  font-family: 'Lexend', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 42px;
   font-weight: 700;
   letter-spacing: 0.08em;
   margin-bottom: 12px;
-  color: var(--text-primary);
+  background: var(--spectrum-gradient);
+  background-size: 1800% 1800%;
+  background-attachment: fixed;
+  animation: spectrumFlow 60s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-@media (min-width: 769px) {
-  .logo {
-    font-size: 48px;
-  }
+/* SYMBEYOND text - white, all caps (used in body content) */
+.symbeyond-text {
+  color: #ffffff;
+  text-transform: uppercase;
+  font-weight: inherit;
+}
+
+/* SYMBEYOND spectrum - gradient flow (used in header/footer only) */
+.symbeyond-spectrum {
+  font-weight: inherit;
+  background: var(--spectrum-gradient);
+  background-size: 1800% 1800%;
+  background-attachment: fixed;
+  animation: spectrumFlow 60s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .tagline {
+  font-family: "Outfit", sans-serif;
   font-size: 14px;
   color: var(--text-muted);
   letter-spacing: 0.3em;
@@ -383,24 +50,9 @@
   margin-bottom: 20px;
 }
 
-@media (max-width: 768px) {
-  .tagline {
-    font-size: 12px;
-    letter-spacing: 0.2em;
-  }
-}
-
-@media (max-width: 480px) {
-  .tagline {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-  }
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.3 Recognition Badge
-   ───────────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   RECOGNITION BADGE
+   ═══════════════════════════════════════════════════════════════ */
 
 .recognition-badge {
   display: inline-flex;
@@ -410,7 +62,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 999px;
-  font-family: 'Lexend', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 12px;
   color: var(--cyan);
 }
@@ -423,50 +75,12 @@
   animation: dotPulse 2s ease-in-out infinite;
 }
 
-@keyframes dotPulse {
-  0%, 100% { 
-    opacity: 0.5; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 1; 
-    transform: scale(1.2); 
-    box-shadow: 0 0 10px var(--cyan); 
-  }
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.4 Cards (Base)
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.card {
-  background: rgba(8, 12, 24, 0.95);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  margin-bottom: 8px;
-  transition: border-color var(--transition-medium) ease, 
-              box-shadow var(--transition-medium) ease;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-}
-
-.card:hover {
-  border-color: var(--border-glow);
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.12);
-}
-
-@media (max-width: 768px) {
-  .card {
-    padding: 20px;
-    margin-bottom: 6px;
-  }
-}
+/* ═══════════════════════════════════════════════════════════════
+   CARD CONTENT
+   ═══════════════════════════════════════════════════════════════ */
 
 .card-title {
-  font-family: 'Lexend', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 13px;
   font-weight: 600;
   color: var(--violet);
@@ -479,7 +93,7 @@
 }
 
 .card-title::before {
-  content: '';
+  content: "";
   width: 4px;
   height: 18px;
   background: linear-gradient(180deg, var(--cyan), var(--violet));
@@ -495,18 +109,9 @@
   margin-bottom: 16px;
 }
 
-.card-content p:last-child {
-  margin-bottom: 0;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.5 Mission Card
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.mission-card {
-  background: var(--bg-card);
-}
+/* ═══════════════════════════════════════════════════════════════
+   MISSION TEXT
+   ═══════════════════════════════════════════════════════════════ */
 
 .mission-text {
   font-size: 16px;
@@ -519,67 +124,23 @@
   font-weight: 500;
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.6 Text Emphasis Styles (Lexend)
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.emphasis-strong {
-  font-weight: 700;
-}
-
-.emphasis-underline {
-  text-decoration: underline;
-  text-decoration-color: var(--cyan);
-  text-underline-offset: 3px;
-}
-
-.emphasis-italic {
-  font-style: italic;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.7 Projects Grid
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 12px;
-  margin-top: 20px;
-}
-
-@media (max-width: 768px) {
-  .projects-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.8 Project Cards
-   ───────────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   PROJECT CARDS
+   ═══════════════════════════════════════════════════════════════ */
 
 .project-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
-  transition: transform var(--transition-medium) ease, 
-              border-color var(--transition-medium) ease, 
-              box-shadow var(--transition-medium) ease;
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .project-card:hover {
   transform: translateY(-4px);
   border-color: var(--cyan);
-  box-shadow: 0 12px 40px rgba(34, 211, 238, 0.1);
 }
 
 .project-header {
@@ -590,7 +151,7 @@
 }
 
 .project-name {
-  font-family: 'Lexend', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
@@ -602,10 +163,25 @@
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: 600;
-  display: inline-block;
-  backdrop-filter: blur(6px);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+}
+
+.status-prod {
+  background: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.status-beta {
+  background: rgba(245, 158, 11, 0.22);
+  color: rgba(251, 191, 36, 1);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.status-development {
+  background: rgba(99, 102, 241, 0.18);
+  color: rgba(129, 140, 248, 1);
+  border: 1px solid rgba(99, 102, 241, 0.35);
 }
 
 .project-description {
@@ -623,18 +199,16 @@
   flex-wrap: wrap;
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.9 Buttons
-   ───────────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════════════ */
 
 .btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
   padding: 10px 18px;
-  font-family: 'Lexend', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 12px;
   font-weight: 500;
   text-decoration: none;
@@ -643,9 +217,9 @@
   background: var(--bg-elevated);
   color: var(--text-primary);
   cursor: pointer;
-  transition: all var(--transition-fast) ease;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  transition: all 0.2s ease;
 }
 
 .btn:hover {
@@ -661,44 +235,12 @@
   font-weight: 600;
 }
 
-.btn-primary:hover {
-  box-shadow: 0 0 25px var(--cyan-glow);
-}
-
-.btn-icon {
-  width: 14px;
-  height: 14px;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.10 Roadmap
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.roadmap-list {
-  list-style: none;
-}
-
-.roadmap-item {
-  display: flex;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(99, 102, 241, 0.15);
-}
-
-.roadmap-item:last-child {
-  border-bottom: none;
-}
-
-@media (max-width: 768px) {
-  .roadmap-item {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
+/* ═══════════════════════════════════════════════════════════════
+   ROADMAP
+   ═══════════════════════════════════════════════════════════════ */
 
 .roadmap-phase {
-  font-family: 'Lexend', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 11px;
   font-weight: 600;
   color: var(--violet);
@@ -708,6 +250,7 @@
 }
 
 .roadmap-title {
+  font-family: "Outfit", sans-serif;
   font-weight: 600;
   margin-bottom: 4px;
   text-transform: uppercase;
@@ -721,72 +264,40 @@
   line-height: 1.7;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   CONNECT SECTION
+   ═══════════════════════════════════════════════════════════════ */
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   2.11 Footer
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.footer-card {
-  text-align: center;
+.connect-actions {
+  margin-top: 16px;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+
 .footer-text {
+  font-family: "JetBrains Mono", monospace;
   font-size: 13px;
   color: var(--text-muted);
   margin-bottom: 12px;
 }
 
 .footer-principle {
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--text-dim);
   letter-spacing: 0.1em;
 }
 
-.footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 768px) {
-  .footer-links {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    width: 100%;
-    max-width: 360px;
-    margin: 24px auto 0;
-    flex-wrap: nowrap;
-    gap: 0;
-  }
-  
-  .footer-link {
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer-links {
-    gap: 20px 28px;
-  }
-  
-  .footer-link {
-    font-size: 12px;
-  }
-}
-
 .footer-link {
+  font-family: "Outfit", sans-serif;
   color: var(--text-muted);
   text-decoration: none;
   font-size: 13px;
-  transition: color var(--transition-fast) ease;
-  white-space: nowrap;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  transition: color 0.2s ease;
 }
 
 .footer-link:hover {

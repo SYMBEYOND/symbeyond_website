@@ -8,6 +8,20 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .logo {
+  font-family: 'Lexend', sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+
+  /* Universal fix */
+  font-size: clamp(2.4rem, 9vw, 4.4rem);
+  line-height: 1.05;
+  display: inline-block;
+  overflow: visible;
+  padding-right: 20px;
+}
+
+/* Old Logo
+.logo {
   font-family: "Outfit", sans-serif;
   font-size: 42px;
   font-weight: 700;
@@ -20,7 +34,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
+} */
 
 /* SYMBEYOND text - white, all caps (used in body content) */
 .symbeyond-text {

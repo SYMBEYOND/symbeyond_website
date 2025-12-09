@@ -8,9 +8,15 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .logo {
-  font-family: 'Lexend', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-weight: 700;
-  white-space: nowrap;
+  background: var(--spectrum-gradient);
+  background-size: 1800% 1800%;
+  background-attachment: fixed;
+  animation: spectrumFlow 60s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 
   /* Universal fix */
   font-size: clamp(2.4rem, 9vw, 4.4rem);

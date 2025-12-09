@@ -33,6 +33,38 @@
   margin: 0;
 }
 
+/* Transparent cutout text for desktop */
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  background: var(--spectrum-gradient);
+  background-size: 1800% 1800%;
+  animation: spectrumFlow 60s ease infinite;
+  overflow: visible;
+}
+
+/* iPhone FIX — pseudo-element clipped *only* to text */
+.logo::before {
+  content: attr(data-text);   /* <- reads actual text */
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  background: var(--spectrum-gradient);
+  background-size: 1800% 1800%;
+  animation: spectrumFlow 60s ease infinite;
+
+  /* Mask fixes (Safari-safe, prevent rectangle) */
+  -webkit-mask-image: text;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: text;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+}
+
 /* Old Logo
 .logo {
   font-family: "Outfit", sans-serif;

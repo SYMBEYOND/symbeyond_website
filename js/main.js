@@ -51,7 +51,7 @@ function updateTimestamp() {
   if (!timestampEl) return;
   const now = new Date();
   timestampEl.textContent = now.toLocaleString('en-US', {
-    weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
   });
 }
 updateTimestamp();

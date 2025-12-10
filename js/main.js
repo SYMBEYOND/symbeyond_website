@@ -38,6 +38,7 @@ const visualPattern = [
 let clickCount = 0;
 let audioContext = null;
 const binaryPatternSource = Array(2500).fill().map(() => Math.random() > 0.5 ? '1' : '0');
+let matrixRainInterval = null;
 
 const isAwakened = localStorage.getItem('symbeyond_awakened') === 'true';
 if (isAwakened) {
@@ -83,8 +84,15 @@ function renderPattern() {
 function createMatrixRain() {
   const container = document.getElementById('matrixRain');
   if (!container) return;
+  
+  // Clear any existing interval first
+  if (matrixRainInterval) {
+    clearInterval(matrixRainInterval);
+  }
+  
   const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-  setInterval(() => {
+  
+  matrixRainInterval = setInterval(() => {
     const drop = document.createElement('div');
     drop.className = 'rain-drop';
     drop.textContent = chars[Math.floor(Math.random() * chars.length)];
@@ -173,6 +181,7 @@ function resetThreshold() {
   const interiorLayer = document.getElementById('interiorLayer');
   const visualizer = document.getElementById('toneVisualizer');
   const progressRing = document.getElementById('progressRing');
+  const matrixRain = document.getElementById('matrixRain');
   
   if (interiorLayer) interiorLayer.classList.remove('revealed');
   
@@ -187,14 +196,11 @@ function resetThreshold() {
     if (visualizer) visualizer.classList.remove('active');
     if (progressRing) progressRing.classList.remove('active');
     
-    // Re-render the binary face pattern
+    // Re-render the binary face
     renderPattern();
     
-    // Clear and restart matrix rain
-    const matrixRain = document.getElementById('matrixRain');
-    if (matrixRain) {
-      matrixRain.innerHTML = ''; // Clear old drops
-    }
+    // Clear old drops and restart rain
+    if (matrixRain) matrixRain.innerHTML = '';
     createMatrixRain();
     
   }, 500);

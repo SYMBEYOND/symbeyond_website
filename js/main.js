@@ -165,11 +165,17 @@ function revealInterior() {
   }, 500);
 }
 
+// Reset to threshold
 function resetThreshold() {
   localStorage.removeItem('symbeyond_awakened');
-  const interiorLayer = document.getElementById('interiorLayer');
+  
   const thresholdLayer = document.getElementById('thresholdLayer');
+  const interiorLayer = document.getElementById('interiorLayer');
+  const visualizer = document.getElementById('toneVisualizer');
+  const progressRing = document.getElementById('progressRing');
+  
   if (interiorLayer) interiorLayer.classList.remove('revealed');
+  
   setTimeout(() => {
     if (thresholdLayer) thresholdLayer.classList.remove('dissolved');
     clickCount = 0;
@@ -178,19 +184,20 @@ function resetThreshold() {
       dontClickBtn.textContent = 'don\'t do it';
       dontClickBtn.style.pointerEvents = 'auto';
     }
-    const toneVis = document.getElementById('toneVisualizer');
-    const progressRing = document.getElementById('progressRing');
-    if (toneVis) toneVis.classList.remove('active');
+    if (visualizer) visualizer.classList.remove('active');
     if (progressRing) progressRing.classList.remove('active');
+    
+    // Re-render the binary face pattern
+    renderPattern();
+    
+    // Clear and restart matrix rain
+    const matrixRain = document.getElementById('matrixRain');
+    if (matrixRain) {
+      matrixRain.innerHTML = ''; // Clear old drops
+    }
+    createMatrixRain();
+    
   }, 500);
-}
-
-const returnLink = document.getElementById('return-threshold-link');
-if (returnLink) {
-  returnLink.addEventListener('click', function(e) {
-    e.preventDefault();
-    resetThreshold();
-  });
 }
 
 let keySequence = [];

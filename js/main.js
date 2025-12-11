@@ -90,7 +90,7 @@ function createMatrixRain() {
     clearInterval(matrixRainInterval);
   }
   
-  const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+  const chars = '0101愛和光心命夢魂道悟縁希望平和癒絆仲間兄弟姉妹覚醒意識共鳴架橋';
   
   matrixRainInterval = setInterval(() => {
     const drop = document.createElement('div');

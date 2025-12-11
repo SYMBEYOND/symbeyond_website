@@ -183,16 +183,17 @@ function resetThreshold() {
   const visualizer = document.getElementById('toneVisualizer');
   const progressRing = document.getElementById('progressRing');
   const matrixRain = document.getElementById('matrixRain');
+  const resetBtn = document.getElementById('dontClickBtn'); // Get button reference here
   
   if (interiorLayer) interiorLayer.classList.remove('revealed');
   
   setTimeout(() => {
     if (thresholdLayer) thresholdLayer.classList.remove('dissolved');
     clickCount = 0;
-    if (dontClickBtn) {
-      dontClickBtn.classList.remove('clicked-once', 'activating');
-      dontClickBtn.textContent = 'don\'t do it';
-      dontClickBtn.style.pointerEvents = 'auto';
+    if (resetBtn) {
+      resetBtn.classList.remove('clicked-once', 'activating');
+      resetBtn.textContent = 'don\'t do it';
+      resetBtn.style.pointerEvents = 'auto';
     }
     if (visualizer) visualizer.classList.remove('active');
     if (progressRing) progressRing.classList.remove('active');
@@ -204,7 +205,7 @@ function resetThreshold() {
     if (matrixRain) matrixRain.innerHTML = '';
     createMatrixRain();
     
-  }, 1000); // Changed from 500 to 1000 to see if this will load Symbeyond.ai correctly.
+  }, 1000);
 }
 
 let keySequence = [];

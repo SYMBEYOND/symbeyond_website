@@ -203,7 +203,7 @@ function resetThreshold() {
     if (matrixRain) matrixRain.innerHTML = '';
     createMatrixRain();
     
-  }, 500);
+  }, 1000); // Changed from 500 to 1000 to see if this will load Symbeyond.ai correctly.
 }
 
 let keySequence = [];

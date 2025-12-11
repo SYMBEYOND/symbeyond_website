@@ -90,7 +90,8 @@ function createMatrixRain() {
     clearInterval(matrixRainInterval);
   }
   
-  const chars = '01,アイ,ヘイワ,イヤシ,ヒカ,ココロ,イノチ,キズナ,ナカマ,キボウ,キボウ,シンワ,ユメ,ソラ';
+  // Split the string into an array of words
+  const chars = '01,アイ,ヘイワ,イヤシ,ヒカリ,ココロ,イノチ,キズナ,ナカマ,キボウ,キボウ,シンワ,ユメ,ソラ'.split(',');
   
   matrixRainInterval = setInterval(() => {
     const drop = document.createElement('div');

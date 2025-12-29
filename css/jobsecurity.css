@@ -1,0 +1,348 @@
+/* ═══════════════════════════════════════════════════════════════
+   JOB SECURITY DASHBOARD STYLES
+   Extends SYMBEYOND base styles with monitoring-specific components
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Status Grid */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.status-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.status-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.status-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.status-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-indicator {
+  font-size: 1.5rem;
+  line-height: 1;
+  display: inline-block;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.status-online {
+  color: #00ff88;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.status-offline {
+  color: #ff4444;
+  text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+.status-initializing {
+  color: #ffaa00;
+  text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+}
+
+.status-unknown {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Card Header Row */
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.event-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-small {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-small:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-small:active {
+  transform: scale(0.98);
+}
+
+/* Event Stream */
+.event-stream {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+}
+
+.event-stream::-webkit-scrollbar {
+  width: 8px;
+}
+
+.event-stream::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.event-stream::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.event-stream::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.event-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  animation: slideIn 0.3s ease;
+}
+
+.event-item:last-child {
+  border-bottom: none;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.event-timestamp {
+  color: rgba(255, 255, 255, 0.4);
+  margin-right: 0.75rem;
+}
+
+.event-type {
+  color: #00ff88;
+  font-weight: 600;
+  margin-right: 0.75rem;
+}
+
+.event-type.solenoid {
+  color: #00ddff;
+}
+
+.event-type.fram {
+  color: #ff00ff;
+}
+
+.event-type.system {
+  color: #ffaa00;
+}
+
+.event-message {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.event-placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Telemetry Grid */
+.telemetry-grid {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.telemetry-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.telemetry-time {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.telemetry-data {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.telemetry-field {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.telemetry-field-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.telemetry-field-value {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+}
+
+.telemetry-placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Connection Status Badge */
+.recognition-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.recognition-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.recognition-dot.active {
+  background: #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.recognition-dot.error {
+  background: #ff4444;
+  box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .event-controls {
+    width: 100%;
+  }
+
+  .btn-small {
+    flex: 1;
+  }
+
+  .telemetry-item {
+    grid-template-columns: 1fr;
+  }
+
+  .telemetry-data {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .event-stream {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .status-card {
+    background: rgba(255, 255, 255, 0.02);
+  }
+}
+
+/* Accessibility */
+.btn-small:focus,
+.status-card:focus {
+  outline: 2px solid rgba(0, 255, 136, 0.5);
+  outline-offset: 2px;
+}
+
+/* Loading States */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: "...";
+  animation: ellipsis 1.5s infinite;
+}
+
+@keyframes ellipsis {
+  0% { content: ""; }
+  25% { content: "."; }
+  50% { content: ".."; }
+  75% { content: "..."; }
+  100% { content: ""; }
+}

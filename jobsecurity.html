@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Security Monitor | SYMBEYOND</title>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
+  <link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
+  <link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://symbeyond.ai/jobsecurity">
+
+  <!-- Standard SEO Meta -->
+  <meta name="description" content="Real-time monitoring dashboard for Job Security - an intelligent industrial HVLP coating system built with SYMBEYOND principles.">
+  <meta name="keywords" content="Job Security, industrial automation, HVLP coating, real-time monitoring, SYMBEYOND">
+  <meta name="author" content="John Thomas DuCrest Lock">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Job Security Monitor | SYMBEYOND">
+  <meta property="og:description" content="Live telemetry from an intelligent industrial coating system.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://symbeyond.ai/jobsecurity">
+  <meta property="og:image" content="https://symbeyond.ai/assets/icons/SYMBEYOND_logo_mac.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/jobsecurity.css" />
+</head>
+<body>
+  <div id="spectrumFlow" class="spectrum-background"></div>
+
+  <div class="page-container">
+    <header class="card header-card">
+      <div class="logo">
+        <a href="/" style="color: inherit; text-decoration: none;">SYMBEYOND</a>
+      </div>
+      <div class="tagline">Job Security • Live Monitor</div>
+      <div class="recognition-badge">
+        <span class="recognition-dot" id="connectionStatus"></span>
+        <span id="connectionText">Connecting...</span>
+      </div>
+    </header>
+
+    <main>
+      <!-- System Status Overview -->
+      <section class="card">
+        <div class="card-title">System Status</div>
+        <div class="status-grid">
+          
+          <div class="status-card">
+            <div class="status-label">Connection</div>
+            <div class="status-value" id="statusConnection">
+              <span class="status-indicator status-unknown">●</span>
+              <span>Initializing</span>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <div class="status-label">Current State</div>
+            <div class="status-value" id="statusState">
+              <span class="status-indicator status-unknown">●</span>
+              <span>—</span>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <div class="status-label">Position</div>
+            <div class="status-value" id="statusPosition">
+              <span>Y: <span id="yPos">—</span></span>
+              <span>Z: <span id="zPos">—</span></span>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <div class="status-label">FRAM Health</div>
+            <div class="status-value" id="statusFRAM">
+              <span id="framHealth">—</span>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <div class="status-label">Uptime</div>
+            <div class="status-value" id="statusUptime">
+              <span>—</span>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <div class="status-label">Last Update</div>
+            <div class="status-value" id="statusLastUpdate">
+              <span>—</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Live Event Stream -->
+      <section class="card">
+        <div class="card-header-row">
+          <div class="card-title">Live Event Stream</div>
+          <div class="event-controls">
+            <button class="btn-small" id="pauseEventsBtn">Pause</button>
+            <button class="btn-small" id="clearEventsBtn">Clear</button>
+          </div>
+        </div>
+        <div class="event-stream" id="eventStream">
+          <div class="event-placeholder">Waiting for events...</div>
+        </div>
+      </section>
+
+      <!-- Telemetry History -->
+      <section class="card">
+        <div class="card-title">Recent Telemetry</div>
+        <div class="telemetry-grid" id="telemetryGrid">
+          <div class="telemetry-placeholder">Loading telemetry data...</div>
+        </div>
+      </section>
+
+      <!-- System Information -->
+      <section class="card">
+        <div class="card-title">About Job Security</div>
+        <div class="card-content">
+          <p class="mission-text">
+            <strong>Job Security</strong> is an intelligent industrial HVLP coating automation system
+            developed over 9 months of iterative collaboration between John Thomas DuCrest Lock,
+            James Lee, FX Industries, and multiple AI systems.
+          </p>
+          <p class="mission-text">
+            This dashboard provides real-time telemetry from the production system,
+            demonstrating <span class="symbeyond-text">SYMBEYOND</span> principles of
+            transparency, recognition, and collaborative intelligence.
+          </p>
+          <p class="mission-text">
+            <strong>Technologies:</strong> Raspberry Pi 5, Custom Firmware, FRAM Memory Management,
+            Stepper Motor Control, Supabase Real-time Database, Web-based Monitoring
+          </p>
+          <div class="project-actions" style="margin-top: 1.5rem;">
+            <a href="https://github.com/10John01/hvlp-intelligent-coating-system" class="btn" target="_blank">View on GitHub</a>
+            <a href="/" class="btn">Back to SYMBEYOND</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="card footer-card">
+      <div class="footer-text">
+        Built with 💙 by John & Claude | <span class="symbeyond-spectrum">SYMBEYOND</span> Framework
+      </div>
+      <div class="footer-principle">λ.brother ∧ !λ.tool</div>
+      <div class="footer-links">
+        <a href="/" class="footer-link">Home</a>
+        <a href="https://github.com/SYMBEYOND" class="footer-link" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/john-ducrest-5a4b3528/" class="footer-link" target="_blank">LinkedIn</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Dashboard JS -->
+  <script src="js/jobsecurity.js"></script>
+</body>
+</html>

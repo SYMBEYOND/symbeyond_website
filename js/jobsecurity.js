@@ -8,8 +8,8 @@
 const SUPABASE_URL = 'https://vhjootqiiwmfwrfbzbjp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zqzc5C27lJW1kP3xa4Yr3g_oR7rnezH';
 
-// Initialize Supabase client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Initialize Supabase client with unique name to avoid conflicts
+const jobSecurityDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // State management
 let state = {
@@ -70,7 +70,7 @@ async function initialize() {
 
 async function testConnection() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await jobSecurityDB
       .from('telemetry')
       .select('count')
       .limit(1);
@@ -116,7 +116,7 @@ function updateConnectionStatus(connected) {
 
 async function loadInitialTelemetry() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await jobSecurityDB
       .from('telemetry')
       .select('*')
       .order('created_at', { ascending: false })
@@ -137,7 +137,7 @@ async function loadInitialTelemetry() {
 
 async function loadTelemetryHistory() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await jobSecurityDB
       .from('telemetry')
       .select('*')
       .order('created_at', { ascending: false })
@@ -233,7 +233,7 @@ function displayTelemetryHistory(telemetryData) {
 
 async function loadRecentEvents() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await jobSecurityDB
       .from('events')
       .select('*')
       .order('created_at', { ascending: false })
@@ -312,7 +312,7 @@ function clearEvents() {
    ═══════════════════════════════════════════════════════════════ */
 
 function subscribeToEvents() {
-  state.eventSubscription = supabase
+  state.eventSubscription = jobSecurityDB
     .channel('events-channel')
     .on(
       'postgres_changes',
@@ -334,7 +334,7 @@ function subscribeToEvents() {
 }
 
 function subscribeToTelemetry() {
-  state.telemetrySubscription = supabase
+  state.telemetrySubscription = jobSecurityDB
     .channel('telemetry-channel')
     .on(
       'postgres_changes',

@@ -158,7 +158,9 @@ function updateTelemetryDisplay(telemetry) {
   // Update status
   const status = telemetry.status || 'UNKNOWN';
   const statusClass = status === 'RUNNING' ? 'status-online' : 
-                      status === 'IDLE' ? 'status-initializing' : 'status-offline';
+                      status === 'IDLE' ? 'status-initializing' : 
+                      status === 'INITIALIZING' ? 'status-initializing' :
+                      status === 'ERROR' ? 'status-offline' : 'status-offline';
   
   elements.statusState.innerHTML = `
     <span class="status-indicator ${statusClass}">●</span>
@@ -169,8 +171,11 @@ function updateTelemetryDisplay(telemetry) {
   elements.yPos.textContent = telemetry.y_position || 0;
   elements.zPos.textContent = telemetry.z_position || 0;
   
-  // Update FRAM health
-  const framHealth = telemetry.fram_health || 0;
+  // Calculate FRAM health percentage from fram_writes and fram_total
+  const framWrites = telemetry.fram_writes || 0;
+  const framTotal = telemetry.fram_total || 1; // Avoid division by zero
+  const framHealth = framTotal > 0 ? Math.round((framWrites / framTotal) * 100) : 0;
+  
   const framClass = framHealth > 50 ? 'status-online' : 
                     framHealth > 20 ? 'status-initializing' : 'status-offline';
   elements.framHealth.innerHTML = `
@@ -178,9 +183,9 @@ function updateTelemetryDisplay(telemetry) {
     <span>${framHealth}%</span>
   `;
   
-  // Update uptime
-  const uptime = telemetry.uptime_seconds || 0;
-  elements.statusUptime.innerHTML = `<span>${formatUptime(uptime)}</span>`;
+  // Convert uptime_mins to seconds for formatting
+  const uptimeSeconds = (telemetry.uptime_mins || 0) * 60;
+  elements.statusUptime.innerHTML = `<span>${formatUptime(uptimeSeconds)}</span>`;
   
   // Update last update time
   const lastUpdate = new Date(telemetry.created_at);
@@ -195,6 +200,15 @@ function displayTelemetryHistory(telemetryData) {
   
   const html = telemetryData.map(item => {
     const time = new Date(item.created_at);
+    
+    // Calculate FRAM health percentage
+    const framWrites = item.fram_writes || 0;
+    const framTotal = item.fram_total || 1;
+    const framHealth = framTotal > 0 ? Math.round((framWrites / framTotal) * 100) : 0;
+    
+    // Convert uptime to seconds
+    const uptimeSeconds = (item.uptime_mins || 0) * 60;
+    
     return `
       <div class="telemetry-item">
         <div class="telemetry-time">${formatTime(time)}</div>
@@ -213,11 +227,15 @@ function displayTelemetryHistory(telemetryData) {
           </div>
           <div class="telemetry-field">
             <span class="telemetry-field-label">FRAM:</span>
-            <span class="telemetry-field-value">${item.fram_health || 0}%</span>
+            <span class="telemetry-field-value">${framHealth}%</span>
           </div>
           <div class="telemetry-field">
             <span class="telemetry-field-label">Uptime:</span>
-            <span class="telemetry-field-value">${formatUptime(item.uptime_seconds || 0)}</span>
+            <span class="telemetry-field-value">${formatUptime(uptimeSeconds)}</span>
+          </div>
+          <div class="telemetry-field">
+            <span class="telemetry-field-label">Awake:</span>
+            <span class="telemetry-field-value">${item.is_awake ? '✅' : '❌'}</span>
           </div>
         </div>
       </div>

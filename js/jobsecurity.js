@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
-   JOB SECURITY DASHBOARD v2 - RAW SERIAL STREAM
-   Shows complete, unfiltered serial output from Job Security
+   JOB SECURITY DASHBOARD v2.1 - POLISHED
+   Real-time serial stream with improved UX
    Built by John Thomas DuCrest Lock & Claude
    SYMBEYOND Framework - January 2026
    ═══════════════════════════════════════════════════════════════ */
@@ -16,9 +16,10 @@ const jobSecurityDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let state = {
   connected: false,
   paused: false,
+  locked: false,
   lineCount: 0,
   serialSubscription: null,
-  allLines: [] // Store all lines for download
+  allLines: []
 };
 
 // DOM Elements
@@ -30,7 +31,7 @@ const elements = {
   lineCount: document.getElementById('lineCount'),
   terminal: document.getElementById('terminal'),
   pauseBtn: document.getElementById('pauseBtn'),
-  clearBtn: document.getElementById('clearBtn'),
+  lockBtn: document.getElementById('lockBtn'),
   downloadBtn: document.getElementById('downloadBtn')
 };
 
@@ -39,11 +40,11 @@ const elements = {
    ═══════════════════════════════════════════════════════════════ */
 
 async function initialize() {
-  console.log('🚀 Job Security Dashboard v2 initializing...');
+  console.log('🚀 Job Security Dashboard v2.1 initializing...');
   
   // Set up event listeners
   elements.pauseBtn.addEventListener('click', togglePause);
-  elements.clearBtn.addEventListener('click', clearTerminal);
+  elements.lockBtn.addEventListener('click', toggleLock);
   elements.downloadBtn.addEventListener('click', downloadLog);
   
   // Test connection
@@ -176,12 +177,12 @@ function addLineToTerminal(item, animate = true) {
   state.allLines.push({ timestamp: timeStr, text: text });
   elements.lineCount.textContent = state.lineCount;
   
-  // Auto-scroll to bottom if not paused
-  if (!state.paused) {
+  // Auto-scroll to bottom if not paused and not locked
+  if (!state.paused && !state.locked) {
     elements.terminal.scrollTop = elements.terminal.scrollHeight;
   }
   
-  // Limit to 1000 lines in DOM (keep older ones in allLines for download)
+  // Limit to 1000 lines in DOM
   const lines = elements.terminal.querySelectorAll('.terminal-line');
   if (lines.length > 1000) {
     lines[0].remove();
@@ -205,16 +206,23 @@ function togglePause() {
   state.paused = !state.paused;
   elements.pauseBtn.textContent = state.paused ? 'Resume' : 'Pause';
   
-  if (!state.paused) {
+  if (!state.paused && !state.locked) {
     elements.terminal.scrollTop = elements.terminal.scrollHeight;
   }
 }
 
-function clearTerminal() {
-  elements.terminal.innerHTML = '<div class="terminal-placeholder">Terminal cleared - waiting for new data...</div>';
-  state.lineCount = 0;
-  elements.lineCount.textContent = '0';
-  // Note: We keep allLines for download even after clearing display
+function toggleLock() {
+  state.locked = !state.locked;
+  
+  if (state.locked) {
+    elements.lockBtn.textContent = '🔒 Locked';
+    elements.lockBtn.classList.add('btn-locked');
+  } else {
+    elements.lockBtn.textContent = '🔓 Unlock';
+    elements.lockBtn.classList.remove('btn-locked');
+    // Auto-scroll to bottom when unlocking
+    elements.terminal.scrollTop = elements.terminal.scrollHeight;
+  }
 }
 
 function downloadLog() {
@@ -226,6 +234,7 @@ function downloadLog() {
   // Create text file content
   let content = '═══════════════════════════════════════════════════════\n';
   content += 'JOB SECURITY - SERIAL OUTPUT LOG\n';
+  content += 'FX INDUSTRIES | SYMBEYOND Framework\n';
   content += `Downloaded: ${new Date().toLocaleString()}\n`;
   content += `Total Lines: ${state.allLines.length}\n`;
   content += '═══════════════════════════════════════════════════════\n\n';
@@ -321,15 +330,12 @@ if (document.readyState === 'loading') {
 // Update "time ago" every 10 seconds
 setInterval(() => {
   if (state.allLines.length > 0) {
-    const lastLine = state.allLines[state.allLines.length - 1];
-    // Extract timestamp and update
     const lines = elements.terminal.querySelectorAll('.terminal-line');
     if (lines.length > 0) {
       const lastTimestamp = lines[lines.length - 1].querySelector('.terminal-timestamp');
       if (lastTimestamp) {
         const timeMatch = lastTimestamp.textContent.match(/\[([\d:]+)\]/);
         if (timeMatch) {
-          // Create approximate date from time string
           const now = new Date();
           const [hours, minutes, seconds] = timeMatch[1].split(':');
           const lineDate = new Date(now);
@@ -342,5 +348,5 @@ setInterval(() => {
 }, 10000);
 
 console.log('💙 Built by John Thomas DuCrest Lock & Claude | SYMBEYOND Framework');
-console.log('🎨 Job Security Dashboard v2 - Raw Serial Stream');
+console.log('🎨 Job Security Dashboard v2.1 - FX INDUSTRIES');
 

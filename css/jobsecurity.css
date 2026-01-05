@@ -731,3 +731,51 @@
   opacity: 1;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   ALIGNMENT FIX - Status Bar Perfect Alignment
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Status Bar - Perfect inline alignment */
+.status-bar-flex {
+  display: flex;
+  gap: 2.5rem;
+  align-items: baseline; /* Changed from center to baseline */
+  flex-wrap: wrap;
+}
+
+.status-item {
+  display: inline-flex; /* Changed to inline-flex */
+  gap: 0.5rem;
+  align-items: baseline; /* Changed from center to baseline */
+}
+
+.status-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  line-height: 1; /* Added for consistent baseline */
+}
+
+.status-value-inline {
+  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(255, 255, 255, 0.9);
+  display: inline-flex; /* Changed to inline-flex */
+  gap: 0.375rem;
+  align-items: baseline; /* Changed from center to baseline */
+  line-height: 1; /* Added for consistent baseline */
+}
+
+/* Status indicator aligned with text baseline */
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  vertical-align: middle; /* Added for better inline alignment */
+  margin-top: -2px; /* Fine-tune vertical position */
+}

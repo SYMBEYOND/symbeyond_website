@@ -135,7 +135,7 @@ function updateConnectionStatus(connected, sleeping = false) {
     elements.connectionStatus.classList.remove('active');
     elements.connectionStatus.classList.remove('error');
     elements.connectionStatus.classList.add('sleeping');
-    elements.connectionText.textContent = 'SLEEPING 🌙';
+    elements.connectionText.textContent = 'Job Security • SLEEPING 🌙';
     
     elements.statusConnection.innerHTML = `
       <span class="status-indicator status-sleeping">●</span>
@@ -411,4 +411,3 @@ setInterval(() => {
 
 console.log('💙 Built by John Thomas DuCrest Lock & Claude | SYMBEYOND Framework');
 console.log('🎨 Job Security Dashboard v2.2 - FX INDUSTRIES');
-

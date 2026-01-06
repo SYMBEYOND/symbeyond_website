@@ -112,6 +112,20 @@ if (dontClickBtn) {
     e.stopPropagation();
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
     clickCount++;
+    
+    // If returning from interior (threshold is visible but was dissolved), just hide threshold immediately
+    const thresholdLayer = document.getElementById('thresholdLayer');
+    const interiorLayer = document.getElementById('interiorLayer');
+    
+    if (thresholdLayer && !thresholdLayer.classList.contains('dissolved') && 
+        interiorLayer && interiorLayer.classList.contains('revealed')) {
+      // User is seeing threshold after clicking "Return to Threshold", so just dismiss it
+      thresholdLayer.classList.add('dissolved');
+      clickCount = 0; // Reset for next time
+      return;
+    }
+    
+    // Normal first-time behavior
     if (clickCount === 1) {
       this.classList.add('clicked-once');
       this.textContent = 'last chance... it\'s not a good idea';

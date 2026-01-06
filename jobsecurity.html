@@ -78,9 +78,9 @@
         <div class="card-header-row">
           <div class="card-title">🎨 Job Security's Voice</div>
           <div class="event-controls">
-            <button class="btn-small" id="pauseBtn">Pause</button>
-            <button class="btn-small" id="lockBtn">🔓 Unlock</button>
-            <button class="btn-small" id="downloadBtn">Download</button>
+            <button class="btn-small" id="pauseBtn" title="Pause/resume incoming messages">Pause</button>
+            <button class="btn-small" id="lockBtn" title="Lock scroll position or enable auto-scroll">🔓 Unlocked</button>
+            <button class="btn-small" id="downloadBtn" title="Download complete log as text file">Download</button>
           </div>
         </div>
         
@@ -110,7 +110,7 @@
             Supabase Real-time Database, Matrix-style Terminal Display
           </p>
           <div class="project-actions" style="margin-top: 1.5rem;">
-            <a href="https://github.com/10John01/hvlp-intelligent-coating-system" class="btn" target="_blank">View on GitHub</a>
+            <a href="https://github.com/SYMBEYOND/symbeyond_website" class="btn" target="_blank">View on GitHub</a>
             <a href="/" class="btn">Back to SYMBEYOND</a>
           </div>
         </div>
@@ -136,6 +136,18 @@
   
   <!-- Dashboard JS -->
   <script src="js/jobsecurity.js"></script>
+  
+  <!-- Handle return from threshold page with silent reload -->
+  <script>
+    // Check if we came from the threshold page
+    if (document.referrer.includes('threshold') || window.location.hash === '#returned') {
+      // Clean URL without reload
+      if (window.location.hash === '#returned') {
+        history.replaceState(null, '', window.location.pathname);
+      }
+      // The dashboard will initialize normally, effectively "resetting" the page state
+    }
+  </script>
 </body>
 </html>
 

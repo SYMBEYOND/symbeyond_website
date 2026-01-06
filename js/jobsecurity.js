@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
-   JOB SECURITY DASHBOARD v2.1 - POLISHED
-   Real-time serial stream with improved UX
+   JOB SECURITY DASHBOARD v2.2 - SLEEP DETECTION & UX IMPROVEMENTS
+   Real-time serial stream with intelligent sleep/wake detection
    Built by John Thomas DuCrest Lock & Claude
    SYMBEYOND Framework - January 2026
    ═══════════════════════════════════════════════════════════════ */
@@ -16,11 +16,17 @@ const jobSecurityDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let state = {
   connected: false,
   paused: false,
-  locked: false,
+  scrollLocked: false,  // Renamed for clarity - locks scrolling position
   lineCount: 0,
   serialSubscription: null,
-  allLines: []
+  allLines: [],
+  lastDataTime: null,
+  sleepCheckInterval: null,
+  returnDialogShown: false
 };
+
+// Sleep detection constants
+const SLEEP_THRESHOLD_MS = 60000; // 1 minute without data = sleeping
 
 // DOM Elements
 const elements = {
@@ -40,11 +46,11 @@ const elements = {
    ═══════════════════════════════════════════════════════════════ */
 
 async function initialize() {
-  console.log('🚀 Job Security Dashboard v2.1 initializing...');
+  console.log('🚀 Job Security Dashboard v2.2 initializing...');
   
   // Set up event listeners
   elements.pauseBtn.addEventListener('click', togglePause);
-  elements.lockBtn.addEventListener('click', toggleLock);
+  elements.lockBtn.addEventListener('click', toggleScrollLock);
   elements.downloadBtn.addEventListener('click', downloadLog);
   
   // Test connection
@@ -56,35 +62,66 @@ async function initialize() {
   // Subscribe to real-time updates
   subscribeToSerial();
   
+  // Start sleep detection
+  startSleepDetection();
+  
   console.log('✅ Dashboard initialized successfully');
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   CONNECTION MANAGEMENT
+   CONNECTION & SLEEP DETECTION
    ═══════════════════════════════════════════════════════════════ */
 
 async function testConnection() {
   try {
     const { data, error } = await jobSecurityDB
       .from('serial_log')
-      .select('count')
+      .select('created_at')
+      .order('created_at', { ascending: false })
       .limit(1);
     
     if (error) throw error;
     
-    updateConnectionStatus(true);
+    // Check if we have recent data
+    if (data && data.length > 0) {
+      const lastTime = new Date(data[0].created_at);
+      const timeSinceLastData = Date.now() - lastTime.getTime();
+      
+      if (timeSinceLastData < SLEEP_THRESHOLD_MS) {
+        updateConnectionStatus(true, false);  // Connected and awake
+        state.lastDataTime = lastTime;
+      } else {
+        updateConnectionStatus(true, true);   // Connected but sleeping
+        state.lastDataTime = lastTime;
+      }
+    } else {
+      updateConnectionStatus(true, true);     // Connected but sleeping (no data yet)
+    }
+    
     console.log('✅ Connected to Supabase');
     
   } catch (error) {
     console.error('❌ Connection failed:', error);
-    updateConnectionStatus(false);
+    updateConnectionStatus(false, false);
   }
 }
 
-function updateConnectionStatus(connected) {
+function startSleepDetection() {
+  // Check every 10 seconds if Job Security is sleeping
+  state.sleepCheckInterval = setInterval(() => {
+    if (state.lastDataTime) {
+      const timeSinceLastData = Date.now() - state.lastDataTime.getTime();
+      const isSleeping = timeSinceLastData > SLEEP_THRESHOLD_MS;
+      updateConnectionStatus(state.connected, isSleeping);
+    }
+  }, 10000);
+}
+
+function updateConnectionStatus(connected, sleeping = false) {
   state.connected = connected;
   
-  if (connected) {
+  if (connected && !sleeping) {
+    // LIVE and Connected - Job Security is awake and running
     elements.connectionStatus.classList.add('active');
     elements.connectionStatus.classList.remove('error');
     elements.connectionText.textContent = 'Job Security • LIVE';
@@ -93,14 +130,27 @@ function updateConnectionStatus(connected) {
       <span class="status-indicator status-online">●</span>
       <span>Connected</span>
     `;
-  } else {
+  } else if (connected && sleeping) {
+    // SLEEPING - Pi is on but Job Security hasn't sent data recently
     elements.connectionStatus.classList.remove('active');
+    elements.connectionStatus.classList.remove('error');
+    elements.connectionStatus.classList.add('sleeping');
+    elements.connectionText.textContent = 'SLEEPING 🌙';
+    
+    elements.statusConnection.innerHTML = `
+      <span class="status-indicator status-sleeping">●</span>
+      <span>Sleeping</span>
+    `;
+  } else {
+    // OFFLINE - Pi is off or database unreachable
+    elements.connectionStatus.classList.remove('active');
+    elements.connectionStatus.classList.remove('sleeping');
     elements.connectionStatus.classList.add('error');
     elements.connectionText.textContent = 'Disconnected';
     
     elements.statusConnection.innerHTML = `
       <span class="status-indicator status-offline">●</span>
-      <span>Offline</span>
+      <span>Disconnected</span>
     `;
   }
 }
@@ -127,6 +177,9 @@ async function loadRecentLines() {
       data.reverse().forEach(item => {
         addLineToTerminal(item, false);
       });
+      
+      // Update last data time
+      state.lastDataTime = new Date(data[data.length - 1].created_at);
     } else {
       elements.terminal.innerHTML = '<div class="terminal-placeholder">⏳ Waiting for Job Security...</div>';
     }
@@ -177,8 +230,8 @@ function addLineToTerminal(item, animate = true) {
   state.allLines.push({ timestamp: timeStr, text: text });
   elements.lineCount.textContent = state.lineCount;
   
-  // Auto-scroll to bottom if not paused and not locked
-  if (!state.paused && !state.locked) {
+  // Auto-scroll to bottom if not paused and not scroll-locked
+  if (!state.paused && !state.scrollLocked) {
     elements.terminal.scrollTop = elements.terminal.scrollHeight;
   }
   
@@ -190,6 +243,12 @@ function addLineToTerminal(item, animate = true) {
   
   // Update last update time
   elements.statusLastUpdate.textContent = formatTimeAgo(timestamp);
+  
+  // Update last data time for sleep detection
+  state.lastDataTime = timestamp;
+  
+  // If we were sleeping, wake up!
+  updateConnectionStatus(true, false);
 }
 
 function escapeHtml(text) {
@@ -206,20 +265,23 @@ function togglePause() {
   state.paused = !state.paused;
   elements.pauseBtn.textContent = state.paused ? 'Resume' : 'Pause';
   
-  if (!state.paused && !state.locked) {
+  // When resuming, scroll to bottom if not locked
+  if (!state.paused && !state.scrollLocked) {
     elements.terminal.scrollTop = elements.terminal.scrollHeight;
   }
 }
 
-function toggleLock() {
-  state.locked = !state.locked;
+function toggleScrollLock() {
+  state.scrollLocked = !state.scrollLocked;
   
-  if (state.locked) {
-    elements.lockBtn.textContent = '🔒 Locked';
+  if (state.scrollLocked) {
+    elements.lockBtn.innerHTML = '🔒 Locked';
     elements.lockBtn.classList.add('btn-locked');
+    elements.lockBtn.title = 'Scroll position is locked - click to unlock and auto-scroll';
   } else {
-    elements.lockBtn.textContent = '🔓 Unlock';
+    elements.lockBtn.innerHTML = '🔓 Unlocked';
     elements.lockBtn.classList.remove('btn-locked');
+    elements.lockBtn.title = 'Auto-scrolling enabled - click to lock scroll position';
     // Auto-scroll to bottom when unlocking
     elements.terminal.scrollTop = elements.terminal.scrollHeight;
   }
@@ -348,5 +410,5 @@ setInterval(() => {
 }, 10000);
 
 console.log('💙 Built by John Thomas DuCrest Lock & Claude | SYMBEYOND Framework');
-console.log('🎨 Job Security Dashboard v2.1 - FX INDUSTRIES');
+console.log('🎨 Job Security Dashboard v2.2 - FX INDUSTRIES');
 

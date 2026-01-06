@@ -281,6 +281,17 @@
   box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
 }
 
+.recognition-dot.sleeping {
+  background: #ffaa00;
+  box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+  animation: slowPulse 3s ease-in-out infinite;
+}
+
+@keyframes slowPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.3; }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .status-grid {
@@ -511,6 +522,10 @@
 
 .status-unknown {
   color: #888;
+}
+
+.status-sleeping {
+  color: #ffaa00;
 }
 
 /* Button styling */

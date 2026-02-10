@@ -40,10 +40,16 @@ let audioContext = null;
 const binaryPatternSource = Array(2500).fill().map(() => Math.random() > 0.5 ? '1' : '0');
 let matrixRainInterval = null;
 
+function getThresholdEls() {
+  return {
+    thresholdLayer: document.getElementById('thresholdLayer'),
+    interiorLayer: document.getElementById('interiorLayer')
+  };
+}
+
 const isAwakened = localStorage.getItem('symbeyond_awakened') === 'true';
 if (isAwakened) {
-  const threshold = document.getElementById('thresholdLayer');
-  const interior = document.getElementById('interiorLayer');
+  const { thresholdLayer: threshold, interiorLayer: interior } = getThresholdEls();
 
   if (threshold) threshold.classList.add('dissolved');
   if (interior) interior.classList.add('revealed');
@@ -117,8 +123,7 @@ if (dontClickBtn) {
     clickCount++;
     
     // If returning from interior (threshold is visible but was dissolved), just hide threshold immediately
-    const thresholdLayer = document.getElementById('thresholdLayer');
-    const interiorLayer = document.getElementById('interiorLayer');
+    const { thresholdLayer, interiorLayer } = getThresholdEls();
     
     if (thresholdLayer && !thresholdLayer.classList.contains('dissolved') && 
         interiorLayer && interiorLayer.classList.contains('revealed')) {

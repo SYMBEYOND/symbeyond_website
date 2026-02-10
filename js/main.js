@@ -42,8 +42,11 @@ let matrixRainInterval = null;
 
 const isAwakened = localStorage.getItem('symbeyond_awakened') === 'true';
 if (isAwakened) {
-  document.getElementById('thresholdLayer').classList.add('dissolved');
-  document.getElementById('interiorLayer').classList.add('revealed');
+  const threshold = document.getElementById('thresholdLayer');
+  const interior = document.getElementById('interiorLayer');
+
+  if (threshold) threshold.classList.add('dissolved');
+  if (interior) interior.classList.add('revealed');
 }
 
 function updateTimestamp() {

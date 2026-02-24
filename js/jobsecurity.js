@@ -165,7 +165,7 @@ async function loadRecentLines() {
       .from('serial_log')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(500);
+      .limit(5000);
     
     if (error) throw error;
     
@@ -235,9 +235,9 @@ function addLineToTerminal(item, animate = true) {
     elements.terminal.scrollTop = elements.terminal.scrollHeight;
   }
   
-  // Limit to 1000 lines in DOM
+  // Limit to 5000 lines in DOM
   const lines = elements.terminal.querySelectorAll('.terminal-line');
-  if (lines.length > 2000) {
+  if (lines.length > 5000) {
     lines[0].remove();
   }
   

@@ -32,3 +32,6 @@ Temporary Items
 # Node (if you add any build tools later)
 node_modules/
 npm-debug.log*
+
+# Legacy experiments and archived code
+legacy/

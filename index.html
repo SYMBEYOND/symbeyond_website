@@ -894,8 +894,8 @@
       <div class="service-card">
         <div class="svc-icon">📋</div>
         <div class="svc-name">Monthly Retainer</div>
-        <div class="svc-rate">$500 / week — 5 hr minimum</div>
-        <p class="svc-desc">Ongoing support, monitoring, and advisory at $100/hr with a 5-hour weekly minimum. Priority access, scheduled availability, and consistent expert support for small businesses.</p>
+        <div class="svc-rate">$500 – $1,500 / month</div>
+        <p class="svc-desc">Ongoing support, monitoring, and advisory for a predictable monthly cost. Ideal for small businesses needing consistent, reliable technology support.</p>
         <div class="confidence" aria-label="Confidence: 4 of 5">
           <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd"></div>
         </div>
@@ -945,7 +945,6 @@
         <p style="font-size:0.82rem; color:rgba(245,240,232,0.5); margin-bottom:1.4rem; line-height:1.75;">Every client engagement begins with a signed Service Agreement:</p>
         <div class="trust-item">Strict confidentiality — client data and processes are never shared</div>
         <div class="trust-item">Clear scope of work defined before any billable time begins</div>
-        <div class="trust-item">Every engagement includes a Scope of Work (SOW) defining tasks, timeline, and deliverables</div>
         <div class="trust-item">Mandatory reporting clause — illegal content reported; all else remains confidential</div>
         <div class="trust-item">Transparent payment terms, cancellation policy, and liability limits</div>
         <div class="trust-item">Voice recording consent for professional documentation (AZ/UT single-party consent)</div>
@@ -953,7 +952,7 @@
         <div class="trust-meta">
           SYMBEYOND AI LLC · ACC #25025155<br/>
           Arizona Domestic LLC · Est. February 26, 2026<br/>
-          <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ff959bbf8c86929d9a8690919bd19e96">[email&#160;protected]</a> · 435.229.8946
+          jd@symbeyond.ai · 435.229.8946
         </div>
       </div>
     </div>
@@ -977,9 +976,10 @@
           <span class="tag">Hurricane, UT</span>
           <span class="tag">LaVerkin, UT</span>
           <span class="tag">Apple Valley, UT</span>
+          <span class="tag">Virgin, UT</span>
+          <span class="tag">Springdale, UT</span>
           <span class="tag">Kanab, UT</span>
           <span class="tag">Fredonia, AZ</span>
-          <span class="tag">and nearby communities</span>
         </div>
       </div>
 
@@ -1090,7 +1090,7 @@
     <div class="contact-row">
       <div class="contact-item">
         <div class="c-label">Email</div>
-        <a href="/cdn-cgi/l/email-protection#5b313f1b282236393e2234353f753a32" class="c-value"><span class="__cf_email__" data-cfemail="c2a8a682b1bbafa0a7bbadaca6eca3ab">[email&#160;protected]</span></a>
+        <a href="mailto:jd@symbeyond.ai" class="c-value">jd@symbeyond.ai</a>
       </div>
       <div class="contact-item">
         <div class="c-label">Phone</div>
@@ -1114,8 +1114,23 @@
   <footer>
     <span>© 2026 SYMBEYOND AI LLC · ACC #25025155 · Arizona</span>
     <span>λ.brother ∧ !λ.tool</span>
-    <a href="/cdn-cgi/l/email-protection#3d57597d4e44505f5844525359135c54"><span class="__cf_email__" data-cfemail="e08a84a093998d8285998f8e84ce8189">[email&#160;protected]</span></a>
+    <a href="mailto:jd@symbeyond.ai">jd@symbeyond.ai</a>
   </footer>
 
   <!-- ═══════ JS ═══════ -->
-  <script data-cfasync="false" src="/cdn
+  <script>
+    // Scroll reveal
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 75);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+
+</body>
+</html>

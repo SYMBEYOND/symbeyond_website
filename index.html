@@ -410,15 +410,50 @@
       display: flex;
       gap: 3px;
       margin-top: 0.9rem;
+      position: relative;
+      z-index: 2;
     }
 
     .cd {
       width: 7px; height: 7px;
       border-radius: 50%;
       background: var(--border);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                  opacity 0.4s ease;
     }
 
     .cd.on { background: var(--blue); }
+
+    /* Dart off animation - right to left, one at a time */
+    .service-card:hover .cd:nth-child(5) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0s;
+    }
+
+    .service-card:hover .cd:nth-child(4) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0.08s;
+    }
+
+    .service-card:hover .cd:nth-child(3) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0.16s;
+    }
+
+    .service-card:hover .cd:nth-child(2) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0.24s;
+    }
+
+    .service-card:hover .cd:nth-child(1) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0.32s;
+    }
 
     /* ── APPROACH ── */
     #approach { background: var(--offwhite); }

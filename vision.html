@@ -192,26 +192,26 @@
     <p class="subtitle">If your vision is priceless, it deserves more than a contact form.</p>
 
     <!--═══════════════════════════════════════════════════════════
-        FORM SUBMISSION - Current State & Future Plan
+        FORM SUBMISSION - Implementation History
         
-        CURRENT (2026-04-29):
-        Using mailto: action - opens user's email client with pre-filled subject.
-        Works if user has configured email client. Fails gracefully otherwise.
-        Zero backend, zero cost, zero dependencies.
+        ORIGINAL (2026-04-29):
+        Used mailto: action - caused email client loop bug in production.
+        Worked for initial testing but created UX blocker on live deployment.
         
-        FUTURE PLAN:
-        Integrate Formspree (formspree.io) for bulletproof submissions:
+        IMPLEMENTED (2026-04-30):
+        Formspree integration (formspree.io/f/xykoykok)
         - 50 free submissions/month
-        - Works without email client
+        - No email client dependency
         - Submission tracking and database
+        - Email notifications to jd@symbeyond.ai
         - Upgrade to $10/month if volume exceeds 50
         
-        Decision: Don't fix what isn't broken yet. Deploy mailto: first,
-        upgrade to Formspree when/if submission failures become a pattern.
+        Reason for upgrade: mailto: loop bug froze email client on submission.
+        Not a theoretical problem - actual production blocker discovered in testing.
         
-        - John Thomas DuCrest Lock & Claude, 2026-04-29
+        - John Thomas DuCrest Lock & Claude, 2026-04-30
     ═══════════════════════════════════════════════════════════-->
-    <form action="mailto:jd@symbeyond.ai?subject=Priceless Vision Inquiry" method="post" enctype="text/plain">
+    <form action="https://formspree.io/f/xykoykok" method="POST">
       <div class="field">
         <label for="name">Your Name</label>
         <input type="text" id="name" name="name" required />

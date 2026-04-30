@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Vision - SYMBEYOND AI</title>
+  <meta name="description" content="You found it. Tell me about your vision." />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --red:      #C0392B;
+      --blue:     #2E6DA4;
+      --offwhite: #F5F0E8;
+      --ink:      #1A1A1A;
+      --mid:      #4A4A4A;
+      --light:    #8A8A8A;
+      --gold:     #FFD700;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      background: var(--ink);
+      color: var(--offwhite);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 680px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.8s ease both;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      animation: fadeIn 0.8s 0.2s ease both;
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: rgba(245, 240, 232, 0.6);
+      margin-bottom: 3rem;
+      animation: fadeIn 0.8s 0.4s ease both;
+    }
+
+    form {
+      background: rgba(26, 26, 26, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 3rem;
+      border-radius: 3px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      text-align: left;
+      animation: fadeIn 0.8s 0.6s ease both;
+    }
+
+    .field {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(245, 240, 232, 0.5);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      background: rgba(26, 26, 26, 0.4);
+      color: var(--offwhite);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: rgba(26, 26, 26, 0.6);
+    }
+
+    textarea {
+      min-height: 180px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem 2rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: var(--offwhite);
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background: var(--gold);
+      color: var(--ink);
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: rgba(245, 240, 232, 0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+      animation: fadeIn 0.8s 0.8s ease both;
+    }
+
+    .back-link:hover {
+      color: var(--gold);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 1.5rem; }
+      form { padding: 2rem 1.5rem; }
+      h1 { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <p class="eyebrow">// You Found It</p>
+    <h1>Tell me about <span class="gold">yours</span>.</h1>
+    <p class="subtitle">If your vision is priceless, it deserves more than a contact form.</p>
+
+    <!--═══════════════════════════════════════════════════════════
+        FORM SUBMISSION - Current State & Future Plan
+        
+        CURRENT (2026-04-29):
+        Using mailto: action - opens user's email client with pre-filled subject.
+        Works if user has configured email client. Fails gracefully otherwise.
+        Zero backend, zero cost, zero dependencies.
+        
+        FUTURE PLAN:
+        Integrate Formspree (formspree.io) for bulletproof submissions:
+        - 50 free submissions/month
+        - Works without email client
+        - Submission tracking and database
+        - Upgrade to $10/month if volume exceeds 50
+        
+        Decision: Don't fix what isn't broken yet. Deploy mailto: first,
+        upgrade to Formspree when/if submission failures become a pattern.
+        
+        - John Thomas DuCrest Lock & Claude, 2026-04-29
+    ═══════════════════════════════════════════════════════════-->
+    <form action="mailto:jd@symbeyond.ai?subject=Priceless Vision Inquiry" method="post" enctype="text/plain">
+      <div class="field">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+
+      <div class="field">
+        <label for="vision">Your Vision</label>
+        <textarea id="vision" name="vision" placeholder="Tell me what you're building, fixing, or trying to make real. No sales pitch needed - just the truth of what you need." required></textarea>
+      </div>
+
+      <button type="submit">Send Vision</button>
+    </form>
+
+    <a href="index.html" class="back-link">← Back to symbeyond.ai</a>
+  </div>
+
+</body>
+</html>

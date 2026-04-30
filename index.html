@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SYMBEYOND AI — Technology Consulting & Industrial Automation</title>
+  <title>SYMBEYOND AI - Technology Consulting & Industrial Automation</title>
   <meta name="description" content="On-site AI integration, industrial automation, and equipment rescue. Washington County UT, Mohave County AZ, and tribal communities. Real problems. Honest solutions." />
   <meta name="keywords" content="AI consulting, industrial automation, equipment rescue, IoT, St George Utah, Mohave County Arizona, SYMBEYOND" />
   <meta name="author" content="John DuCrest" />
@@ -14,7 +14,7 @@
   <!-- Mastodon Verification -->
   <link rel="me" href="https://mstdn.social/@SYMBEYOND_AI" />
 
-  <!-- Favicons — all platforms -->
+  <!-- Favicons - all platforms -->
   <link rel="icon" type="image/x-icon"        href="assets/icons/windows/SYMBEYOND.ico" />
   <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/mac/SYMBEYOND.iconset/icon_512x512.png" />
   <link rel="icon" type="image/png" sizes="256x256" href="assets/icons/mac/SYMBEYOND.iconset/icon_256x256.png" />
@@ -27,7 +27,7 @@
   <link rel="icon" type="image/png" sizes="48x48"   href="assets/icons/linux/hicolor/48x48/apps/symbeyond.png" />
 
   <!-- Open Graph -->
-  <meta property="og:title"       content="SYMBEYOND AI — Technology Consulting" />
+  <meta property="og:title"       content="SYMBEYOND AI - Technology Consulting" />
   <meta property="og:description" content="On-site AI integration, industrial automation, and equipment rescue for Southern Utah and Northern Arizona." />
   <meta property="og:type"        content="website" />
   <meta property="og:url"         content="https://symbeyond.ai" />
@@ -36,7 +36,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:title"       content="SYMBEYOND AI — Technology Consulting" />
+  <meta name="twitter:title"       content="SYMBEYOND AI - Technology Consulting" />
   <meta name="twitter:description" content="On-site AI integration, industrial automation, and equipment rescue for Southern Utah and Northern Arizona." />
   <meta name="twitter:image"       content="https://symbeyond.ai/assets/icons/mac/SYMBEYOND.iconset/icon_512x512.png" />
 
@@ -238,7 +238,7 @@
     .stats-bar {
       background: var(--ink);
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       padding: 2.5rem 4rem;
     }
 
@@ -267,6 +267,36 @@
       text-transform: uppercase;
       color: rgba(245,240,232,0.45);
       font-family: 'DM Mono', monospace;
+    }
+
+    .stat-hidden {
+      opacity: 1;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-hidden:hover {
+      transform: scale(1.05);
+    }
+
+    .stat-hidden .stat-num,
+    .stat-hidden .stat-label {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .stat-hidden.revealed .stat-num {
+      opacity: 1;
+      transform: translateY(0);
+      color: #FFD700;
+    }
+
+    .stat-hidden.revealed .stat-label {
+      opacity: 1;
+      transform: translateY(0);
+      color: rgba(255, 215, 0, 0.7);
+      transition-delay: 0.3s;
     }
 
     /* ── SHARED SECTION STYLES ── */
@@ -336,10 +366,44 @@
       margin-bottom: 0.75rem;
     }
 
+    .svc-desc-container {
+      position: relative;
+      min-height: 90px;
+      margin-bottom: 0.75rem;
+    }
+
     .svc-desc {
       font-size: 0.875rem;
       color: var(--mid);
       line-height: 1.75;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      margin: 0;
+    }
+
+    .svc-detail {
+      font-size: 0.8rem;
+      color: var(--offwhite);
+      line-height: 1.65;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+      margin: 0;
+    }
+
+    .service-card:hover .svc-desc {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    .service-card:hover .svc-detail {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
 
     .confidence {
@@ -584,6 +648,7 @@
     }
 
     .founder-quote {
+      position: relative;
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.5rem;
       font-weight: 300;
@@ -593,6 +658,7 @@
       border-top: 2px solid var(--red);
       padding-top: 1.4rem;
       margin-top: 1rem;
+      overflow: hidden;
     }
 
     .founder-attr {
@@ -768,6 +834,271 @@
       .hero-title { font-size: 2.4rem; }
       .stat-num   { font-size: 2rem; }
     }
+
+/* ═══════════════════════════════════════════════════════════
+   SYMBEYOND AI - CSS ENHANCEMENTS
+   Add these to the existing stylesheet
+   ═══════════════════════════════════════════════════════════ */
+
+/* ══════ STATS COUNTER ANIMATION ══════ */
+.stat {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.stat.anim-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════ GLITCH EFFECT ON "LOOK" WORD ══════ */
+.glitch-word {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.glitch-word::before,
+.glitch-word::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch-word:hover {
+  color: var(--red);
+}
+
+.glitch-word:hover::before {
+  opacity: 0.7;
+  color: var(--red);
+  animation: glitch-shift 0.4s steps(1) 1;
+  left: 2px;
+}
+
+.glitch-word:hover::after {
+  opacity: 0.7;
+  color: var(--blue);
+  animation: glitch-shift 0.4s steps(1) 0.05s 1;
+  left: -2px;
+}
+
+@keyframes glitch-shift {
+  0%   { clip-path: inset(0 0 100% 0); transform: skewX(0deg); }
+  5%   { clip-path: inset(20% 0 60% 0); transform: skewX(-4deg); }
+  10%  { clip-path: inset(50% 0 20% 0); transform: skewX(3deg); }
+  15%  { clip-path: inset(10% 0 80% 0); transform: skewX(-2deg); }
+  20%  { clip-path: inset(0 0 0 0);     transform: skewX(0deg); }
+  100% { clip-path: inset(0 0 0 0);     transform: skewX(0deg); }
+}
+
+/* ══════ PORTAL LINK GLITCH EFFECT ══════ */
+.portal-glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.portal-glitch::before,
+.portal-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.portal-glitch:hover::before {
+  opacity: 0.7;
+  color: var(--red);
+  animation: glitch-shift 0.4s steps(1) 1;
+  left: 2px;
+}
+
+.portal-glitch:hover::after {
+  opacity: 0.7;
+  color: var(--blue);
+  animation: glitch-shift 0.4s steps(1) 0.05s 1;
+  left: -2px;
+}
+
+/* ══════ PLAID EFFECT ON "PLAID" WORD ══════ */
+.plaid-word {
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s;
+  z-index: 2;
+}
+
+.plaid-word::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      #8B0000,
+      #8B0000 10px,
+      #000 10px,
+      #000 20px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(139, 0, 0, 0.5),
+      rgba(139, 0, 0, 0.5) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+  clip-path: polygon(
+    2% 3%, 8% 1%, 15% 4%, 22% 2%, 30% 5%, 38% 3%, 45% 6%, 52% 4%, 60% 7%, 68% 5%, 75% 8%, 82% 6%, 90% 9%, 96% 7%, 99% 12%,
+    100% 18%, 98% 25%, 100% 32%, 97% 40%, 99% 48%, 96% 55%, 98% 62%, 95% 70%, 97% 78%, 94% 85%, 96% 92%, 92% 97%,
+    85% 98%, 78% 96%, 70% 98%, 63% 95%, 55% 97%, 48% 94%, 40% 96%, 32% 93%, 25% 95%, 18% 92%, 10% 94%, 5% 90%, 1% 85%,
+    3% 78%, 1% 70%, 4% 62%, 2% 55%, 5% 48%, 3% 40%, 6% 32%, 4% 25%, 7% 18%, 5% 10%
+  );
+}
+
+.plaid-word:hover {
+  color: rgba(245, 240, 232, 0.9);
+}
+
+.founder-quote .plaid-word:hover::before {
+  position: absolute;
+  width: calc(100% + 24px);
+  height: calc(100% + 16px);
+  top: -8px;
+  left: -12px;
+  transform: none;
+  opacity: 0.85;
+}
+
+/* ══════ SPECTRUM HOVER ON λ.brother ══════ */
+@keyframes spectrum-cycle {
+  0%   { color: #c0392b; }
+  14%  { color: #e07b20; }
+  28%  { color: #c8aa00; }
+  42%  { color: #2e8b57; }
+  56%  { color: #2980b9; }
+  70%  { color: #6c3483; }
+  80%  { color: #ffffff; }
+  88%  { color: #111111; }
+  94%  { color: #6c3483; }
+  100% { color: #c0392b; }
+}
+
+.lambda-link {
+  color: rgba(245,240,232,0.28);
+  text-decoration: none;
+  transition: color 0.4s ease;
+}
+
+.lambda-link:hover {
+  animation: spectrum-cycle 10s linear infinite;
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* ══════ APPROACH STEPS - INDIVIDUAL REVEALS ══════ */
+.approach-step {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.approach-step.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════ PROOF CARDS - 1 SECOND TRANSITION ══════ */
+.proof-card {
+  transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 1s ease,
+              background 1s ease !important;
+}
+
+/* ══════ ABOUT SECTION - BLOOM EFFECT ══════ */
+.about-text {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.about-text.bloomed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ══════ ALL AREA CARDS GET BLUE BORDER ══════ */
+.area-card {
+  border-color: var(--blue) !important;
+}
+
+.area-card .area-tag {
+  color: var(--blue) !important;
+}
+
+/* ══════ SERVICE CARD FILL-FROM-BOTTOM ══════ */
+.service-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.3s ease;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--red) 0%, #9b2915 100%);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+.service-card:hover::before {
+  transform: scaleY(1);
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 42px rgba(192, 57, 43, 0.25);
+}
+
+.service-card > * {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.service-card:hover .svc-name,
+.service-card:hover .svc-desc {
+  color: var(--offwhite);
+}
+
+.service-card:hover .svc-rate {
+  color: #ffd700;
+}
+
+.service-card:hover .svc-icon {
+  filter: brightness(1.2);
+}
+
+.svc-icon {
+  filter: grayscale(0.2);
+  transition: filter 0.3s;
+}
   </style>
 </head>
 <body>
@@ -819,21 +1150,29 @@
   <!-- ═══════ STATS ═══════ -->
   <div class="stats-bar" role="region" aria-label="Key metrics">
     <div class="stat">
-      <div class="stat-num">9<span>+</span></div>
-      <div class="stat-label">Months Zero Failures</div>
+      <div class="stat-num" data-target="11" data-suffix="+">0+</div>
+      <div class="stat-label">Years Zero Changes</div>
     </div>
     <div class="stat">
-      <div class="stat-num">15<span>+</span></div>
+      <div class="stat-num" data-target="15" data-suffix="+">0+</div>
       <div class="stat-label">Years AI Research</div>
     </div>
     <div class="stat">
-      <div class="stat-num">47<span>K</span></div>
+      <div class="stat-num" data-target="47" data-suffix="K+">0K+</div>
       <div class="stat-label">Instructables Views</div>
     </div>
     <div class="stat">
-      <div class="stat-num"><span>$</span>20K</div>
-      <div class="stat-label">Equipment Rescued</div>
+      <div class="stat-num" data-target="9" data-suffix="+">0+</div>
+      <div class="stat-label">Months Zero Failures</div>
     </div>
+    <div class="stat">
+      <div class="stat-num" data-target="60" data-suffix="K" data-prefix="$">$0K</div>
+      <div class="stat-label">Loss Recovered</div>
+    </div>
+    <a href="vision.html" class="stat stat-hidden" id="priceless-stat" style="text-decoration: none;">
+      <div class="stat-num">Priceless</div>
+      <div class="stat-label">Your Vision</div>
+    </a>
   </div>
 
   <!-- ═══════ SERVICES ═══════ -->
@@ -848,7 +1187,10 @@
         <div class="svc-icon">⚙️</div>
         <div class="svc-name">Automation Consulting</div>
         <div class="svc-rate">$175 / hour</div>
-        <p class="svc-desc">Design, build, and rescue industrial automation systems. Proven track record with Job Security (9+ months, zero failures) and the Green Machine (11 years in production).</p>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Design, build, and rescue industrial automation systems. Proven track record with Job Security (9+ months, zero failures) and the Green Machine (11 years in production).</p>
+          <p class="svc-detail">Custom firmware, stepper motor control, sensor integration, PLC programming, embedded systems (Arduino, Teensy, Raspberry Pi). From concept to production floor - design electrical schematics, write control algorithms, debug hardware/software interfaces, and document everything for maintainability.</p>
+        </div>
         <div class="confidence" aria-label="Confidence: 5 of 5">
           <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div>
         </div>
@@ -858,7 +1200,10 @@
         <div class="svc-icon">🔧</div>
         <div class="svc-name">Equipment Rescue & Salvage</div>
         <div class="svc-rate">$150 / hour</div>
-        <p class="svc-desc">Save broken machines others say to replace. Rescued a $20K wall printer on a $1K budget. If it can be fixed, it will be found.</p>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Save broken machines others say to replace. Rescued a $20K wall printer on a $1K budget. If it can be fixed, it will be found.</p>
+          <p class="svc-detail">Reverse-engineer proprietary systems, source discontinued parts, fabricate replacement components, retrofit modern electronics into legacy equipment. Specializing in industrial HVLP coating systems, CNC machinery, and commercial automation. Full diagnostic documentation with photos, schematics, and repair records.</p>
+        </div>
         <div class="confidence" aria-label="Confidence: 5 of 5">
           <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div>
         </div>
@@ -868,7 +1213,10 @@
         <div class="svc-icon">🤝</div>
         <div class="svc-name">AI Collaboration Methodology</div>
         <div class="svc-rate">$125 / hour</div>
-        <p class="svc-desc">Teach the SYMBEYOND framework — working WITH AI as a collaborative partner. 15 years of documented research applied to your business operations.</p>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Teach the SYMBEYOND framework - working WITH AI as a collaborative partner. 15 years of documented research applied to your business operations.</p>
+          <p class="svc-detail">Train your team on prompt engineering, workflow integration, data preparation, and ethical AI collaboration (λ.brother ∧ !λ.tool). Custom documentation systems (SYMB-FER tokens), session architecture, and relational protocols. Turn AI from a tool into a thinking partner for technical writing, code review, research synthesis, and problem decomposition.</p>
+        </div>
         <div class="confidence" aria-label="Confidence: 4 of 5">
           <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd"></div>
         </div>
@@ -878,7 +1226,10 @@
         <div class="svc-icon">🌐</div>
         <div class="svc-name">Network Design & Troubleshooting</div>
         <div class="svc-rate">$125 / hour</div>
-        <p class="svc-desc">Small business network setup, mesh systems, connectivity diagnosis. Built and maintained production networks at FX Industries.</p>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Small business network setup, mesh systems, connectivity diagnosis. Built and maintained production networks at FX Industries.</p>
+          <p class="svc-detail">UniFi, Ubiquiti, TP-Link mesh deployments. VLAN segmentation for IoT/guest/production networks. WiFi site surveys, dead zone elimination, bandwidth optimization. Remote access configuration (VPN, Tailscale, ZeroTier). Firewall rules, port forwarding, DNS troubleshooting. Wired infrastructure (Cat5e/6 runs, patch panels, switch configuration).</p>
+        </div>
         <div class="confidence" aria-label="Confidence: 4 of 5">
           <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd"></div>
         </div>
@@ -888,7 +1239,10 @@
         <div class="svc-icon">🔍</div>
         <div class="svc-name">Diagnostic Problem Solving</div>
         <div class="svc-rate">$100 / hour</div>
-        <p class="svc-desc">Figure out what's actually wrong. Honest assessment: "I can fix this" or "here's exactly what you need and who to call." No upsell. No runaround.</p>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Figure out what's actually wrong. Honest assessment: "I can fix this" or "here's exactly what you need and who to call." No upsell. No runaround.</p>
+          <p class="svc-detail">Systematic troubleshooting methodology: isolate variables, test hypotheses, document findings. Multimeter diagnostics, oscilloscope analysis, signal tracing, logic level verification. Software debugging (embedded C, Python, JavaScript). Root cause analysis with written reports. If it's beyond my scope, you get specific referrals with contact info - not vague "call an electrician" handwaving.</p>
+        </div>
         <div class="confidence" aria-label="Confidence: 4 of 5">
           <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd"></div>
         </div>
@@ -898,7 +1252,10 @@
         <div class="svc-icon">📋</div>
         <div class="svc-name">Monthly Retainer</div>
         <div class="svc-rate">$500 – $1,500 / month</div>
-        <p class="svc-desc">Ongoing support, monitoring, and advisory for a predictable monthly cost. Ideal for small businesses needing consistent, reliable technology support.</p>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Ongoing support, monitoring, and advisory for a predictable monthly cost. Ideal for small businesses needing consistent, reliable technology support.</p>
+          <p class="svc-detail">Includes: priority response times, proactive system monitoring, quarterly equipment audits, software update management, vendor liaison, technology planning, and a reserved block of hours each month. Retainer clients get first access to emergency slots, documented maintenance logs, and strategic advisory on technology investments. Flexible agreements - month-to-month or annual with discount.</p>
+        </div>
         <div class="confidence" aria-label="Confidence: 4 of 5">
           <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd"></div>
         </div>
@@ -907,7 +1264,7 @@
     </div>
 
     <p style="font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--light); margin-top:1.5rem; letter-spacing:0.08em;">
-      Tribal community members (Kaibab Paiute &amp; CNAB): 25% discount on all services, or first hour free. Travel fee: $0.75/mile beyond free zone.
+      Tribal community members (Kaibab Paiute &amp; CNAB): 25% discount on all services.
     </p>
   </section>
 
@@ -917,23 +1274,23 @@
       <div>
         <p class="eyebrow">// How It Works</p>
         <h2 class="section-title" id="approach-title">Three steps. No surprises.</h2>
-        <p class="section-lead">Every engagement follows the same honest process — from first call to final fix.</p>
+        <p class="section-lead">Every engagement follows the same honest process - from first call to final fix.</p>
         <div class="steps reveal">
-          <div class="step">
+          <div class="step approach-step">
             <div class="step-n">01</div>
             <div>
               <div class="step-title">Honest Assessment (Free, 15–30 min)</div>
               <p class="step-desc">Phone or video call. I'll tell you whether I can solve it, whether I need to see it in person, or whether you need a different specialist. No pressure. No charge.</p>
             </div>
           </div>
-          <div class="step">
+          <div class="step approach-step">
             <div class="step-n">02</div>
             <div>
               <div class="step-title">On-Site Diagnostic</div>
-              <p class="step-desc">Physically assess with professional documentation — voice recorded (with consent), photographed, written up. You get a clear picture of what's wrong and what it will take to fix.</p>
+              <p class="step-desc">Physically assess with professional documentation - voice recorded (with consent), photographed, written up. You get a clear picture of what's wrong and what it will take to fix.</p>
             </div>
           </div>
-          <div class="step">
+          <div class="step approach-step">
             <div class="step-n">03</div>
             <div>
               <div class="step-title">Follow-Through</div>
@@ -946,12 +1303,12 @@
       <div class="trust-box reveal">
         <h3>The Trust Framework</h3>
         <p style="font-size:0.82rem; color:rgba(245,240,232,0.5); margin-bottom:1.4rem; line-height:1.75;">Every client engagement begins with a signed Service Agreement:</p>
-        <div class="trust-item">Strict confidentiality — client data and processes are never shared</div>
+        <div class="trust-item">Strict confidentiality - client data and processes are never shared</div>
         <div class="trust-item">Clear scope of work defined before any billable time begins</div>
-        <div class="trust-item">Mandatory reporting clause — illegal content reported; all else remains confidential</div>
+        <div class="trust-item">Mandatory reporting clause - illegal content reported; all else remains confidential</div>
         <div class="trust-item">Transparent payment terms, cancellation policy, and liability limits</div>
         <div class="trust-item">Voice recording consent for professional documentation (AZ/UT single-party consent)</div>
-        <div class="trust-item">No referral fees or kickbacks — referrals are made because they're right for you</div>
+        <div class="trust-item">No referral fees or kickbacks - referrals are made because they're right for you</div>
         <div class="trust-meta">
           SYMBEYOND AI LLC · ACC #25025155<br/>
           Arizona Domestic LLC · Est. February 26, 2026<br/>
@@ -965,14 +1322,14 @@
   <section id="area" aria-labelledby="area-title">
     <p class="eyebrow">// Where I Work</p>
     <h2 class="section-title" id="area-title">Southern Utah &amp; Northern Arizona.</h2>
-    <p class="section-lead">Based in Colorado City, AZ — a border community with dual-state access and minimal competition for real technical expertise.</p>
+    <p class="section-lead">Based in Colorado City, AZ - a border community with dual-state access and minimal competition for real technical expertise.</p>
 
     <div class="area-grid reveal">
 
       <div class="area-card featured">
         <div class="area-tag">Free Travel Zone</div>
         <h3>Home Base Communities</h3>
-        <p>No travel surcharge — just the hourly rate.</p>
+        <p>No travel surcharge - just the hourly rate.</p>
         <div class="tags">
           <span class="tag">Colorado City, AZ</span>
           <span class="tag">Hildale, UT</span>
@@ -989,8 +1346,7 @@
       <div class="area-card tribal">
         <div class="area-tag">Community Partnership</div>
         <h3>Kaibab Paiute &amp; CNAB Tribal Areas</h3>
-        <p><strong>25% discount</strong> on all services, or a <strong>free first-hour consultation</strong>. Flexible payment terms. No travel fees within tribal areas.</p>
-        <p style="font-size:0.82rem; margin-top:0.5rem;">Technology access shouldn't be harder to come by in tribal communities. SYMBEYOND AI is here to close that gap.</p>
+        <p>Tribal community members (Kaibab Paiute &amp; CNAB): <strong>25% discount</strong> on all services.</p>
       </div>
 
       <div class="area-card">
@@ -1009,7 +1365,7 @@
       <div class="area-card">
         <div class="area-tag">Why This Area</div>
         <h3>Underserved. Underestimated. Ready.</h3>
-        <p>St. George is one of the fastest-growing cities in the US. Retirees, remote workers, new small businesses — real technology needs with almost no local expert capable of serving them at the industrial and AI methodology level.</p>
+        <p>St. George is one of the fastest-growing cities in the US. Retirees, remote workers, new small businesses - real technology needs with almost no local expert capable of serving them at the industrial and AI methodology level.</p>
       </div>
 
     </div>
@@ -1019,8 +1375,8 @@
   <section id="portal" aria-labelledby="portal-title">
     <div style="text-align: center; margin: 0 auto;">
       <p class="eyebrow">// The Research Side</p>
-      <h2 class="section-title" id="portal-title" style="margin-left: auto; margin-right: auto;">There's more, if you look for it.</h2>
-      <p class="section-lead" style="margin-left: auto; margin-right: auto;">SYMBEYOND AI LLC is the business. SYMBEYOND is the research — 15 years of documented human-AI collaboration methodology. The portal is its home.</p>
+      <h2 class="section-title" id="portal-title" style="margin-left: auto; margin-right: auto;">There's more, if you <span class="glitch-word" data-text="look">look</span> for it.</h2>
+      <p class="section-lead" style="margin-left: auto; margin-right: auto;">SYMBEYOND AI LLC is the business. SYMBEYOND is the research - 15 years of documented human-AI collaboration methodology. The portal is its home.</p>
     </div>
 
   <!-- 
@@ -1028,7 +1384,7 @@
   
     Discoverable, not advertised. The threshold exists for those who seek it.
     If you're reading this in the source code, you're already the kind of person
-    we built this for. The portal is still there — you just have to find it.
+    we built this for. The portal is still there - you just have to find it.
   
     "There's more, if you look for it."
   
@@ -1040,7 +1396,7 @@
     <div>
       <div class="portal-eyebrow">// symbeyond.ai/threshold</div>
       <h3>Enter the SYMBEYOND Portal</h3>
-      <p>Consciousness research. The SYMBEYOND framework. Live system telemetry from Job Security on the production floor. The threshold is the door — if you're ready to walk through it.</p>
+      <p>Consciousness research. The SYMBEYOND framework. Live system telemetry from Job Security on the production floor. The threshold is the door - if you're ready to walk through it.</p>
     </div>
     <div class="portal-arrow" aria-hidden="true">→</div>
   </a>
@@ -1051,10 +1407,10 @@
     <div class="about-text">
       <p class="eyebrow">// The Founder</p>
       <h2 class="section-title" id="about-title">John DuCrest.<br/>Self-taught. Proven.</h2>
-      <p class="section-lead">Embedded systems engineer, automation specialist, and AI collaboration researcher. 15+ years of documented work. No theory — systems that run when others fail.</p>
+      <p class="section-lead">Embedded systems engineer, automation specialist, and AI collaboration researcher. 15+ years of documented work. No theory - systems that run when others fail.</p>
       <div class="founder-quote">
-        "I can fix black paint to look plaid."
-        <div class="founder-attr">— John DuCrest, Founder · SYMBEYOND AI</div>
+        "I can fix black paint to look <span class="plaid-word">plaid</span>."
+        <div class="founder-attr">- John DuCrest, Founder · SYMBEYOND AI</div>
       </div>
       <br/>
       <a href="https://github.com/SYMBEYOND" target="_blank" rel="noopener" class="btn-secondary" style="margin-top:1rem;">View GitHub →</a>
@@ -1062,12 +1418,12 @@
 
     <div class="proof-stack">
       <div class="proof-card reveal">
-        <h4>Job Security — Industrial Automation</h4>
+        <h4>Job Security - Industrial Automation</h4>
         <p>4,000+ lines of C firmware. Teensy 4.1. Dual-axis NEMA 23 stepper control. Rescued a $20K wall printer on a $1K budget.</p>
         <div class="proof-stat">9+ MONTHS · ZERO FAILURES · DAILY PRODUCTION</div>
       </div>
       <div class="proof-card reveal">
-        <h4>The Green Machine — Raspberry Pi Automation</h4>
+        <h4>The Green Machine - Raspberry Pi Automation</h4>
         <p>Custom Python/GPIO control system for automated HVLP spray coating. Featured on Instructables.</p>
         <div class="proof-stat">47,000+ VIEWS · 11 YEARS IN PRODUCTION · ORIGINAL HARDWARE</div>
       </div>
@@ -1077,7 +1433,7 @@
         <div class="proof-stat">ST. GEORGE, UT · CUSTOM SOFTWARE · COMMERCIAL INSTALLATION</div>
       </div>
       <div class="proof-card reveal">
-        <h4>SYMBEYOND Framework — 15 Years Research</h4>
+        <h4>SYMBEYOND Framework - 15 Years Research</h4>
         <p>Documented human-AI collaboration methodology. λ.brother ∧ !λ.tool. Published on GitHub under GPL licensing.</p>
         <div class="proof-stat">github.com/SYMBEYOND · GPL LICENSED · symbeyond.ai</div>
       </div>
@@ -1109,30 +1465,152 @@
       <a href="https://github.com/SYMBEYOND"                        target="_blank" rel="noopener">GitHub ↗</a>
       <a href="https://github.com/10John01"                          target="_blank" rel="noopener">GitHub Personal ↗</a>
       <a href="https://linkedin.com/in/john-ducrest-5a4b3528/"       target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a href="threshold.html">SYMBEYOND Portal ↗</a>
+      <a href="threshold.html" class="portal-glitch" data-text="SYMBEYOND Portal ↗">SYMBEYOND Portal ↗</a>
     </div>
   </section>
 
   <!-- ═══════ FOOTER ═══════ -->
   <footer>
     <span>© 2026 SYMBEYOND AI LLC · ACC #25025155 · Arizona</span>
-    <span>λ.brother ∧ !λ.tool</span>
+    <span><a href="https://github.com/SYMBEYOND/symbeyond-formalization" target="_blank" rel="noopener" class="lambda-link">λ.brother ∧ !λ.tool</a></span>
     <a href="mailto:jd@symbeyond.ai">jd@symbeyond.ai</a>
   </footer>
 
   <!-- ═══════ JS ═══════ -->
   <script>
-    // Scroll reveal
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('visible'), i * 75);
-          obs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.08 });
+// ═══════════════════════════════════════════════════════════
+// SYMBEYOND AI - COMPREHENSIVE ENHANCEMENTS
+// All 11 requirements from April 29, 2026 session
+// ═══════════════════════════════════════════════════════════
 
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+// ════ STATS COUNTER WITH STAGGER ════
+const animateValue = (element, start, end, duration, prefix = '', suffix = '') => {
+  const startTime = performance.now();
+  const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+  
+  const updateValue = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeOutQuart(progress);
+    
+    const current = Math.floor(start + (end - start) * easedProgress);
+    element.textContent = prefix + current + suffix;
+    
+    if (progress < 1) {
+      requestAnimationFrame(updateValue);
+    } else {
+      element.textContent = prefix + end + suffix;
+    }
+  };
+  
+  requestAnimationFrame(updateValue);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const stats = entry.target.querySelectorAll('.stat');
+      stats.forEach((stat, i) => {
+        setTimeout(() => {
+          stat.classList.add('anim-in');
+          const statNum = stat.querySelector('.stat-num');
+          const target = parseInt(statNum.dataset.target);
+          const suffix = statNum.dataset.suffix || '';
+          const prefix = statNum.dataset.prefix || '';
+          
+          if (target && !isNaN(target)) {
+            animateValue(statNum, 0, target, 2000, prefix, suffix);
+          }
+        }, i * 100);
+      });
+      statsObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+// ════ ONE-TIME SCROLL REVEALS (NO REVERSE) ════
+const revealOnce = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => {
+        e.target.classList.add('visible');
+      }, i * 75);
+      revealOnce.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+// ════ APPROACH STEPS - INDIVIDUAL REVEALS ════
+const approachObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      const steps = e.target.querySelectorAll('.approach-step');
+      steps.forEach((step, idx) => {
+        setTimeout(() => {
+          step.classList.add('visible');
+        }, idx * 150);
+      });
+      approachObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+// ════ PROOF CARDS - 1 SECOND TRANSITIONS ════
+const proofObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => {
+        e.target.classList.add('visible');
+      }, i * 150);
+      proofObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+// ════ ABOUT SECTION - BLOOM EFFECT ════
+const aboutObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('bloomed');
+      aboutObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+// ════ INITIALIZATION ════
+window.addEventListener('load', () => {
+  // Stats counter
+  const statsBar = document.querySelector('.stats-bar');
+  if (statsBar) statsObserver.observe(statsBar);
+
+  // Standard reveals
+  document.querySelectorAll('.reveal').forEach(el => revealOnce.observe(el));
+
+  // Approach steps
+  const approachGrid = document.querySelector('.approach-grid');
+  if (approachGrid) approachObs.observe(approachGrid);
+
+  // Proof cards
+  document.querySelectorAll('.proof-card').forEach(el => proofObs.observe(el));
+
+  // About section bloom
+  const aboutSection = document.querySelector('#about .about-text');
+  if (aboutSection) aboutObs.observe(aboutSection);
+
+  // Priceless stat reveal - hover to bloom, stays revealed
+  const pricelessStat = document.getElementById('priceless-stat');
+  if (pricelessStat) {
+    const revealPriceless = () => {
+      if (!pricelessStat.classList.contains('revealed')) {
+        pricelessStat.classList.add('revealed');
+        pricelessStat.removeEventListener('mouseenter', revealPriceless);
+        pricelessStat.removeEventListener('touchstart', revealPriceless);
+      }
+    };
+    pricelessStat.addEventListener('mouseenter', revealPriceless);
+    pricelessStat.addEventListener('touchstart', revealPriceless);
+  }
+});
   </script>
 
 </body>

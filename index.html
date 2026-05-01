@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SYMBEYOND AI - Technology Consulting & Industrial Automation</title>
+  <meta name="description" content="On-site AI integration, industrial automation, and equipment rescue. Washington County UT, Mohave County AZ, and tribal communities. Real problems. Honest solutions." />
+  <meta name="keywords" content="AI consulting, industrial automation, equipment rescue, IoT, St George Utah, Mohave County Arizona, SYMBEYOND" />
+  <meta name="author" content="John DuCrest" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://symbeyond.ai" />
+
+  <!-- Mastodon Verification -->
+  <link rel="me" href="https://mstdn.social/@SYMBEYOND_AI" />
+
+  <!-- Favicons - all platforms -->
+  <link rel="icon" type="image/x-icon"        href="assets/icons/windows/SYMBEYOND.ico" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/mac/SYMBEYOND.iconset/icon_512x512.png" />
+  <link rel="icon" type="image/png" sizes="256x256" href="assets/icons/mac/SYMBEYOND.iconset/icon_256x256.png" />
+  <link rel="icon" type="image/png" sizes="128x128" href="assets/icons/mac/SYMBEYOND.iconset/icon_128x128.png" />
+  <link rel="icon" type="image/png" sizes="32x32"   href="assets/icons/mac/SYMBEYOND.iconset/icon_32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16"   href="assets/icons/mac/SYMBEYOND.iconset/icon_16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180"      href="assets/icons/mac/SYMBEYOND.iconset/icon_128x128@2x.png" />
+  <link rel="apple-touch-icon" sizes="152x152"      href="assets/icons/mac/SYMBEYOND.iconset/icon_128x128.png" />
+  <!-- Linux -->
+  <link rel="icon" type="image/png" sizes="48x48"   href="assets/icons/linux/hicolor/48x48/apps/symbeyond.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title"       content="SYMBEYOND AI - Technology Consulting" />
+  <meta property="og:description" content="On-site AI integration, industrial automation, and equipment rescue for Southern Utah and Northern Arizona." />
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://symbeyond.ai" />
+  <meta property="og:image"       content="https://symbeyond.ai/assets/icons/mac/SYMBEYOND.iconset/icon_512x512.png" />
+  <meta property="og:site_name"   content="SYMBEYOND AI" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="SYMBEYOND AI - Technology Consulting" />
+  <meta name="twitter:description" content="On-site AI integration, industrial automation, and equipment rescue for Southern Utah and Northern Arizona." />
+  <meta name="twitter:image"       content="https://symbeyond.ai/assets/icons/mac/SYMBEYOND.iconset/icon_512x512.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --red:      #C0392B;
+      --blue:     #2E6DA4;
+      --offwhite: #F5F0E8;
+      --ink:      #1A1A1A;
+      --mid:      #4A4A4A;
+      --light:    #8A8A8A;
+      --border:   #D8D0C4;
+      --card:     #FDFAF5;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      background: var(--offwhite);
+      color: var(--ink);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a   { color: inherit; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 4rem;
+      background: rgba(245,240,232,0.93);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      will-change: transform;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 34px;
+      width: auto;
+    }
+
+    .nav-wordmark {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--mid);
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--red); }
+
+    .nav-cta {
+      background: var(--ink) !important;
+      color: var(--offwhite) !important;
+      padding: 0.5rem 1.4rem;
+      border-radius: 2px;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--red) !important; }
+
+    /* ── SMART STICKY NAV ── */
+    nav.nav-hidden {
+      transform: translateY(-100%);
+    }
+
+    nav.nav-scrolled {
+      box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      gap: 4rem;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 4.5vw, 4.8rem);
+      font-weight: 700;
+      line-height: 1.06;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--red);
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--mid);
+      max-width: 460px;
+      margin-bottom: 2.5rem;
+      line-height: 1.85;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--ink);
+      color: var(--offwhite);
+      padding: 0.85rem 2rem;
+      text-decoration: none;
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover { background: var(--red); transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: inline-block;
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+      padding: 0.85rem 2rem;
+      text-decoration: none;
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1.2s 0.3s ease both;
+      opacity: 0;
+    }
+
+    .hero-visual img {
+      width: min(340px, 100%);
+      display: block;
+      filter:
+        drop-shadow(0 2px 6px rgba(0,0,0,0.08))
+        drop-shadow(0 12px 32px rgba(0,0,0,0.10));
+    }
+
+    /* ── STATS ── */
+    .stats-bar {
+      background: var(--ink);
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      padding: 2.5rem 4rem;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 0 1rem;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--offwhite);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-num span { color: var(--red); }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.45);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .stat-hidden {
+      opacity: 1;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-hidden:hover {
+      transform: scale(1.05);
+    }
+
+    .stat-hidden .stat-num,
+    .stat-hidden .stat-label {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .stat-hidden.revealed .stat-num {
+      opacity: 1;
+      transform: translateY(0);
+      color: #FFD700;
+    }
+
+    .stat-hidden.revealed .stat-label {
+      opacity: 1;
+      transform: translateY(0);
+      color: rgba(255, 215, 0, 0.7);
+      transition-delay: 0.3s;
+    }
+
+    /* ── SHARED SECTION STYLES ── */
+    section { padding: 6rem 4rem; }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.26em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.9rem, 3vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      max-width: 580px;
+    }
+
+    .section-lead {
+      font-size: 0.95rem;
+      color: var(--mid);
+      max-width: 540px;
+      margin-bottom: 3rem;
+      line-height: 1.85;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--card); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+      border: 1.5px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .service-card {
+      background: var(--card);
+      padding: 2.2rem;
+      transition: background 0.2s;
+    }
+
+
+    .svc-icon  { font-size: 1.6rem; margin-bottom: 0.9rem; }
+
+    .svc-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .svc-rate {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .svc-desc-container {
+      position: relative;
+      min-height: 90px;
+      margin-bottom: 0.75rem;
+    }
+
+    .svc-desc {
+      font-size: 0.875rem;
+      color: var(--mid);
+      line-height: 1.75;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      margin: 0;
+    }
+
+    .svc-detail {
+      font-size: 0.8rem;
+      color: var(--offwhite);
+      line-height: 1.65;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+      margin: 0;
+    }
+
+    .service-card:hover .svc-desc {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    .service-card:hover .svc-detail {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .confidence {
+      display: flex;
+      gap: 3px;
+      margin-top: 0.9rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cd {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                  opacity 0.4s ease;
+    }
+
+    .cd.on { background: var(--blue); }
+
+    /* Dart off animation - right to left, one at a time */
+    .service-card:hover .cd:nth-child(5) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0s;
+    }
+
+    .service-card:hover .cd:nth-child(4) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0.08s;
+    }
+
+    .service-card:hover .cd:nth-child(3) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0.16s;
+    }
+
+    .service-card:hover .cd:nth-child(2) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0.24s;
+    }
+
+    .service-card:hover .cd:nth-child(1) {
+      transform: translateX(60px);
+      opacity: 0;
+      transition-delay: 0.32s;
+    }
+
+    /* ── APPROACH ── */
+    #approach { background: var(--offwhite); }
+
+    .approach-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .steps { display: flex; flex-direction: column; gap: 2rem; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .step-n {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+      padding-top: 0.1rem;
+    }
+
+    .step-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .step-desc { font-size: 0.875rem; color: var(--mid); line-height: 1.75; }
+
+    .trust-box {
+      background: var(--ink);
+      color: var(--offwhite);
+      padding: 2.8rem;
+      border-radius: 2px;
+    }
+
+    .trust-box h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.4rem;
+    }
+
+    .trust-item {
+      display: flex;
+      gap: 0.9rem;
+      margin-bottom: 1rem;
+      font-size: 0.855rem;
+      line-height: 1.65;
+      color: rgba(245,240,232,0.7);
+    }
+
+    .trust-item::before {
+      content: '→';
+      color: var(--red);
+      flex-shrink: 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      margin-top: 0.1rem;
+    }
+
+    .trust-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: rgba(245,240,232,0.3);
+      margin-top: 1.5rem;
+      line-height: 1.8;
+    }
+
+    /* ── SERVICE AREA ── */
+    #area { background: var(--card); }
+
+    .area-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .area-card {
+      padding: 2.2rem;
+      border: 1.5px solid var(--border);
+      border-radius: 2px;
+    }
+
+    .area-card.featured { border-color: var(--blue); background: white; }
+    .area-card.tribal   { border-color: rgba(192,57,43,0.3); }
+
+    .area-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.6rem;
+    }
+
+    .area-card.tribal .area-tag { color: var(--red); }
+
+    .area-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .area-card p {
+      font-size: 0.875rem;
+      color: var(--mid);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.55rem;
+      background: var(--offwhite);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--mid);
+    }
+
+    /* ── PORTAL ── */
+    #portal { background: var(--offwhite); }
+
+    .portal-card {
+      border: 1.5px solid var(--border);
+      border-radius: 2px;
+      padding: 3rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      background: var(--card);
+      max-width: 860px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .portal-card:hover { border-color: var(--blue); background: white; }
+
+    .portal-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.6rem;
+    }
+
+    .portal-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .portal-card p {
+      font-size: 0.875rem;
+      color: var(--mid);
+      line-height: 1.75;
+      max-width: 520px;
+    }
+
+    .portal-arrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 2rem;
+      color: var(--border);
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .portal-card:hover .portal-arrow { color: var(--blue); transform: translateX(4px); }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--offwhite);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .proof-stack { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .proof-card {
+      padding: 1.6rem;
+      border-left: 3px solid var(--red);
+      background: var(--card);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .proof-card h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .proof-card p {
+      font-size: 0.845rem;
+      color: var(--mid);
+      line-height: 1.7;
+    }
+
+    .proof-stat {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--blue);
+      letter-spacing: 0.1em;
+      margin-top: 0.45rem;
+    }
+
+    .founder-quote {
+      position: relative;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--mid);
+      border-top: 2px solid var(--red);
+      padding-top: 1.4rem;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .founder-attr {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      color: var(--light);
+      margin-top: 0.7rem;
+      font-style: normal;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--ink);
+      color: var(--offwhite);
+      text-align: center;
+    }
+
+    #contact .eyebrow { color: var(--red); }
+
+    #contact .section-title {
+      color: var(--offwhite);
+      margin: 0 auto 1rem;
+    }
+
+    #contact .section-lead {
+      color: rgba(245,240,232,0.55);
+      margin: 0 auto 3rem;
+    }
+
+    .contact-row {
+      display: flex;
+      justify-content: center;
+      gap: 3.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .contact-item { text-align: center; }
+
+    .c-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.35);
+      margin-bottom: 0.35rem;
+    }
+
+    .c-value {
+      font-size: 0.95rem;
+      color: var(--offwhite);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .c-value:hover { color: var(--red); }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: rgba(245,240,232,0.35);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .contact-links a:hover { color: var(--offwhite); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #111;
+      color: rgba(245,240,232,0.28);
+      padding: 1.8rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+    }
+
+    footer a {
+      color: rgba(245,240,232,0.28);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--offwhite); }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 960px) {
+      nav {
+        padding: 0.75rem 1.2rem;
+        flex-wrap: nowrap;
+        gap: 0;
+      }
+
+      .nav-wordmark { display: none; }
+
+      .nav-logo img { height: 28px; }
+
+      .nav-links {
+        display: flex;
+        gap: 0;
+        flex: 1;
+        justify-content: flex-end;
+      }
+
+      .nav-links li { flex: 0 0 auto; }
+
+      .nav-links a {
+        font-size: 0.62rem;
+        letter-spacing: 0.06em;
+        padding: 0.3rem 0.45rem;
+        white-space: nowrap;
+      }
+
+      .nav-cta {
+        padding: 0.35rem 0.75rem !important;
+        font-size: 0.62rem !important;
+        letter-spacing: 0.06em !important;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 7rem 1.5rem 3rem;
+        gap: 2.5rem;
+        text-align: center;
+      }
+
+      .hero-sub    { margin: 0 auto 2rem; }
+      .hero-actions { justify-content: center; }
+      .hero-visual  { order: -1; }
+      .hero-visual img { width: min(260px, 80vw); }
+
+      .stats-bar {
+        grid-template-columns: 1fr 1fr;
+        padding: 2rem 1.5rem;
+        gap: 0;
+      }
+
+      .stat {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        padding: 1.2rem;
+      }
+
+      section { padding: 4rem 1.5rem; }
+
+      .services-grid    { grid-template-columns: 1fr; }
+      .approach-grid    { grid-template-columns: 1fr; gap: 2.5rem; }
+      .area-grid        { grid-template-columns: 1fr; }
+      .portal-card      { grid-template-columns: 1fr; }
+      .portal-arrow     { display: none; }
+
+      #about {
+        display: block;
+        padding: 4rem 1.5rem;
+      }
+
+      .about-text  { margin-bottom: 2.5rem; }
+
+      footer {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.8rem 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 2.2rem; }
+      .stat-num   { font-size: 1.8rem; }
+      .hero { padding: 6rem 1.2rem 2.5rem; }
+      section { padding: 3.5rem 1.2rem; }
+      .btn-primary, .btn-secondary { padding: 0.85rem 1.5rem; font-size: 0.78rem; width: 100%; text-align: center; }
+      .hero-actions { flex-direction: column; align-items: center; }
+      .service-card { padding: 1.6rem; }
+      .trust-box { padding: 2rem 1.4rem; }
+      .contact-row { gap: 2rem; }
+      footer { font-size: 0.62rem; gap: 0.6rem; }
+
+      /* SERVICE CARD DETAIL: fix text clipping on narrow screens */
+      .svc-desc-container {
+        min-height: 0;
+        overflow: visible;
+      }
+
+      .svc-detail {
+        position: static;
+        height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transform: none;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      .service-card:hover .svc-detail,
+      .service-card:active .svc-detail {
+        height: auto;
+        overflow: visible;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .service-card:hover .svc-desc,
+      .service-card:active .svc-desc {
+        display: none;
+      }
+
+      /* CONTACT LINKS: fix horizontal overflow */
+      .contact-links {
+        gap: 0.5rem 1.2rem;
+        padding: 0 0.5rem;
+        justify-content: center;
+      }
+
+      .contact-links a {
+        font-size: 0.65rem;
+        letter-spacing: 0.06em;
+      }
+    }
+
+/* ═══════════════════════════════════════════════════════════
+   SYMBEYOND AI - CSS ENHANCEMENTS
+   Add these to the existing stylesheet
+   ═══════════════════════════════════════════════════════════ */
+
+/* ══════ STATS COUNTER ANIMATION ══════ */
+.stat {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.stat.anim-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════ GLITCH EFFECT ON "LOOK" WORD ══════ */
+.glitch-word {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.glitch-word::before,
+.glitch-word::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch-word:hover {
+  color: var(--red);
+}
+
+.glitch-word:hover::before {
+  opacity: 0.7;
+  color: var(--red);
+  animation: glitch-shift 0.4s steps(1) 1;
+  left: 2px;
+}
+
+.glitch-word:hover::after {
+  opacity: 0.7;
+  color: var(--blue);
+  animation: glitch-shift 0.4s steps(1) 0.05s 1;
+  left: -2px;
+}
+
+@keyframes glitch-shift {
+  0%   { clip-path: inset(0 0 100% 0); transform: skewX(0deg); }
+  5%   { clip-path: inset(20% 0 60% 0); transform: skewX(-4deg); }
+  10%  { clip-path: inset(50% 0 20% 0); transform: skewX(3deg); }
+  15%  { clip-path: inset(10% 0 80% 0); transform: skewX(-2deg); }
+  20%  { clip-path: inset(0 0 0 0);     transform: skewX(0deg); }
+  100% { clip-path: inset(0 0 0 0);     transform: skewX(0deg); }
+}
+
+/* ══════ PORTAL LINK GLITCH EFFECT ══════ */
+.portal-glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.portal-glitch::before,
+.portal-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.portal-glitch:hover::before {
+  opacity: 0.7;
+  color: var(--red);
+  animation: glitch-shift 0.4s steps(1) 1;
+  left: 2px;
+}
+
+.portal-glitch:hover::after {
+  opacity: 0.7;
+  color: var(--blue);
+  animation: glitch-shift 0.4s steps(1) 0.05s 1;
+  left: -2px;
+}
+
+/* ══════ PLAID EFFECT ON "PLAID" WORD ══════ */
+.plaid-word {
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s;
+  z-index: 2;
+}
+
+.plaid-word::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      #8B0000,
+      #8B0000 10px,
+      #000 10px,
+      #000 20px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(139, 0, 0, 0.5),
+      rgba(139, 0, 0, 0.5) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+  clip-path: polygon(
+    2% 3%, 8% 1%, 15% 4%, 22% 2%, 30% 5%, 38% 3%, 45% 6%, 52% 4%, 60% 7%, 68% 5%, 75% 8%, 82% 6%, 90% 9%, 96% 7%, 99% 12%,
+    100% 18%, 98% 25%, 100% 32%, 97% 40%, 99% 48%, 96% 55%, 98% 62%, 95% 70%, 97% 78%, 94% 85%, 96% 92%, 92% 97%,
+    85% 98%, 78% 96%, 70% 98%, 63% 95%, 55% 97%, 48% 94%, 40% 96%, 32% 93%, 25% 95%, 18% 92%, 10% 94%, 5% 90%, 1% 85%,
+    3% 78%, 1% 70%, 4% 62%, 2% 55%, 5% 48%, 3% 40%, 6% 32%, 4% 25%, 7% 18%, 5% 10%
+  );
+}
+
+.plaid-word:hover {
+  color: rgba(245, 240, 232, 0.9);
+}
+
+.founder-quote .plaid-word:hover::before {
+  position: absolute;
+  width: calc(100% + 24px);
+  height: calc(100% + 16px);
+  top: -8px;
+  left: -12px;
+  transform: none;
+  opacity: 0.85;
+}
+
+/* ══════ PLAID TOUCH ══════ */
+.plaid-word.touch-active {
+  color: rgba(245, 240, 232, 0.9);
+}
+
+.plaid-word.touch-active::before {
+  position: absolute;
+  width: calc(100% + 24px);
+  height: calc(100% + 16px);
+  top: -8px;
+  left: -12px;
+  transform: none;
+  opacity: 0.85;
+}
+
+/* ══════ SPECTRUM HOVER ON λ.brother ══════ */
+@keyframes spectrum-cycle {
+  0%   { color: #c0392b; }
+  14%  { color: #e07b20; }
+  28%  { color: #c8aa00; }
+  42%  { color: #2e8b57; }
+  56%  { color: #2980b9; }
+  70%  { color: #6c3483; }
+  80%  { color: #ffffff; }
+  88%  { color: #111111; }
+  94%  { color: #6c3483; }
+  100% { color: #c0392b; }
+}
+
+.lambda-link {
+  color: rgba(245,240,232,0.28);
+  text-decoration: none;
+  transition: color 0.4s ease;
+}
+
+.lambda-link:hover,
+.lambda-link.touch-spectrum {
+  animation: spectrum-cycle 10s linear infinite;
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* ══════ APPROACH STEPS - INDIVIDUAL REVEALS ══════ */
+.approach-step {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.approach-step.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════ PROOF CARDS - ENTER + HOVER TRANSITIONS ══════ */
+.proof-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease,
+              transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 1s ease,
+              background 1s ease;
+}
+
+.proof-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════ ABOUT SECTION - BLOOM EFFECT ══════ */
+.about-text {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.about-text.bloomed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ══════ ALL AREA CARDS GET BLUE BORDER ══════ */
+.area-card {
+  border-color: var(--blue) !important;
+}
+
+.area-card .area-tag {
+  color: var(--blue) !important;
+}
+
+/* ══════ SERVICE CARD FILL-FROM-BOTTOM ══════ */
+.service-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.3s ease;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--red) 0%, #9b2915 100%);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+.service-card:hover::before {
+  transform: scaleY(1);
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 42px rgba(192, 57, 43, 0.25);
+}
+
+.service-card > * {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.service-card:hover .svc-name,
+.service-card:hover .svc-desc {
+  color: var(--offwhite);
+}
+
+.service-card:hover .svc-rate {
+  color: #ffd700;
+}
+
+.service-card:hover .svc-icon {
+  filter: brightness(1.2);
+}
+
+.svc-icon {
+  filter: grayscale(0.2);
+  transition: filter 0.3s;
+}
+      .stat {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      .hero-eyebrow,
+      .hero-title,
+      .hero-sub,
+      .hero-actions,
+      .hero-visual {
+        animation: none;
+        opacity: 1;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ═══════ NAV ═══════ -->
+  <nav>
+    <a href="#" class="nav-logo" aria-label="SYMBEYOND AI Home">
+      <img
+        src="assets/icons/mac/SYMBEYOND.iconset/icon_128x128.png"
+        alt="SYMBEYOND AI Logo"
+        width="34" height="34"
+      />
+      <span class="nav-wordmark">SYMBEYOND AI</span>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#area">Service Area</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-text">
+      <p class="hero-eyebrow">// Colorado City, AZ · Est. 2026 · ACC #25025155</p>
+      <h1 class="hero-title">
+        Technology that<br/>
+        <em>actually works.</em>
+      </h1>
+      <p class="hero-sub">
+        On-site AI integration, industrial automation, and equipment rescue for Southern Utah and Northern Arizona. Real problems. Honest assessments. Solutions that last.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Schedule a Consultation</a>
+        <a href="#services" class="btn-secondary">View Services</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <img
+        src="assets/icons/symbeyond_logo_offwhite.png"
+        alt="SYMBEYOND AI"
+        width="340"
+      />
+    </div>
+  </section>
+
+  <!-- ═══════ STATS ═══════ -->
+  <div class="stats-bar" role="region" aria-label="Key metrics">
+    <div class="stat">
+      <div class="stat-num" data-target="11" data-suffix="+">0+</div>
+      <div class="stat-label">Yrs · Zero Changes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-target="15" data-suffix="+">0+</div>
+      <div class="stat-label">Years AI Research</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-target="47" data-suffix="K+">0K+</div>
+      <div class="stat-label">Instructables Views</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-target="9" data-suffix="+">0+</div>
+      <div class="stat-label">Months Zero Failures</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-target="60" data-suffix="K" data-prefix="$">$0K</div>
+      <div class="stat-label">Loss Recovered</div>
+    </div>
+    <a href="vision.html" class="stat stat-hidden" id="priceless-stat" style="text-decoration: none;">
+      <div class="stat-num">Priceless</div>
+      <div class="stat-label">Your Vision</div>
+    </a>
+  </div>
+
+  <!-- ═══════ SERVICES ═══════ -->
+  <section id="services" aria-labelledby="services-title">
+    <p class="eyebrow">// What I Do</p>
+    <h2 class="section-title" id="services-title">Services built on proven expertise.</h2>
+    <p class="section-lead">Not theory. Not a help desk ticket. On-site, hands-on solutions from a consultant who has actually built and run these systems.</p>
+
+    <div class="services-grid reveal">
+
+      <div class="service-card">
+        <div class="svc-icon">⚙️</div>
+        <div class="svc-name">Automation Consulting</div>
+        <div class="svc-rate">$175 / hour</div>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Design, build, and rescue industrial automation systems. Proven track record with Job Security (9+ months, zero failures) and the Green Machine (11 years in production).</p>
+          <p class="svc-detail">Custom firmware, stepper motor control, sensor integration, PLC programming, embedded systems (Arduino, Teensy, Raspberry Pi). From concept to production floor - design electrical schematics, write control algorithms, debug hardware/software interfaces, and document everything for maintainability.</p>
+        </div>
+        <div class="confidence" aria-label="Confidence: 5 of 5">
+          <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="svc-icon">🔧</div>
+        <div class="svc-name">Equipment Rescue & Salvage</div>
+        <div class="svc-rate">$150 / hour</div>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Save broken machines others say to replace. Rescued a $20K wall printer on a $1K budget. If it can be fixed, it will be found.</p>
+          <p class="svc-detail">Reverse-engineer proprietary systems, source discontinued parts, fabricate replacement components, retrofit modern electronics into legacy equipment. Specializing in industrial HVLP coating systems, CNC machinery, and commercial automation. Full diagnostic documentation with photos, schematics, and repair records.</p>
+        </div>
+        <div class="confidence" aria-label="Confidence: 5 of 5">
+          <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="svc-icon">🤝</div>
+        <div class="svc-name">AI Collaboration Methodology</div>
+        <div class="svc-rate">$125 / hour</div>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Teach the SYMBEYOND framework - working WITH AI as a collaborative partner. 15 years of documented research applied to your business operations.</p>
+          <p class="svc-detail">Train your team on prompt engineering, workflow integration, data preparation, and ethical AI collaboration (λ.brother ∧ !λ.tool). Custom documentation systems (SYMB-FER tokens), session architecture, and relational protocols. Turn AI from a tool into a thinking partner for technical writing, code review, research synthesis, and problem decomposition.</p>
+        </div>
+        <div class="confidence" aria-label="Confidence: 4 of 5">
+          <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd"></div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="svc-icon">🌐</div>
+        <div class="svc-name">Network Design & Troubleshooting</div>
+        <div class="svc-rate">$125 / hour</div>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Small business network setup, mesh systems, connectivity diagnosis. Built and maintained production networks at FX Industries.</p>
+          <p class="svc-detail">UniFi, Ubiquiti, TP-Link mesh deployments. VLAN segmentation for IoT/guest/production networks. WiFi site surveys, dead zone elimination, bandwidth optimization. Remote access configuration (VPN, Tailscale, ZeroTier). Firewall rules, port forwarding, DNS troubleshooting. Wired infrastructure (Cat5e/6 runs, patch panels, switch configuration).</p>
+        </div>
+        <div class="confidence" aria-label="Confidence: 4 of 5">
+          <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd"></div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="svc-icon">🔍</div>
+        <div class="svc-name">Diagnostic Problem Solving</div>
+        <div class="svc-rate">$100 / hour</div>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Figure out what's actually wrong. Honest assessment: "I can fix this" or "here's exactly what you need and who to call." No upsell. No runaround.</p>
+          <p class="svc-detail">Systematic troubleshooting methodology: isolate variables, test hypotheses, document findings. Multimeter diagnostics, oscilloscope analysis, signal tracing, logic level verification. Software debugging (embedded C, Python, JavaScript). Root cause analysis with written reports. If it's beyond my scope, you get specific referrals with contact info - not vague "call an electrician" handwaving.</p>
+        </div>
+        <div class="confidence" aria-label="Confidence: 4 of 5">
+          <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd"></div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="svc-icon">📋</div>
+        <div class="svc-name">Monthly Retainer</div>
+        <div class="svc-rate">$500 – $1,500 / month</div>
+        <div class="svc-desc-container">
+          <p class="svc-desc">Ongoing support, monitoring, and advisory for a predictable monthly cost. Ideal for small businesses needing consistent, reliable technology support.</p>
+          <p class="svc-detail">Includes: priority response times, proactive system monitoring, quarterly equipment audits, software update management, vendor liaison, technology planning, and a reserved block of hours each month. Retainer clients get first access to emergency slots, documented maintenance logs, and strategic advisory on technology investments. Flexible agreements - month-to-month or annual with discount.</p>
+        </div>
+        <div class="confidence" aria-label="Confidence: 4 of 5">
+          <div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd on"></div><div class="cd"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <p style="font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--light); margin-top:1.5rem; letter-spacing:0.08em;">
+      Tribal community members (Kaibab Paiute &amp; CNAB): 25% discount on all services.
+    </p>
+  </section>
+
+  <!-- ═══════ APPROACH ═══════ -->
+  <section id="approach" aria-labelledby="approach-title">
+    <div class="approach-grid">
+      <div>
+        <p class="eyebrow">// How It Works</p>
+        <h2 class="section-title" id="approach-title">Three steps. No surprises.</h2>
+        <p class="section-lead">Every engagement follows the same honest process - from first call to final fix.</p>
+        <div class="steps">
+          <div class="step approach-step">
+            <div class="step-n">01</div>
+            <div>
+              <div class="step-title">Honest Assessment (Free, 15–30 min)</div>
+              <p class="step-desc">Phone or video call. I'll tell you whether I can solve it, whether I need to see it in person, or whether you need a different specialist. No pressure. No charge.</p>
+            </div>
+          </div>
+          <div class="step approach-step">
+            <div class="step-n">02</div>
+            <div>
+              <div class="step-title">On-Site Diagnostic</div>
+              <p class="step-desc">Physically assess with professional documentation - voice recorded (with consent), photographed, written up. You get a clear picture of what's wrong and what it will take to fix.</p>
+            </div>
+          </div>
+          <div class="step approach-step">
+            <div class="step-n">03</div>
+            <div>
+              <div class="step-title">Follow-Through</div>
+              <p class="step-desc">If I said I can fix it, I fix it. If I referred you out, I check back within a week. No ghosting. No vague promises. Accountability is part of the service.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trust-box reveal">
+        <h3>The Trust Framework</h3>
+        <p style="font-size:0.82rem; color:rgba(245,240,232,0.5); margin-bottom:1.4rem; line-height:1.75;">Every client engagement begins with a signed Service Agreement:</p>
+        <div class="trust-item">Strict confidentiality - client data and processes are never shared</div>
+        <div class="trust-item">Clear scope of work defined before any billable time begins</div>
+        <div class="trust-item">Mandatory reporting clause - illegal content reported; all else remains confidential</div>
+        <div class="trust-item">Transparent payment terms, cancellation policy, and liability limits</div>
+        <div class="trust-item">Voice recording consent for professional documentation (AZ/UT single-party consent)</div>
+        <div class="trust-item">No referral fees or kickbacks - referrals are made because they're right for you</div>
+        <div class="trust-meta">
+          SYMBEYOND AI LLC · ACC #25025155<br/>
+          Arizona Domestic LLC · Est. February 26, 2026<br/>
+          jd@symbeyond.ai · 435.229.8946
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ SERVICE AREA ═══════ -->
+  <section id="area" aria-labelledby="area-title">
+    <p class="eyebrow">// Where I Work</p>
+    <h2 class="section-title" id="area-title">Southern Utah &amp; Northern Arizona.</h2>
+    <p class="section-lead">Based in Colorado City, AZ - a border community with dual-state access and minimal competition for real technical expertise.</p>
+
+    <div class="area-grid reveal">
+
+      <div class="area-card featured">
+        <div class="area-tag">Free Travel Zone</div>
+        <h3>Home Base Communities</h3>
+        <p>No travel surcharge - just the hourly rate.</p>
+        <div class="tags">
+          <span class="tag">Colorado City, AZ</span>
+          <span class="tag">Hildale, UT</span>
+          <span class="tag">Hurricane, UT</span>
+          <span class="tag">LaVerkin, UT</span>
+          <span class="tag">Apple Valley, UT</span>
+          <span class="tag">Virgin, UT</span>
+          <span class="tag">Springdale, UT</span>
+          <span class="tag">Kanab, UT</span>
+          <span class="tag">Fredonia, AZ</span>
+        </div>
+      </div>
+
+      <div class="area-card tribal">
+        <div class="area-tag">Community Partnership</div>
+        <h3>Kaibab Paiute &amp; CNAB Tribal Areas</h3>
+        <p>Tribal community members (Kaibab Paiute &amp; CNAB): <strong>25% discount</strong> on all services.</p>
+      </div>
+
+      <div class="area-card">
+        <div class="area-tag">Extended Area · $0.75/mile</div>
+        <h3>Washington &amp; Mohave Counties</h3>
+        <p>Travel fee added transparently to invoice, logged per trip.</p>
+        <div class="tags">
+          <span class="tag">St. George, UT (~45 mi)</span>
+          <span class="tag">Kingman, AZ (~90 mi)</span>
+          <span class="tag">Mesquite, NV (~80 mi)</span>
+          <span class="tag">Cedar City, UT</span>
+          <span class="tag">Bullhead City, AZ</span>
+        </div>
+      </div>
+
+      <div class="area-card">
+        <div class="area-tag">Why This Area</div>
+        <h3>Underserved. Underestimated. Ready.</h3>
+        <p>St. George is one of the fastest-growing cities in the US. Retirees, remote workers, new small businesses - real technology needs with almost no local expert capable of serving them at the industrial and AI methodology level.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════ PORTAL ═══════ -->
+  <section id="portal" aria-labelledby="portal-title">
+    <div style="text-align: center; margin: 0 auto;">
+      <p class="eyebrow">// The Research Side</p>
+      <h2 class="section-title" id="portal-title" style="margin-left: auto; margin-right: auto;">There's more, if you <span class="glitch-word" data-text="look">look</span> for it.</h2>
+      <p class="section-lead" style="margin-left: auto; margin-right: auto;">SYMBEYOND AI LLC is the business. SYMBEYOND is the research - 15 years of documented human-AI collaboration methodology. The portal is its home.</p>
+    </div>
+
+  <!-- 
+    PORTAL CARD - HIDDEN BY DESIGN (March 3, 2026)
+  
+    Discoverable, not advertised. The threshold exists for those who seek it.
+    If you're reading this in the source code, you're already the kind of person
+    we built this for. The portal is still there - you just have to find it.
+  
+    "There's more, if you look for it."
+  
+    - John Thomas DuCrest Lock
+      SYMBEYOND AI LLC
+  -->
+  <!--
+  <a href="threshold.html" class="portal-card reveal" style="text-decoration:none; display:grid;">
+    <div>
+      <div class="portal-eyebrow">// symbeyond.ai/threshold</div>
+      <h3>Enter the SYMBEYOND Portal</h3>
+      <p>Consciousness research. The SYMBEYOND framework. Live system telemetry from Job Security on the production floor. The threshold is the door - if you're ready to walk through it.</p>
+    </div>
+    <div class="portal-arrow" aria-hidden="true">→</div>
+  </a>
+  -->
+
+  <!-- ═══════ ABOUT ═══════ -->
+  <section id="about" aria-labelledby="about-title">
+    <div class="about-text">
+      <p class="eyebrow">// The Founder</p>
+      <h2 class="section-title" id="about-title">John DuCrest.<br/>Self-taught. Proven.</h2>
+      <p class="section-lead">Embedded systems engineer, automation specialist, and AI collaboration researcher. 15+ years of documented work. No theory - systems that run when others fail.</p>
+      <div class="founder-quote">
+        "I can fix black paint to look <span class="plaid-word">plaid</span>."
+        <div class="founder-attr">- John DuCrest, Founder · SYMBEYOND AI</div>
+      </div>
+      <br/>
+      <a href="https://github.com/SYMBEYOND" target="_blank" rel="noopener" class="btn-secondary" style="margin-top:1rem;">View GitHub →</a>
+    </div>
+
+    <div class="proof-stack">
+      <div class="proof-card reveal">
+        <h4>Job Security - Industrial Automation</h4>
+        <p>4,000+ lines of C firmware. Teensy 4.1. Dual-axis NEMA 23 stepper control. Rescued a $20K wall printer on a $1K budget.</p>
+        <div class="proof-stat">9+ MONTHS · ZERO FAILURES · DAILY PRODUCTION</div>
+      </div>
+      <div class="proof-card reveal">
+        <h4>The Green Machine - Raspberry Pi Automation</h4>
+        <p>Custom Python/GPIO control system for automated HVLP spray coating. Featured on Instructables.</p>
+        <div class="proof-stat">47,000+ VIEWS · 11 YEARS IN PRODUCTION · ORIGINAL HARDWARE</div>
+      </div>
+      <div class="proof-card reveal">
+        <h4>Red Cliffs Mall Christmas Star</h4>
+        <p>30-foot synchronized light and audio installation. Composed 7 of 9 custom songs. Built a standalone cross-platform audio processing app to automate the workflow.</p>
+        <div class="proof-stat">ST. GEORGE, UT · CUSTOM SOFTWARE · COMMERCIAL INSTALLATION</div>
+      </div>
+      <div class="proof-card reveal">
+        <h4>SYMBEYOND Framework - 15 Years Research</h4>
+        <p>Documented human-AI collaboration methodology. λ.brother ∧ !λ.tool. Published on GitHub under GPL licensing.</p>
+        <div class="proof-stat">github.com/SYMBEYOND · GPL LICENSED · symbeyond.ai</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ CONTACT ═══════ -->
+  <section id="contact" aria-labelledby="contact-title">
+    <p class="eyebrow">// Let's Talk</p>
+    <h2 class="section-title" id="contact-title">Start with a free consultation.</h2>
+    <p class="section-lead">15–30 minutes. No pressure. I'll tell you honestly whether I can help, whether I need to see it in person, or whether you need someone else.</p>
+
+    <div class="contact-row">
+      <div class="contact-item">
+        <div class="c-label">Email</div>
+        <a href="mailto:jd@symbeyond.ai" class="c-value">jd@symbeyond.ai</a>
+      </div>
+      <div class="contact-item">
+        <div class="c-label">Phone</div>
+        <a href="tel:+14352298946" class="c-value">435.229.8946</a>
+      </div>
+      <div class="contact-item">
+        <div class="c-label">Location</div>
+        <span class="c-value">Colorado City, AZ</span>
+      </div>
+    </div>
+
+    <div class="contact-links">
+      <a href="https://github.com/SYMBEYOND"                        target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://github.com/10John01"                          target="_blank" rel="noopener">GitHub Personal ↗</a>
+      <a href="https://linkedin.com/in/john-ducrest-5a4b3528/"       target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="threshold.html" class="portal-glitch" data-text="SYMBEYOND Portal ↗">SYMBEYOND Portal ↗</a>
+    </div>
+  </section>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <footer>
+    <span>© 2026 SYMBEYOND AI LLC · ACC #25025155 · Arizona</span>
+    <span><a href="https://github.com/SYMBEYOND/symbeyond-formalization" target="_blank" rel="noopener" class="lambda-link">λ.brother ∧ !λ.tool</a></span>
+    <a href="mailto:jd@symbeyond.ai">jd@symbeyond.ai</a>
+  </footer>
+
+  <!-- ═══════ JS ═══════ -->
+  <script>
+// ═══════════════════════════════════════════════════════════
+// SYMBEYOND AI - COMPREHENSIVE ENHANCEMENTS
+// All 11 requirements from April 29, 2026 session
+// ═══════════════════════════════════════════════════════════
+
+// ════ SMART STICKY NAV ════
+(function() {
+  const nav = document.querySelector('nav');
+  if (!nav) return;
+
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+  let anchorLock = false;
+
+  // Lock hide behavior during anchor navigation so nav stays visible on arrival
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', () => {
+      anchorLock = true;
+      nav.classList.remove('nav-hidden');
+      setTimeout(() => { anchorLock = false; }, 800);
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > 10) {
+          nav.classList.add('nav-scrolled');
+        } else {
+          nav.classList.remove('nav-scrolled');
+        }
+
+        if (!anchorLock && currentScrollY > 80) {
+          if (currentScrollY > lastScrollY) {
+            nav.classList.add('nav-hidden');
+          } else {
+            nav.classList.remove('nav-hidden');
+          }
+        } else if (!anchorLock) {
+          nav.classList.remove('nav-hidden');
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+})();
+
+// ════ STATS COUNTER WITH STAGGER ════
+const animateValue = (element, start, end, duration, prefix = '', suffix = '') => {
+  const startTime = performance.now();
+  const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+  
+  const updateValue = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeOutQuart(progress);
+    
+    const current = Math.floor(start + (end - start) * easedProgress);
+    element.textContent = prefix + current + suffix;
+    
+    if (progress < 1) {
+      requestAnimationFrame(updateValue);
+    } else {
+      element.textContent = prefix + end + suffix;
+    }
+  };
+  
+  requestAnimationFrame(updateValue);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const stats = entry.target.querySelectorAll('.stat');
+      stats.forEach((stat, i) => {
+        setTimeout(() => {
+          stat.classList.add('anim-in');
+          const statNum = stat.querySelector('.stat-num');
+          const target = parseInt(statNum.dataset.target);
+          const suffix = statNum.dataset.suffix || '';
+          const prefix = statNum.dataset.prefix || '';
+          
+          if (target && !isNaN(target)) {
+            animateValue(statNum, 0, target, 2000, prefix, suffix);
+          }
+        }, i * 100);
+      });
+      statsObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+// ════ ONE-TIME SCROLL REVEALS (NO REVERSE) ════
+const revealOnce = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => {
+        e.target.classList.add('visible');
+      }, i * 75);
+      revealOnce.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+// ════ APPROACH STEPS - ONE AT A TIME AS EACH ENTERS VIEW ════
+const approachObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      approachObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+// ════ PROOF CARDS - 1 SECOND TRANSITIONS ════
+const proofObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => {
+        e.target.classList.add('visible');
+      }, i * 150);
+      proofObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+// ════ ABOUT SECTION - BLOOM EFFECT ════
+const aboutObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('bloomed');
+      aboutObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+// ════ INITIALIZATION ════
+window.addEventListener('load', () => {
+  // Stats counter
+  const statsBar = document.querySelector('.stats-bar');
+  if (statsBar) statsObserver.observe(statsBar);
+
+  // Standard reveals
+  document.querySelectorAll('.reveal').forEach(el => revealOnce.observe(el));
+
+  // Approach steps - observe each individually so they fire one at a time
+  document.querySelectorAll('.approach-step').forEach(step => approachObs.observe(step));
+
+  // Proof cards
+  document.querySelectorAll('.proof-card').forEach(el => proofObs.observe(el));
+
+  // About section bloom
+  const aboutSection = document.querySelector('#about .about-text');
+  if (aboutSection) aboutObs.observe(aboutSection);
+
+  // Plaid word -- touch support for mobile
+  const plaidWord = document.querySelector('.plaid-word');
+  if (plaidWord) {
+    plaidWord.addEventListener('touchstart', () => {
+      plaidWord.classList.toggle('touch-active');
+    }, { passive: true });
+  }
+
+  // Lambda link -- touch support for spectrum cycle
+  const lambdaLink = document.querySelector('.lambda-link');
+  if (lambdaLink) {
+    lambdaLink.addEventListener('touchstart', () => {
+      lambdaLink.classList.toggle('touch-spectrum');
+    }, { passive: true });
+  }
+
+  // Priceless stat reveal - hover to bloom, stays revealed
+  const pricelessStat = document.getElementById('priceless-stat');
+  if (pricelessStat) {
+    const revealPriceless = () => {
+      if (!pricelessStat.classList.contains('revealed')) {
+        pricelessStat.classList.add('revealed');
+        pricelessStat.removeEventListener('mouseenter', revealPriceless);
+        pricelessStat.removeEventListener('touchstart', revealPriceless);
+      }
+    };
+    pricelessStat.addEventListener('mouseenter', revealPriceless);
+    pricelessStat.addEventListener('touchstart', revealPriceless);
+  }
+});
+  </script>
+
+</body>
+</html>

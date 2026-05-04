@@ -1320,11 +1320,17 @@
       </div>
     </div>
     <div class="hero-visual" aria-hidden="true">
-      <img
-        src="assets/icons/symbeyond_logo_offwhite.png"
-        alt="SYMBEYOND AI"
-        width="340"
-      />
+      <picture>
+        <source srcset="assets/icons/symbeyond_logo_offwhite.webp" type="image/webp">
+        <img
+          src="assets/icons/symbeyond_logo_offwhite.png"
+          alt="SYMBEYOND AI"
+          width="340"
+          height="324"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
     </div>
   </section>
 

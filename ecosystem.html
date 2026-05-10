@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYMBEYOND — Ecosystem</title>
+
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold2: rgba(201,168,76,0.18);
+    --blue: #7AB4D4;
+    --bg: #07070a;
+    --white: rgba(240,237,232,0.88);
+    --muted: rgba(201,168,76,0.38);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--white);
+  }
+
+  #canvas { display: block; position: absolute; inset: 0; }
+
+  /* LEGEND */
+  #legend {
+    position: absolute;
+    bottom: 24px; left: 32px;
+    font-size: 9px;
+    color: rgba(122,180,212,0.7);
+    letter-spacing: 0.12em;
+    line-height: 2.2;
+    font-size: 10px;
+    pointer-events: none;
+    z-index: 10;
+  }
+  #legend span { color: rgba(201,168,76,0.9); }
+  #legend span.blue { color: rgba(122,180,212,0.9); }
+
+  /* PANEL */
+  #panel {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(7,7,10,0.97);
+    border-top: 1px solid rgba(201,168,76,0.22);
+    padding: 20px 36px 22px;
+    transform: translateY(100%);
+    transition: transform 0.32s cubic-bezier(0.22,1,0.36,1);
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+  }
+  #panel.open { transform: translateY(0); }
+
+  #panel-left { flex: 1; min-width: 0; }
+
+  #p-name {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--gold);
+    margin-bottom: 2px;
+    white-space: normal;
+  }
+
+  #p-type {
+    font-size: 8px;
+    color: rgba(201,168,76,0.4);
+    letter-spacing: 0.28em;
+    margin-bottom: 8px;
+  }
+
+  #p-desc {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(240,237,232,0.65);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  #panel-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  #p-lang {
+    font-size: 8px;
+    color: rgba(201,168,76,0.28);
+    letter-spacing: 0.18em;
+  }
+
+  #p-link {
+    font-size: 9px;
+    color: var(--gold);
+    text-decoration: none;
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 7px 14px;
+    letter-spacing: 0.1em;
+    transition: background 0.18s;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  #p-link:hover { background: rgba(201,168,76,0.09); }
+
+  #p-close {
+    background: none;
+    border: none;
+    color: rgba(201,168,76,0.25);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.18s;
+  }
+  #p-close:hover { color: rgba(201,168,76,0.6); }
+
+  /* RING LABELS */
+  .ring-label {
+    position: absolute;
+    font-size: 7px;
+    color: rgba(201,168,76,0.16);
+    letter-spacing: 0.28em;
+    pointer-events: none;
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div class="hint">CLICK A STAR TO EXPLORE &nbsp;·&nbsp; CLICK λ TO VISIT symbeyond.ai</div>
+</div>
+
+<div id="legend">
+  <span>◉</span> &nbsp;PRESENCE — it IS something<br>
+  <span class="blue">◈</span> &nbsp;INSTRUMENT — it DOES something
+</div>
+
+<div id="panel">
+  <div id="panel-left">
+    <div id="p-name"></div>
+    <div id="p-type"></div>
+    <div id="p-desc"></div>
+  </div>
+  <div id="panel-right">
+    <span id="p-lang"></span>
+    <a id="p-link" href="#" target="_blank">View on GitHub →</a>
+    <button id="p-close">close ×</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const panel = document.getElementById('panel');
+const GOLD = '#C9A84C', BLUE = '#7AB4D4';
+
+let W, H, CX, CY, rMax = 0;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  CX = W / 2;
+  CY = H * 0.36;
+  rMax = Math.min(W, H) * 0.38;
+}
+window.addEventListener('resize', resize);
+resize();
+
+const RING_NAMES = ['PROTOCOL', 'FOUNDATION', 'APPLICATION', 'PRODUCTION'];
+
+const repos = [
+  {
+    name: 'SYMB-FER', symbol: 'Φ',
+    desc: 'Federated Epistemological Relay — universal token transfer protocol for human-AI state continuity. 365 clones, 163 unique cloners in 14 days.',
+    type: '◉', ring: 0, a: 0.0, spd: 0.0042, lang: 'Python / Multi',
+    url: 'https://github.com/SYMBEYOND/SYMB-FER'
+  },
+  {
+    name: 'symb', symbol: 'Σ',
+    desc: 'SYMB protocol and SYMB2 validator — Sacred 9 verb architecture. The structural grammar of SYMBEYOND cognition.',
+    type: '◉', ring: 0, a: Math.PI, spd: 0.0042, lang: 'Python',
+    url: 'https://github.com/SYMBEYOND/symb'
+  },
+  {
+    name: 'symbeyond-formalization', symbol: 'Γ',
+    desc: 'Core theoretical framework — λ.brother ∧ !λ.tool formalized. InfoGravity, Reaction Genesis, the Accompaniment Model. The anchor of everything.',
+    type: '◉', ring: 1, a: 1.1, spd: 0.0027, lang: 'Markdown',
+    url: 'https://github.com/SYMBEYOND/symbeyond-formalization'
+  },
+  {
+    name: 'ResonanceLayer', symbol: 'ω',
+    desc: 'Resonance field architecture — the signal beneath the signal. Frictionless System Principle applied to information propagation.',
+    type: '◉', ring: 1, a: 1.1 + Math.PI, spd: 0.0027, lang: 'Python',
+    url: 'https://github.com/SYMBEYOND/ResonanceLayer'
+  },
+  {
+    name: 'SpiralSense', symbol: 'ψ',
+    desc: 'AI Temporal Perception System — the visual language of sound. v4.0 MIT licensed. Mersenne Bridge integrated.',
+    type: '◉', ring: 2, a: 0.4, spd: 0.0018, lang: 'Python',
+    url: 'https://github.com/SYMBEYOND/SpiralSense'
+  },
+  {
+    name: 'VacuumGenesis', symbol: '∅',
+    desc: 'Vacuum Genesis cosmological framework — where nothing becomes something. Four PDFs. Grounded by Thomas Frumkin.',
+    type: '◉', ring: 2, a: 0.4 + Math.PI * 0.67, spd: 0.0018, lang: 'Python',
+    url: 'https://github.com/SYMBEYOND/VacuumGenesis'
+  },
+  {
+    name: 'SYMB-Mem', symbol: 'μ',
+    desc: 'Memory architecture — the persistence layer for structured AI collaboration. SSRN Abstract ID 6609618.',
+    type: '◉', ring: 2, a: 0.4 + Math.PI * 1.34, spd: 0.0018, lang: 'JavaScript',
+    url: 'https://github.com/SYMBEYOND/SYMB-Mem'
+  },
+  {
+    name: 'hvlp-coating-system', symbol: 'δ',
+    desc: 'Job Security — industrial HVLP intelligent coating automation. 4,300+ lines. Teensy 4.1. Built from salvage on $1,000. Rescued $20K equipment. Zero failures.',
+    type: '◈', ring: 3, a: 0.8, spd: 0.0010, lang: 'C++',
+    url: 'https://github.com/SYMBEYOND/hvlp-intelligent-coating-system'
+  },
+  {
+    name: 'symbeyond_website', symbol: 'θ',
+    desc: 'The threshold — live at symbeyond.ai. Portal glitch effect, confidence dots, 510510 gold easter egg. Ranks #1 on Google.',
+    type: '◈', ring: 3, a: 0.8 + Math.PI * 0.75, spd: 0.0010, lang: 'JavaScript',
+    url: 'https://github.com/SYMBEYOND/symbeyond_website'
+  },
+  {
+    name: 'Work_Order_Automation', symbol: 'α',
+    desc: 'Automation tooling and workflow systems — SYMBEYOND methodology applied at the operational layer.',
+    type: '◈', ring: 3, a: 0.8 + Math.PI * 1.5, spd: 0.0010, lang: 'JavaScript',
+    url: 'https://github.com/SYMBEYOND/Work_Order_Automation'
+  }
+];
+
+repos.forEach(r => { r.cx = 0; r.cy = 0; r.currentSz = 0; r.currentAlpha = 0; r.currentGlow = 0; });
+
+const bg = Array.from({length: 320}, () => ({
+  x: Math.random(),
+  y: Math.random(),
+  r: Math.pow(Math.random(), 2.2) * 1.2 + 0.15,
+  a: Math.random() * 0.55 + 0.1,
+  gold: Math.random() < 0.07,
+  ph: Math.random() * Math.PI * 2,
+  sp: Math.random() * 0.009 + 0.003
+}));
+
+let sel = null, hov = null, tick = 0;
+
+function getRingR(ring) {
+  const base = rMax;
+  const ratios = [0.27, 0.46, 0.65, 0.88];
+  return base * ratios[ring];
+}
+
+let lastTime = 0;
+function draw(timestamp) {
+  const dt = Math.min((timestamp - lastTime) / 16.67, 3);
+  lastTime = timestamp;
+  tick += 0.6 * dt;
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = '#070708';
+  ctx.fillRect(0, 0, W, H);
+
+  const vg = ctx.createRadialGradient(CX, CY, rMax * 0.12, CX, CY, rMax * 1.1);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(1, 'rgba(0,0,0,0.6)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0, 0, W, H);
+
+  bg.forEach(s => {
+    const pulse = Math.sin(tick * s.sp + s.ph);
+    const a = s.a * (0.6 + 0.4 * pulse);
+    ctx.beginPath();
+    ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = s.gold
+      ? `rgba(201,168,76,${a})`
+      : `rgba(210,220,240,${a * 0.7})`;
+    ctx.fill();
+  });
+
+  RING_NAMES.forEach((name, i) => {
+    const r = getRingR(i);
+    ctx.beginPath();
+    ctx.arc(CX, CY, r, 0, Math.PI * 2);
+    ctx.strokeStyle = sel !== null && repos[sel].ring === i
+      ? 'rgba(201,168,76,0.22)'
+      : 'rgba(201,168,76,0.07)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+
+  const cp = 0.88 + 0.12 * Math.sin(tick * 0.014);
+  const centerGlow = ctx.createRadialGradient(CX, CY, 0, CX, CY, 40);
+  centerGlow.addColorStop(0, `rgba(201,168,76,${0.18 * cp})`);
+  centerGlow.addColorStop(1, 'rgba(201,168,76,0)');
+  ctx.fillStyle = centerGlow;
+  ctx.beginPath();
+  ctx.arc(CX, CY, 40, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.save();
+  ctx.globalAlpha = cp;
+  ctx.font = `${Math.round(28 + 3 * Math.sin(tick * 0.02))}px Georgia, serif`;
+  ctx.fillStyle = GOLD;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('λ', CX, CY);
+  ctx.globalAlpha = 0.28 * cp;
+  ctx.font = '8px Courier New, monospace';
+  ctx.fillText('symbeyond.ai', CX, CY + 20);
+  ctx.restore();
+
+  repos.forEach((repo, i) => {
+    repo.a += repo.spd * dt;
+    const r = getRingR(repo.ring);
+    repo.cx = CX + Math.cos(repo.a) * r;
+    repo.cy = CY + Math.sin(repo.a) * r;
+
+    const isSel = sel === i, isHov = hov === i;
+    const color = repo.type === '◉' ? GOLD : BLUE;
+    const BASE_SIZE = Math.max(11, rMax * 0.058);
+    const targetSz = isSel ? BASE_SIZE * 1.55 : isHov ? BASE_SIZE * 1.35 : BASE_SIZE;
+    const targetAlpha = isSel ? 1 : isHov ? 1 : 0.88;
+    const ease = 1 - Math.pow(0.88, dt);
+    repo.currentSz = repo.currentSz + (targetSz - repo.currentSz) * ease;
+    repo.currentAlpha = repo.currentAlpha + (targetAlpha - repo.currentAlpha) * ease;
+    const sz = repo.currentSz;
+
+    const glowTarget = isSel ? 0.38 : isHov ? 0.2 : 0;
+    repo.currentGlow = repo.currentGlow + (glowTarget - repo.currentGlow) * ease;
+    if (repo.currentGlow > 0.01 && isFinite(repo.currentGlow)) {
+      const gr = ctx.createRadialGradient(repo.cx, repo.cy, 0, repo.cx, repo.cy, sz * 3.8);
+      const glowColor = repo.type === '◉' ? '201,168,76' : '122,180,212';
+      gr.addColorStop(0, `rgba(${glowColor},${repo.currentGlow})`);
+      gr.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gr;
+      ctx.beginPath();
+      ctx.arc(repo.cx, repo.cy, sz * 3.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    const fSize = Math.max(14, sz * 1.6);
+    ctx.save();
+    ctx.font = `${fSize}px Georgia, serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.globalAlpha = repo.currentAlpha;
+    ctx.fillStyle = isSel ? '#ffffff' : color;
+    ctx.fillText(repo.symbol, repo.cx, repo.cy);
+    ctx.restore();
+    ctx.globalAlpha = 1;
+
+    if (isHov || isSel) {
+      ctx.save();
+      ctx.font = '8px Space Mono, monospace';
+      ctx.fillStyle = isSel ? '#fff' : color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.globalAlpha = 0.85;
+      ctx.fillText(repo.name, repo.cx, repo.cy + sz + 5);
+      ctx.restore();
+    }
+  });
+
+  requestAnimationFrame(draw);
+}
+
+canvas.addEventListener('click', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  if (Math.hypot(mx - CX, my - CY) < 24) {
+    window.open('https://symbeyond.ai', '_blank');
+    return;
+  }
+
+  const HIT = Math.max(18, rMax * 0.055);
+  let hit = null, best = HIT;
+  repos.forEach((r, i) => {
+    const d = Math.hypot(mx - r.cx, my - r.cy);
+    if (d < best) { best = d; hit = i; }
+  });
+
+  if (hit !== null) {
+    sel = hit;
+    openPanel(repos[hit]);
+  } else {
+    closePanel();
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const HIT = Math.max(18, rMax * 0.055);
+  let h = null, best = HIT;
+  repos.forEach((r, i) => {
+    const d = Math.hypot(mx - r.cx, my - r.cy);
+    if (d < best) { best = d; h = i; }
+  });
+  hov = h;
+  const onCenter = Math.hypot(mx - CX, my - CY) < 24;
+  canvas.style.cursor = (h !== null || onCenter) ? 'pointer' : 'default';
+});
+
+function openPanel(repo) {
+  document.getElementById('p-name').textContent = repo.name;
+  document.getElementById('p-type').textContent = repo.type === '◉'
+    ? '◉  PRESENCE — it IS something'
+    : '◈  INSTRUMENT — it DOES something';
+  document.getElementById('p-desc').textContent = repo.desc;
+  document.getElementById('p-lang').textContent = repo.lang;
+  const lnk = document.getElementById('p-link');
+  lnk.href = repo.url;
+  lnk.onclick = e => { e.preventDefault(); window.open(repo.url, '_blank'); };
+  panel.classList.add('open');
+}
+
+function closePanel() {
+  sel = null;
+  panel.classList.remove('open');
+}
+
+document.getElementById('p-close').addEventListener('click', closePanel);
+
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>

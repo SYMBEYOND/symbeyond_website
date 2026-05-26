@@ -14,15 +14,16 @@
   --dark-2: #141414;
   --dark-3: #1c1c1c;
   --border: rgba(255,255,255,0.08);
-  --text: #e8e6e0;
-  --text-muted: #888880;
-  --text-dim: #555550;
+  --text: #f0eeea;
+  --text-muted: #b2b0a8;
+  --text-dim: #7a7a72;
   --mono: 'Courier New','Lucida Console',monospace;
   --sans: 'Helvetica Neue',Arial,sans-serif;
+  --wrap: 1200px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--dark);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;overflow-x:hidden;}
+body{background:var(--dark);color:var(--text);font-family:var(--sans);font-size:17px;line-height:1.75;overflow-x:hidden;}
 a{color:var(--red);text-decoration:none;}
 a:hover{color:var(--gold);}
 body::before{
@@ -34,104 +35,103 @@ body::before{
     repeating-linear-gradient(90deg,rgba(204,51,0,0.04) 0px,rgba(204,51,0,0.04) 1px,transparent 1px,transparent 120px);
   pointer-events:none;z-index:0;
 }
-nav{position:fixed;top:0;width:100%;background:rgba(13,13,13,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:100;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-family:var(--mono);font-size:13px;color:var(--text-muted);letter-spacing:0.12em;}
-.nav-logo span{color:var(--red);}
+nav{position:fixed;top:0;width:100%;background:rgba(13,13,13,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:100;padding:0 2.5rem;height:58px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:var(--mono);font-size:14px;color:var(--text-muted);letter-spacing:0.12em;}
 .nav-back{font-family:var(--mono);font-size:12px;color:var(--text-dim);letter-spacing:0.08em;transition:color 0.2s;}
 .nav-back:hover{color:var(--red);}
-.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 2rem;}
-.hero{padding:160px 0 100px;border-bottom:1px solid var(--border);}
-.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--red);text-transform:uppercase;margin-bottom:1.5rem;}
-.hero-title{font-family:var(--mono);font-size:clamp(42px,7vw,80px);font-weight:700;letter-spacing:-0.02em;color:#fff;line-height:1.05;margin-bottom:1rem;}
-.hero-title span{color:var(--red);}
-.hero-sub{font-size:20px;color:var(--text-muted);margin-bottom:2.5rem;max-width:540px;line-height:1.5;}
-.hero-promise{font-family:var(--mono);font-size:15px;color:var(--text);border-left:3px solid var(--red);padding-left:1.25rem;margin-bottom:3rem;max-width:520px;line-height:1.6;}
+.wrap{position:relative;z-index:1;max-width:var(--wrap);margin:0 auto;padding:0 2.5rem;}
+.hero{padding:160px 0 110px;border-bottom:1px solid var(--border);}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;color:var(--red);text-transform:uppercase;margin-bottom:1.5rem;}
+.hero-title{font-family:var(--mono);font-size:clamp(48px,7vw,88px);font-weight:700;letter-spacing:-0.02em;color:#fff;line-height:1.05;margin-bottom:1rem;}
+.hero-title em{color:var(--red);font-style:normal;}
+.hero-sub{font-size:21px;color:var(--text-muted);margin-bottom:2.5rem;max-width:580px;line-height:1.5;}
+.hero-promise{font-family:var(--mono);font-size:15px;color:var(--text);border-left:3px solid var(--red);padding-left:1.25rem;margin-bottom:3rem;max-width:540px;line-height:1.65;}
 .hero-cta-group{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
-.btn-primary{display:inline-block;background:var(--red);color:#fff;font-family:var(--mono);font-size:13px;letter-spacing:0.1em;padding:14px 28px;border:none;cursor:pointer;transition:background 0.2s,transform 0.1s;text-transform:uppercase;}
+.btn-primary{display:inline-block;background:var(--red);color:#fff;font-family:var(--mono);font-size:13px;letter-spacing:0.1em;padding:15px 30px;border:none;cursor:pointer;transition:background 0.2s,transform 0.1s;text-transform:uppercase;}
 .btn-primary:hover{background:var(--red-dim);color:#fff;transform:translateY(-1px);}
-.btn-secondary{display:inline-block;background:transparent;color:var(--text-muted);font-family:var(--mono);font-size:13px;letter-spacing:0.1em;padding:14px 28px;border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s,color 0.2s;text-transform:uppercase;}
+.btn-secondary{display:inline-block;background:transparent;color:var(--text-muted);font-family:var(--mono);font-size:13px;letter-spacing:0.1em;padding:15px 30px;border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s,color 0.2s;text-transform:uppercase;}
 .btn-secondary:hover{border-color:var(--red);color:var(--red);}
-section{padding:80px 0;border-bottom:1px solid var(--border);}
+section{padding:90px 0;border-bottom:1px solid var(--border);}
 .section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;color:var(--red);text-transform:uppercase;margin-bottom:2rem;}
-h2{font-size:clamp(24px,3.5vw,36px);font-weight:600;color:#fff;margin-bottom:1.25rem;line-height:1.2;letter-spacing:-0.01em;}
-.lead{font-size:18px;color:var(--text-muted);margin-bottom:2.5rem;max-width:660px;line-height:1.6;}
-.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:3rem;}
-.problem-card{background:var(--dark-2);padding:2rem;transition:background 0.2s;}
+h2{font-size:clamp(26px,3vw,40px);font-weight:600;color:#fff;margin-bottom:1.25rem;line-height:1.2;letter-spacing:-0.01em;}
+.lead{font-size:19px;color:var(--text-muted);margin-bottom:2.5rem;max-width:700px;line-height:1.65;}
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:3rem;}
+.problem-card{background:var(--dark-2);padding:2.25rem;transition:background 0.2s;}
 .problem-card:hover{background:var(--dark-3);}
 .problem-card-num{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:0.15em;margin-bottom:0.75rem;}
-.problem-card h3{font-size:16px;font-weight:600;color:#fff;margin-bottom:0.5rem;}
-.problem-card p{font-size:14px;color:var(--text-muted);line-height:1.6;}
+.problem-card h3{font-size:17px;font-weight:600;color:#fff;margin-bottom:0.5rem;}
+.problem-card p{font-size:15px;color:var(--text-muted);line-height:1.65;}
 
-/* PROOF SECTION */
-.proof-intro{margin-bottom:3rem;}
-.proof-pair{margin-bottom:3rem;}
+/* PROOF */
+.proof-pair{margin-bottom:3.5rem;}
 .proof-pair-label{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
-.proof-pair-label span{color:var(--gold);}
+.proof-pair-label em{color:var(--gold);font-style:normal;}
 .proof-cols{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);}
 .proof-col{background:var(--dark-2);}
-.proof-col-head{padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
-.proof-col-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;}
-.proof-col-tag.origin{background:rgba(100,120,100,0.15);color:#7aaa7a;border:1px solid rgba(100,180,100,0.12);}
+.proof-col-head{padding:11px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.proof-col-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 9px;}
+.proof-col-tag.origin{background:rgba(100,120,100,0.15);color:#8ac08a;border:1px solid rgba(100,180,100,0.12);}
 .proof-col-tag.result{background:rgba(204,51,0,0.1);color:#e08060;border:1px solid rgba(204,51,0,0.15);}
 .proof-col-name{font-size:12px;color:var(--text-dim);}
 .proof-col img{width:100%;display:block;}
-.proof-caption{padding:12px 16px;font-size:13px;color:var(--text-dim);line-height:1.5;}
+.proof-caption{padding:13px 18px;font-size:13px;color:var(--text-dim);line-height:1.55;}
 
 .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem;}
-.results-col-head{font-family:var(--mono);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;padding:10px 16px;margin-bottom:0;}
-.results-col-head.yes{background:rgba(20,80,20,0.3);color:#6db86d;border:1px solid rgba(100,180,100,0.15);}
-.results-col-head.no{background:rgba(80,20,20,0.3);color:#c07070;border:1px solid rgba(180,100,100,0.15);}
+.results-col-head{font-family:var(--mono);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;padding:11px 18px;}
+.results-col-head.yes{background:rgba(20,80,20,0.3);color:#7acc7a;border:1px solid rgba(100,180,100,0.15);}
+.results-col-head.no{background:rgba(80,20,20,0.3);color:#cc8080;border:1px solid rgba(180,100,100,0.15);}
 .results-list{list-style:none;border:1px solid var(--border);border-top:none;}
-.results-list li{padding:10px 16px;font-size:14px;color:var(--text-muted);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.results-list li{padding:11px 18px;font-size:15px;color:var(--text-muted);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
 .results-list li:last-child{border-bottom:none;}
 .results-list li::before{content:'';display:block;width:5px;height:5px;border-radius:50%;flex-shrink:0;}
-.results-col-head.yes + .results-list li::before{background:#6db86d;}
-.results-col-head.no + .results-list li::before{background:#c07070;}
+.results-col-head.yes+.results-list li::before{background:#7acc7a;}
+.results-col-head.no+.results-list li::before{background:#cc8080;}
 
-.honest-block{background:var(--dark-2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:2rem 2.5rem;margin-top:2.5rem;}
+.honest-block{background:var(--dark-2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:2.25rem 2.75rem;margin-top:2.5rem;}
 .honest-block h3{font-family:var(--mono);font-size:13px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;}
-.honest-block p{font-size:15px;color:var(--text-muted);line-height:1.7;}
+.honest-block p{font-size:16px;color:var(--text-muted);line-height:1.75;}
 .honest-block p+p{margin-top:0.75rem;}
 
 .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:2.5rem;}
-.pricing-card{background:var(--dark-2);padding:2.5rem;}
+.pricing-card{background:var(--dark-2);padding:2.75rem;}
 .pricing-card.featured{background:rgba(204,51,0,0.06);}
-.pricing-tier{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:1rem;}
-.pricing-price{font-family:var(--mono);font-size:42px;font-weight:700;color:#fff;line-height:1;margin-bottom:0.5rem;}
+.pricing-tier{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;color:var(--text-dim);text-transform:uppercase;margin-bottom:1rem;}
+.pricing-price{font-family:var(--mono);font-size:46px;font-weight:700;line-height:1;margin-bottom:0.5rem;}
 .pricing-price.free{color:var(--gold);}
 .pricing-price.paid{color:var(--red);}
-.pricing-desc{font-size:15px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.5;}
+.pricing-desc{font-size:16px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.6;}
 .pricing-includes{list-style:none;margin-bottom:2rem;}
-.pricing-includes li{font-size:13px;color:var(--text-muted);padding:5px 0;padding-left:16px;position:relative;}
+.pricing-includes li{font-size:14px;color:var(--text-muted);padding:5px 0;padding-left:18px;position:relative;}
 .pricing-includes li::before{content:'—';position:absolute;left:0;color:var(--text-dim);font-family:var(--mono);}
 
-.cta-section{padding:100px 0;text-align:center;border-bottom:none;}
-.cta-section h2{font-size:clamp(28px,4vw,44px);margin-bottom:1rem;}
-.cta-section .lead{margin:0 auto 2.5rem;text-align:center;}
-.cta-mono{font-family:var(--mono);font-size:12px;color:var(--text-dim);margin-top:1.5rem;letter-spacing:0.05em;}
+.cta-section{padding:110px 0;text-align:center;border-bottom:none;}
+.cta-section h2{font-size:clamp(30px,4vw,48px);margin-bottom:1rem;}
+.cta-section .lead{margin:0 auto 2.5rem;}
+.cta-mono{font-family:var(--mono);font-size:13px;color:var(--text-dim);margin-top:1.75rem;letter-spacing:0.05em;}
 
 footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-index:1;}
-.footer-inner{max-width:900px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.footer-inner{max-width:var(--wrap);margin:0 auto;padding:0 2.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
 .footer-left{font-family:var(--mono);font-size:12px;color:var(--text-dim);letter-spacing:0.08em;}
-.footer-left span{color:var(--red);}
-.footer-right{font-size:12px;color:var(--text-dim);text-align:right;}
+.footer-right{font-size:13px;color:var(--text-dim);text-align:right;}
 .footer-right a{color:var(--text-dim);}
 .footer-right a:hover{color:var(--red);}
 
-@media(max-width:640px){
+@media(max-width:900px){
+  .problem-grid{grid-template-columns:1fr;}
   .proof-cols{grid-template-columns:1fr;}
   .results-grid{grid-template-columns:1fr;}
   .pricing-grid{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
   .hero-cta-group{flex-direction:column;align-items:flex-start;}
-  nav{padding:0 1rem;}
-  .wrap{padding:0 1rem;}
+  nav,.wrap,.footer-inner{padding-left:1.25rem;padding-right:1.25rem;}
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <span class="nav-logo"><span>SYMB</span>EYOND AI</span>
+  <span class="nav-logo">SYMBEYOND AI</span>
   <a href="/" class="nav-back">← symbeyond.ai</a>
 </nav>
 
@@ -140,7 +140,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
 <div class="wrap">
   <div class="hero">
     <div class="hero-tag">Migration Assist Service</div>
-    <h1 class="hero-title">SYMB<span>-</span>OXE</h1>
+    <h1 class="hero-title">SYMB<em>-</em>OXE</h1>
     <p class="hero-sub">Oxygen to Elementor Migration Assist</p>
     <p class="hero-promise">SYMB-OXE does not replace a web designer.<br>It replaces the blank-screen rebuild.</p>
     <div class="hero-cta-group">
@@ -179,10 +179,10 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
   <div class="wrap">
     <div class="section-label">Case Study 001 — FX Industries</div>
     <h2>Content transferred. Images rendered.</h2>
-    <p class="lead proof-intro">Run against a live Oxygen-built WordPress site on WP Engine. These are real screenshots -- original Oxygen pages on the left, SYMB-OXE Elementor import on the right.</p>
+    <p class="lead">Run against a live Oxygen-built WordPress site on WP Engine. Real screenshots -- original Oxygen pages on the left, SYMB-OXE Elementor import on the right.</p>
 
     <div class="proof-pair">
-      <div class="proof-pair-label">Content section with media &nbsp;<span>— primary proof: image transfer confirmed</span></div>
+      <div class="proof-pair-label">Content section with media &nbsp;<em>— primary proof: image transfer confirmed</em></div>
       <div class="proof-cols">
         <div class="proof-col">
           <div class="proof-col-head">
@@ -204,7 +204,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
     </div>
 
     <div class="proof-pair">
-      <div class="proof-pair-label">Hero section &nbsp;<span>— honest: content transfers, CSS styling does not</span></div>
+      <div class="proof-pair-label">Hero section &nbsp;<em>— honest: content transfers, CSS styling does not</em></div>
       <div class="proof-cols">
         <div class="proof-col">
           <div class="proof-col-head">
@@ -220,7 +220,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
             <span class="proof-col-name">Elementor — content foundation</span>
           </div>
           <img src="assets/case-study/image_three_WP.webp" alt="SYMB-OXE Elementor import showing hero text content transferred without background styling" loading="lazy">
-          <div class="proof-caption">SYMB-OXE import. All text and structure transferred. Background styling, button color, and hero polish need your designer -- this is expected and disclosed.</div>
+          <div class="proof-caption">SYMB-OXE import. All text and structure transferred. Background and styling need your designer -- expected and disclosed.</div>
         </div>
       </div>
     </div>
@@ -291,7 +291,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
           <li>Elementor JSON file delivered</li>
           <li>Import guidance included</li>
         </ul>
-        <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Proof Conversion&body=Hi John,%0A%0AI'd like to run a proof conversion on this Oxygen page:" class="btn-primary" style="display:inline-block">Start Conversion</a>
+        <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Proof Conversion&body=Hi John,%0A%0AI'd like a proof conversion on this Oxygen page:" class="btn-primary" style="display:inline-block">Start Conversion</a>
       </div>
     </div>
   </div>
@@ -301,7 +301,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
   <div class="wrap">
     <div class="section-label" style="text-align:center">Get Started</div>
     <h2>Send one page URL.<br>We will tell you the truth.</h2>
-    <p class="lead">No automated promises. No pixel-perfect guarantees. An honest look at what SYMB-OXE can carry for you -- before you spend a dollar.</p>
+    <p class="lead" style="margin:0 auto 2.5rem;text-align:center;">No automated promises. No pixel-perfect guarantees. An honest look at what SYMB-OXE can carry for you -- before you spend a dollar.</p>
     <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Free Review&body=Hi John,%0A%0APage URL for free review:" class="btn-primary">Request Free Review</a>
     <p class="cta-mono">jd@symbeyond.ai &nbsp;·&nbsp; (435) 229-8946 &nbsp;·&nbsp; symbeyond.ai</p>
   </div>
@@ -311,7 +311,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
 
 <footer>
   <div class="footer-inner">
-    <div class="footer-left"><span>SYMB</span>EYOND AI LLC &nbsp;·&nbsp; Arizona ACC #25025155</div>
+    <div class="footer-left">SYMBEYOND AI LLC &nbsp;·&nbsp; Arizona ACC #25025155</div>
     <div class="footer-right">
       <a href="/">symbeyond.ai</a> &nbsp;·&nbsp; Your content is processed locally. No third-party storage.
     </div>

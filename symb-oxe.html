@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYMB-OXE | Oxygen to Elementor Migration Assist | SYMBEYOND AI</title>
+<meta name="description" content="Stuck with an Oxygen-built WordPress site that needs to move into Elementor? SYMB-OXE is a private migration workflow that reduces the blank-screen rebuild.">
+<style>
+:root {
+  --red: #cc3300;
+  --red-dim: #991f00;
+  --gold: #c8a84b;
+  --dark: #0d0d0d;
+  --dark-2: #141414;
+  --dark-3: #1c1c1c;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8e6e0;
+  --text-muted: #888880;
+  --text-dim: #555550;
+  --mono: 'Courier New','Lucida Console',monospace;
+  --sans: 'Helvetica Neue',Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;overflow-x:hidden;}
+a{color:var(--red);text-decoration:none;}
+a:hover{color:var(--gold);}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(255,255,255,0.018) 0px,rgba(255,255,255,0.018) 1px,transparent 1px,transparent 40px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,0.018) 0px,rgba(255,255,255,0.018) 1px,transparent 1px,transparent 40px),
+    repeating-linear-gradient(0deg,rgba(204,51,0,0.04) 0px,rgba(204,51,0,0.04) 1px,transparent 1px,transparent 120px),
+    repeating-linear-gradient(90deg,rgba(204,51,0,0.04) 0px,rgba(204,51,0,0.04) 1px,transparent 1px,transparent 120px);
+  pointer-events:none;z-index:0;
+}
+nav{position:fixed;top:0;width:100%;background:rgba(13,13,13,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:100;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:var(--mono);font-size:13px;color:var(--text-muted);letter-spacing:0.12em;}
+.nav-logo span{color:var(--red);}
+.nav-back{font-family:var(--mono);font-size:12px;color:var(--text-dim);letter-spacing:0.08em;transition:color 0.2s;}
+.nav-back:hover{color:var(--red);}
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 2rem;}
+.hero{padding:160px 0 100px;border-bottom:1px solid var(--border);}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--red);text-transform:uppercase;margin-bottom:1.5rem;}
+.hero-title{font-family:var(--mono);font-size:clamp(42px,7vw,80px);font-weight:700;letter-spacing:-0.02em;color:#fff;line-height:1.05;margin-bottom:1rem;}
+.hero-title span{color:var(--red);}
+.hero-sub{font-size:20px;color:var(--text-muted);margin-bottom:2.5rem;max-width:540px;line-height:1.5;}
+.hero-promise{font-family:var(--mono);font-size:15px;color:var(--text);border-left:3px solid var(--red);padding-left:1.25rem;margin-bottom:3rem;max-width:520px;line-height:1.6;}
+.hero-cta-group{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+.btn-primary{display:inline-block;background:var(--red);color:#fff;font-family:var(--mono);font-size:13px;letter-spacing:0.1em;padding:14px 28px;border:none;cursor:pointer;transition:background 0.2s,transform 0.1s;text-transform:uppercase;}
+.btn-primary:hover{background:var(--red-dim);color:#fff;transform:translateY(-1px);}
+.btn-secondary{display:inline-block;background:transparent;color:var(--text-muted);font-family:var(--mono);font-size:13px;letter-spacing:0.1em;padding:14px 28px;border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s,color 0.2s;text-transform:uppercase;}
+.btn-secondary:hover{border-color:var(--red);color:var(--red);}
+section{padding:80px 0;border-bottom:1px solid var(--border);}
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;color:var(--red);text-transform:uppercase;margin-bottom:2rem;}
+h2{font-size:clamp(24px,3.5vw,36px);font-weight:600;color:#fff;margin-bottom:1.25rem;line-height:1.2;letter-spacing:-0.01em;}
+.lead{font-size:18px;color:var(--text-muted);margin-bottom:2.5rem;max-width:660px;line-height:1.6;}
+.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:3rem;}
+.problem-card{background:var(--dark-2);padding:2rem;transition:background 0.2s;}
+.problem-card:hover{background:var(--dark-3);}
+.problem-card-num{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:0.15em;margin-bottom:0.75rem;}
+.problem-card h3{font-size:16px;font-weight:600;color:#fff;margin-bottom:0.5rem;}
+.problem-card p{font-size:14px;color:var(--text-muted);line-height:1.6;}
+
+/* PROOF SECTION */
+.proof-intro{margin-bottom:3rem;}
+.proof-pair{margin-bottom:3rem;}
+.proof-pair-label{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.proof-pair-label span{color:var(--gold);}
+.proof-cols{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);}
+.proof-col{background:var(--dark-2);}
+.proof-col-head{padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
+.proof-col-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;}
+.proof-col-tag.origin{background:rgba(100,120,100,0.15);color:#7aaa7a;border:1px solid rgba(100,180,100,0.12);}
+.proof-col-tag.result{background:rgba(204,51,0,0.1);color:#e08060;border:1px solid rgba(204,51,0,0.15);}
+.proof-col-name{font-size:12px;color:var(--text-dim);}
+.proof-col img{width:100%;display:block;}
+.proof-caption{padding:12px 16px;font-size:13px;color:var(--text-dim);line-height:1.5;}
+
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem;}
+.results-col-head{font-family:var(--mono);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;padding:10px 16px;margin-bottom:0;}
+.results-col-head.yes{background:rgba(20,80,20,0.3);color:#6db86d;border:1px solid rgba(100,180,100,0.15);}
+.results-col-head.no{background:rgba(80,20,20,0.3);color:#c07070;border:1px solid rgba(180,100,100,0.15);}
+.results-list{list-style:none;border:1px solid var(--border);border-top:none;}
+.results-list li{padding:10px 16px;font-size:14px;color:var(--text-muted);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.results-list li:last-child{border-bottom:none;}
+.results-list li::before{content:'';display:block;width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.results-col-head.yes + .results-list li::before{background:#6db86d;}
+.results-col-head.no + .results-list li::before{background:#c07070;}
+
+.honest-block{background:var(--dark-2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:2rem 2.5rem;margin-top:2.5rem;}
+.honest-block h3{font-family:var(--mono);font-size:13px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;}
+.honest-block p{font-size:15px;color:var(--text-muted);line-height:1.7;}
+.honest-block p+p{margin-top:0.75rem;}
+
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:2.5rem;}
+.pricing-card{background:var(--dark-2);padding:2.5rem;}
+.pricing-card.featured{background:rgba(204,51,0,0.06);}
+.pricing-tier{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:1rem;}
+.pricing-price{font-family:var(--mono);font-size:42px;font-weight:700;color:#fff;line-height:1;margin-bottom:0.5rem;}
+.pricing-price.free{color:var(--gold);}
+.pricing-price.paid{color:var(--red);}
+.pricing-desc{font-size:15px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.5;}
+.pricing-includes{list-style:none;margin-bottom:2rem;}
+.pricing-includes li{font-size:13px;color:var(--text-muted);padding:5px 0;padding-left:16px;position:relative;}
+.pricing-includes li::before{content:'—';position:absolute;left:0;color:var(--text-dim);font-family:var(--mono);}
+
+.cta-section{padding:100px 0;text-align:center;border-bottom:none;}
+.cta-section h2{font-size:clamp(28px,4vw,44px);margin-bottom:1rem;}
+.cta-section .lead{margin:0 auto 2.5rem;text-align:center;}
+.cta-mono{font-family:var(--mono);font-size:12px;color:var(--text-dim);margin-top:1.5rem;letter-spacing:0.05em;}
+
+footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-index:1;}
+.footer-inner{max-width:900px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.footer-left{font-family:var(--mono);font-size:12px;color:var(--text-dim);letter-spacing:0.08em;}
+.footer-left span{color:var(--red);}
+.footer-right{font-size:12px;color:var(--text-dim);text-align:right;}
+.footer-right a{color:var(--text-dim);}
+.footer-right a:hover{color:var(--red);}
+
+@media(max-width:640px){
+  .proof-cols{grid-template-columns:1fr;}
+  .results-grid{grid-template-columns:1fr;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .hero-cta-group{flex-direction:column;align-items:flex-start;}
+  nav{padding:0 1rem;}
+  .wrap{padding:0 1rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo"><span>SYMB</span>EYOND AI</span>
+  <a href="/" class="nav-back">← symbeyond.ai</a>
+</nav>
+
+<main>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-tag">Migration Assist Service</div>
+    <h1 class="hero-title">SYMB<span>-</span>OXE</h1>
+    <p class="hero-sub">Oxygen to Elementor Migration Assist</p>
+    <p class="hero-promise">SYMB-OXE does not replace a web designer.<br>It replaces the blank-screen rebuild.</p>
+    <div class="hero-cta-group">
+      <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Free Review&body=Hi John,%0A%0AI have an Oxygen-built WordPress site I'd like reviewed for Elementor migration.%0A%0ASite URL:%0APage to review:" class="btn-primary">Request Free Review</a>
+      <a href="#proof" class="btn-secondary">See the Proof</a>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">The Situation</div>
+    <h2>Oxygen Classic users are at a crossroads</h2>
+    <p class="lead">Oxygen 6 just dropped at $399.99. If you are deciding whether to upgrade or move to Elementor, the migration question is real -- and the answer has always been "yes, but it is manual work."</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-card-num">01</div>
+        <h3>The builder lock-in problem</h3>
+        <p>Oxygen stores everything in its own format. Moving to Elementor means starting with a blank screen and rebuilding page by page.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-card-num">02</div>
+        <h3>Content is the real asset</h3>
+        <p>Your text, images, section structure, and media library have real value. They should not require a full rebuild to carry over.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-card-num">03</div>
+        <h3>No automated tool exists</h3>
+        <p>There is no "Oxygen to Elementor converter" on the market. Every migration is manual, expensive, and scoped per page.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <div class="section-label">Case Study 001 — FX Industries</div>
+    <h2>Content transferred. Images rendered.</h2>
+    <p class="lead proof-intro">Run against a live Oxygen-built WordPress site on WP Engine. These are real screenshots -- original Oxygen pages on the left, SYMB-OXE Elementor import on the right.</p>
+
+    <div class="proof-pair">
+      <div class="proof-pair-label">Content section with media &nbsp;<span>— primary proof: image transfer confirmed</span></div>
+      <div class="proof-cols">
+        <div class="proof-col">
+          <div class="proof-col-head">
+            <span class="proof-col-tag origin">Origin</span>
+            <span class="proof-col-name">Oxygen — fxindustries.net</span>
+          </div>
+          <img src="assets/case-study/image_two_FX.webp" alt="FX Industries Oxygen site content section with industrial oven image" loading="lazy">
+          <div class="proof-caption">Original Oxygen page. Two-column layout, styled card image, body copy.</div>
+        </div>
+        <div class="proof-col">
+          <div class="proof-col-head">
+            <span class="proof-col-tag result">Result</span>
+            <span class="proof-col-name">Elementor — WP Engine dev</span>
+          </div>
+          <img src="assets/case-study/image_four_WP.webp" alt="SYMB-OXE Elementor import showing same industrial oven image rendered correctly" loading="lazy">
+          <div class="proof-caption">SYMB-OXE import. Same image loaded. Heading and body copy carried. Elementor-editable.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="proof-pair">
+      <div class="proof-pair-label">Hero section &nbsp;<span>— honest: content transfers, CSS styling does not</span></div>
+      <div class="proof-cols">
+        <div class="proof-col">
+          <div class="proof-col-head">
+            <span class="proof-col-tag origin">Origin</span>
+            <span class="proof-col-name">Oxygen — hero with background</span>
+          </div>
+          <img src="assets/case-study/image_one_FX.webp" alt="FX Industries Oxygen hero section with dark nebula background and red button" loading="lazy">
+          <div class="proof-caption">Oxygen hero. CSS background image, angled divider, styled button -- all Oxygen-specific.</div>
+        </div>
+        <div class="proof-col">
+          <div class="proof-col-head">
+            <span class="proof-col-tag result">Result</span>
+            <span class="proof-col-name">Elementor — content foundation</span>
+          </div>
+          <img src="assets/case-study/image_three_WP.webp" alt="SYMB-OXE Elementor import showing hero text content transferred without background styling" loading="lazy">
+          <div class="proof-caption">SYMB-OXE import. All text and structure transferred. Background styling, button color, and hero polish need your designer -- this is expected and disclosed.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-grid">
+      <div class="results-col">
+        <div class="results-col-head yes">What transferred</div>
+        <ul class="results-list">
+          <li>Page text content</li>
+          <li>Section structure and order</li>
+          <li>Images and media references</li>
+          <li>Remapped WordPress media IDs</li>
+          <li>Elementor-editable foundation</li>
+        </ul>
+      </div>
+      <div class="results-col">
+        <div class="results-col-head no">What needs your designer</div>
+        <ul class="results-list">
+          <li>Global header and navigation</li>
+          <li>Hero background styling</li>
+          <li>Button and global CSS styles</li>
+          <li>Animations and scroll effects</li>
+          <li>Full responsive polish</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">The Process</div>
+    <h2>Private tooling. Public outcome.</h2>
+    <p class="lead">SYMB-OXE is not a SaaS product. It is a private migration workflow built and operated by SYMBEYOND. Your site content is processed locally and never stored on third-party servers.</p>
+    <div class="honest-block">
+      <h3>What this service is</h3>
+      <p>You send a public Oxygen-built WordPress page URL. I run the migration pipeline: content extraction, media download and conversion to WebP, Elementor JSON generation, and media ID remapping for your destination WordPress environment.</p>
+      <p>You receive an Elementor-importable foundation with your content, images, and section structure carried over. Your designer or developer handles the visual polish -- header, footer, animations, button styling, responsive refinement.</p>
+      <p>The code stays private. The outcome is yours.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">Pricing</div>
+    <h2>Simple. Honest. No surprises.</h2>
+    <p class="lead">Start with a free review. If the page is a good candidate, we run the proof conversion at a flat rate.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-tier">Free Review</div>
+        <div class="pricing-price free">$0</div>
+        <p class="pricing-desc">Send one public Oxygen page URL. I will review it and tell you exactly what will and will not transfer before you commit to anything.</p>
+        <ul class="pricing-includes">
+          <li>Migration readiness assessment</li>
+          <li>Honest scope statement</li>
+          <li>No pitch, no pressure</li>
+        </ul>
+        <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Free Review&body=Hi John,%0A%0APage URL for review:" class="btn-secondary" style="display:inline-block">Send Page URL</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-tier">Proof Conversion</div>
+        <div class="pricing-price paid">$99</div>
+        <p class="pricing-desc">Full pipeline run on one Oxygen-origin page. Media remapped. Elementor JSON delivered. Ready to import into your WordPress environment.</p>
+        <ul class="pricing-includes">
+          <li>Full SYMB-OXE pipeline run</li>
+          <li>Image WebP conversion and remapping</li>
+          <li>Elementor JSON file delivered</li>
+          <li>Import guidance included</li>
+        </ul>
+        <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Proof Conversion&body=Hi John,%0A%0AI'd like to run a proof conversion on this Oxygen page:" class="btn-primary" style="display:inline-block">Start Conversion</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="wrap">
+    <div class="section-label" style="text-align:center">Get Started</div>
+    <h2>Send one page URL.<br>We will tell you the truth.</h2>
+    <p class="lead">No automated promises. No pixel-perfect guarantees. An honest look at what SYMB-OXE can carry for you -- before you spend a dollar.</p>
+    <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Free Review&body=Hi John,%0A%0APage URL for free review:" class="btn-primary">Request Free Review</a>
+    <p class="cta-mono">jd@symbeyond.ai &nbsp;·&nbsp; (435) 229-8946 &nbsp;·&nbsp; symbeyond.ai</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left"><span>SYMB</span>EYOND AI LLC &nbsp;·&nbsp; Arizona ACC #25025155</div>
+    <div class="footer-right">
+      <a href="/">symbeyond.ai</a> &nbsp;·&nbsp; Your content is processed locally. No third-party storage.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

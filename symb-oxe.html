@@ -2,23 +2,27 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SYMB-OXE | Oxygen to Elementor Migration Assist | SYMBEYOND AI</title>
 <meta name="description" content="Stuck with an Oxygen-built WordPress site that needs to move into Elementor? SYMB-OXE is a private migration workflow that reduces the blank-screen rebuild.">
 <style>
 :root {
-  --red: #cc3300;
-  --red-dim: #991f00;
-  --gold: #c8a84b;
-  --dark: #0d0d0d;
-  --dark-2: #141414;
-  --dark-3: #1c1c1c;
+  --red: #C0392B;
+  --red-dim: #922b21;
+  --gold: #FFD700;
+  --dark: #1A1A1A;
+  --dark-2: #222222;
+  --dark-3: #2a2a2a;
   --border: rgba(255,255,255,0.08);
   --text: #f0eeea;
   --text-muted: #b2b0a8;
   --text-dim: #7a7a72;
-  --mono: 'Courier New','Lucida Console',monospace;
-  --sans: 'Helvetica Neue',Arial,sans-serif;
+  --mono: 'DM Mono', 'Courier New', monospace;
+  --sans: 'Outfit', 'Helvetica Neue', sans-serif;
+  --serif: 'Cormorant Garamond', Georgia, serif;
   --wrap: 1200px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -44,7 +48,7 @@ nav{position:fixed;top:0;width:100%;background:rgba(13,13,13,0.92);backdrop-filt
 /* HERO -- centered */
 .hero{padding:160px 0 110px;border-bottom:1px solid var(--border);text-align:center;}
 .hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;color:var(--red);text-transform:uppercase;margin-bottom:1.5rem;}
-.hero-title{font-family:var(--mono);font-size:clamp(52px,8vw,96px);font-weight:700;letter-spacing:-0.02em;color:#fff;line-height:1.02;margin-bottom:1rem;}
+.hero-title{font-family:var(--serif);font-size:clamp(52px,8vw,96px);font-weight:700;letter-spacing:-0.02em;color:#fff;line-height:1.02;margin-bottom:1rem;}
 .hero-title em{color:var(--red);font-style:normal;}
 .hero-sub{font-size:22px;color:var(--text-muted);margin:0 auto 2.5rem;max-width:560px;line-height:1.5;}
 .hero-promise{font-family:var(--mono);font-size:15px;color:var(--text);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.25rem 0;margin:0 auto 3rem;max-width:500px;line-height:1.65;}
@@ -57,7 +61,7 @@ nav{position:fixed;top:0;width:100%;background:rgba(13,13,13,0.92);backdrop-filt
 /* SECTIONS -- centered labels, h2, lead */
 section{padding:90px 0;border-bottom:1px solid var(--border);}
 .section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;color:var(--red);text-transform:uppercase;margin-bottom:1.5rem;text-align:center;}
-h2{font-size:clamp(26px,3vw,40px);font-weight:600;color:#fff;margin-bottom:1.25rem;line-height:1.2;letter-spacing:-0.01em;text-align:center;}
+h2{font-family:var(--serif);font-size:clamp(26px,3vw,40px);font-weight:700;color:#fff;margin-bottom:1.25rem;line-height:1.2;letter-spacing:-0.01em;text-align:center;}
 .lead{font-size:19px;color:var(--text-muted);margin:0 auto 2.5rem;max-width:700px;line-height:1.65;text-align:center;}
 
 /* PROBLEM GRID -- structural, left as-is */
@@ -135,6 +139,23 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
   nav,.wrap,.footer-inner{padding-left:1.25rem;padding-right:1.25rem;}
   .hero{padding:130px 0 80px;}
 }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: none;
+}
+.fade-up:nth-child(2) { transition-delay: 0.1s; }
+.fade-up:nth-child(3) { transition-delay: 0.2s; }
+.fade-up:nth-child(4) { transition-delay: 0.3s; }
 </style>
 </head>
 <body>
@@ -148,34 +169,34 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
 
 <div class="wrap">
   <div class="hero">
-    <div class="hero-tag">Migration Assist Service</div>
-    <h1 class="hero-title">SYMB<em>-</em>OXE</h1>
-    <p class="hero-sub">Oxygen to Elementor Migration Assist</p>
-    <p class="hero-promise">SYMB-OXE does not replace a web designer.<br>It replaces the blank-screen rebuild.</p>
-    <div class="hero-cta-group">
+    <div class="hero-tag fade-up">Migration Assist Service</div>
+    <h1 class="hero-title fade-up">SYMB<em>-</em>OXE</h1>
+    <p class="hero-sub fade-up">Oxygen to Elementor Migration Assist</p>
+    <p class="hero-promise fade-up">SYMB-OXE does not replace a web designer.<br>It replaces the blank-screen rebuild.</p>
+    <div class="hero-cta-group fade-up">
       <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Free Review&body=Hi John,%0A%0AI have an Oxygen-built WordPress site I'd like reviewed for Elementor migration.%0A%0ASite URL:%0APage to review:" class="btn-primary">Request Free Review</a>
       <a href="#proof" class="btn-secondary">See the Proof</a>
     </div>
   </div>
 </div>
 
-<section>
+<section class="fade-up">
   <div class="wrap">
     <div class="section-label">The Situation</div>
     <h2>Oxygen Classic users are at a crossroads</h2>
     <p class="lead">Oxygen 6 just dropped at $399.99. If you are deciding whether to upgrade or move to Elementor, the migration question is real -- and the answer has always been "yes, but it is manual work."</p>
     <div class="problem-grid">
-      <div class="problem-card">
+      <div class="problem-card fade-up">
         <div class="problem-card-num">01</div>
         <h3>The builder lock-in problem</h3>
         <p>Oxygen stores everything in its own format. Moving to Elementor means starting with a blank screen and rebuilding page by page.</p>
       </div>
-      <div class="problem-card">
+      <div class="problem-card fade-up">
         <div class="problem-card-num">02</div>
         <h3>Content is the real asset</h3>
         <p>Your text, images, section structure, and media library have real value. They should not require a full rebuild to carry over.</p>
       </div>
-      <div class="problem-card">
+      <div class="problem-card fade-up">
         <div class="problem-card-num">03</div>
         <h3>No automated tool exists</h3>
         <p>There is no "Oxygen to Elementor converter" on the market. Every migration is manual, expensive, and scoped per page.</p>
@@ -184,13 +205,13 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
   </div>
 </section>
 
-<section id="proof">
+<section id="proof" class="fade-up">
   <div class="wrap">
     <div class="section-label">Case Study 001 — FX Industries</div>
     <h2>Content transferred. Images rendered.</h2>
     <p class="lead">Run against a live Oxygen-built WordPress site on WP Engine. Real screenshots -- original Oxygen pages on the left, SYMB-OXE Elementor import on the right.</p>
 
-    <div class="proof-pair">
+    <div class="proof-pair fade-up">
       <div class="proof-pair-label">Content section with media &nbsp;<em>— primary proof: image transfer confirmed</em></div>
       <div class="proof-cols">
         <div class="proof-col">
@@ -212,7 +233,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
       </div>
     </div>
 
-    <div class="proof-pair">
+    <div class="proof-pair fade-up">
       <div class="proof-pair-label">Hero section &nbsp;<em>— honest: content transfers, CSS styling does not</em></div>
       <div class="proof-cols">
         <div class="proof-col">
@@ -259,7 +280,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
   </div>
 </section>
 
-<section>
+<section class="fade-up">
   <div class="wrap">
     <div class="section-label">The Process</div>
     <h2>Private tooling. Public outcome.</h2>
@@ -273,13 +294,13 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
   </div>
 </section>
 
-<section>
+<section class="fade-up">
   <div class="wrap">
     <div class="section-label">Pricing</div>
     <h2>Simple. Honest. No surprises.</h2>
     <p class="lead">Start with a free review. If the page is a good candidate, we run the proof conversion at a flat rate.</p>
     <div class="pricing-grid">
-      <div class="pricing-card">
+      <div class="pricing-card fade-up">
         <div class="pricing-tier">Free Review</div>
         <div class="pricing-price free">$0</div>
         <p class="pricing-desc">Send one public Oxygen page URL. I will review it and tell you exactly what will and will not transfer before you commit to anything.</p>
@@ -290,7 +311,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
         </ul>
         <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Free Review&body=Hi John,%0A%0APage URL for review:" class="btn-secondary" style="display:inline-block">Send Page URL</a>
       </div>
-      <div class="pricing-card featured">
+      <div class="pricing-card featured fade-up">
         <div class="pricing-tier">Proof Conversion</div>
         <div class="pricing-price paid">$99</div>
         <p class="pricing-desc">Full pipeline run on one Oxygen-origin page. Media remapped. Elementor JSON delivered. Ready to import into your WordPress environment.</p>
@@ -306,11 +327,23 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
   </div>
 </section>
 
-<section class="cta-section">
+<section class="cta-section fade-up">
   <div class="wrap">
     <div class="section-label">Get Started</div>
     <h2>Send one page URL.<br>We will tell you the truth.</h2>
     <p class="lead">No automated promises. No pixel-perfect guarantees. An honest look at what SYMB-OXE can carry for you -- before you spend a dollar.</p>
+    
+    <!-- CLIENT COUNTER — update manually when state changes -->
+    <div style="text-align:center; margin-bottom:1.5rem;">
+      <div style="display:flex; justify-content:center; gap:6px; margin-bottom:0.5rem;">
+        <span style="width:10px;height:10px;border-radius:50%;background:rgba(245,240,232,0.2);display:inline-block;"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:rgba(245,240,232,0.2);display:inline-block;"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:rgba(245,240,232,0.2);display:inline-block;"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:rgba(245,240,232,0.2);display:inline-block;"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:rgba(245,240,232,0.2);display:inline-block;"></span>
+      </div>
+      <p style="font-family:monospace;font-size:11px;letter-spacing:0.16em;color:rgba(245,240,232,0.45);text-transform:uppercase;margin:0;">5 slots open this month.</p>
+    </div>
     <a href="mailto:jd@symbeyond.ai?subject=SYMB-OXE Free Review&body=Hi John,%0A%0APage URL for free review:" class="btn-primary">Request Free Review</a>
     <p class="cta-mono">jd@symbeyond.ai &nbsp;·&nbsp; (435) 229-8946 &nbsp;·&nbsp; symbeyond.ai</p>
   </div>
@@ -327,5 +360,32 @@ footer{border-top:1px solid var(--border);padding:2.5rem 0;position:relative;z-i
   </div>
 </footer>
 
+
+<script>
+(function () {
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Hero elements: fire immediately on load
+    document.querySelectorAll('.hero .fade-up').forEach(function (el) {
+      el.classList.add('visible');
+    });
+
+    // Everything else: fire on scroll via IntersectionObserver
+    document.querySelectorAll('.fade-up').forEach(function (el) {
+      if (!el.closest('.hero')) {
+        observer.observe(el);
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>

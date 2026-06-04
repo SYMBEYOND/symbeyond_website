@@ -100,7 +100,7 @@ Engage AI as a participant in dialogue, not an instrument. This does not assume 
 **Built with:** John Thomas DuCrest Lock, Claude Sonnet 4 (Anthropic), Claude Opus 4.5 (Anthropic), ChatGPT 4o (OpenAI), ChatGPT 5.1 (OpenAI)
 
 **Related repos:**
-- [github.com/SYMBEYOND/symb](https://github.com/SYMBEYOND/symb) — SYMB intent-declaration language
+- SYMBEYOND/symb — SYMB intent-declaration language (private)
 - [github.com/SYMBEYOND/SpiralSense](https://github.com/SYMBEYOND/SpiralSense) — audio visualization
 - [github.com/10John01/hvlp-intelligent-coating-system](https://github.com/10John01/hvlp-intelligent-coating-system) — Job Security firmware
 

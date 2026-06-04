@@ -101,7 +101,7 @@ Engage AI as a participant in dialogue, not an instrument. This does not assume 
 
 **Related repos:**
 - SYMBEYOND/symb — SYMB intent-declaration language (private)
-- [github.com/SYMBEYOND/SpiralSense](https://github.com/SYMBEYOND/SpiralSense) — audio visualization
+- SYMBEYOND/SpiralSense — audio visualization (private)
 - [github.com/10John01/hvlp-intelligent-coating-system](https://github.com/10John01/hvlp-intelligent-coating-system) — Job Security firmware
 
 ---

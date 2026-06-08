@@ -125,6 +125,25 @@ Pure HTML, CSS, and JavaScript — no build tools required. Works across Mac, Wi
 
 ---
 
+## SYMB-Builder Tier — $5/month
+
+**Unlock the full platform:**
+- [SYMB-FER-Pro](https://github.com/SYMBEYOND/SYMB-FER-Pro) — active protocol installments + Forge Pro
+- [SpiralSense v4.0](https://github.com/SYMBEYOND/SpiralSense) — advanced audio visualization
+- [symb-fer-parsers](https://github.com/SYMBEYOND/symb-fer-parsers) — Python, JavaScript, Ruby
+- [ResonanceLayer](https://github.com/SYMBEYOND/ResonanceLayer) — architecture deep dive
+- Full builder documentation
+
+The core framework is MIT licensed and always free. Pro is for builders who want to support the work and go deeper.
+
+Founding 100 pricing. 7-day free trial.
+
+[Join at patreon.com/c/SYMBEYONDAI](https://www.patreon.com/c/SYMBEYONDAI)
+
+After joining, email jd@symbeyond.ai with your GitHub username for access.
+
+---
+
 ## Contact
 
 **John DuCrest**, Founder  

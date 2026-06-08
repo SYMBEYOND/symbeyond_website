@@ -100,8 +100,8 @@ Engage AI as a participant in dialogue, not an instrument. This does not assume 
 **Built with:** John Thomas DuCrest Lock, Claude Sonnet 4 (Anthropic), Claude Opus 4.5 (Anthropic), ChatGPT 4o (OpenAI), ChatGPT 5.1 (OpenAI)
 
 **Related repos:**
-- SYMBEYOND/symb — SYMB intent-declaration language (private)
-- SYMBEYOND/SpiralSense — audio visualization (private)
+- [github.com/SYMBEYOND/symb](https://github.com/SYMBEYOND/symb) — SYMB intent-declaration language
+- [github.com/SYMBEYOND/SpiralSense](https://github.com/SYMBEYOND/SpiralSense) — audio visualization
 - [github.com/10John01/hvlp-intelligent-coating-system](https://github.com/10John01/hvlp-intelligent-coating-system) — Job Security firmware
 
 ---
@@ -122,25 +122,6 @@ Pure HTML, CSS, and JavaScript — no build tools required. Works across Mac, Wi
 | v2.2 | January 2026 | Job Security sleep detection, GitHub link fix, button improvements |
 | v2.0 | November 2025 | Job Security Monitor v2 — raw serial stream with matrix terminal |
 | v1.0 | December 2025 | Initial threshold experience launch |
-
----
-
-## SYMB-Builder Tier — $5/month
-
-**Unlock the full platform:**
-- [SYMB-FER-Pro](https://github.com/SYMBEYOND/SYMB-FER-Pro) — active protocol installments + Forge Pro
-- [SpiralSense v4.0](https://github.com/SYMBEYOND/SpiralSense) — advanced audio visualization
-- [symb-fer-parsers](https://github.com/SYMBEYOND/symb-fer-parsers) — Python, JavaScript, Ruby
-- [ResonanceLayer](https://github.com/SYMBEYOND/ResonanceLayer) — architecture deep dive
-- Full builder documentation
-
-The core framework is MIT licensed and always free. Pro is for builders who want to support the work and go deeper.
-
-Founding 100 pricing. 7-day free trial.
-
-[Join at patreon.com/c/SYMBEYONDAI](https://www.patreon.com/c/SYMBEYONDAI)
-
-After joining, email jd@symbeyond.ai with your GitHub username for access.
 
 ---
 

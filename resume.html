@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Builder | SYMBEYOND AI</title>
+<meta name="description" content="Free resume builder. Answer plain questions, get a clean one-page resume you can print or save as a PDF. No account, nothing saved.">
+<!-- Favicons -->
+<link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
+<link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
+<link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
+<meta property="og:title" content="Resume Builder | SYMBEYOND AI">
+<meta property="og:description" content="Answer plain questions. Get a clean one-page resume. Free, no account.">
+<meta property="og:url" content="https://symbeyond.ai/resume">
+<meta property="og:image" content="https://symbeyond.ai/assets/icons/SYMBEYOND_logo_mac.png">
+<style>
+  :root{
+    --paper:#FBFBF8; --ink:#20242B; --muted:#5F6672;
+    --teal:#0F6E56; --teal-soft:#E1F5EE;
+    --amber:#BA7517; --amber-soft:#FAEEDA;
+    --line:#D9D7CF; --white:#FFFFFF; --danger:#A32D2D;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:-apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height:1.6; font-size:16px;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:20px 16px 80px;}
+  header.site{padding:28px 0 8px;}
+  .eyebrow{
+    font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--teal); font-weight:600;
+  }
+  h1{font-size:30px; line-height:1.15; font-weight:700; margin:6px 0 4px;}
+  .sub{color:var(--muted); font-size:15px; max-width:48ch;}
+  .honesty{
+    margin:18px 0 6px; padding:12px 14px; border-left:4px solid var(--amber);
+    background:var(--amber-soft); border-radius:0 8px 8px 0; font-size:14px;
+  }
+  .honesty strong{color:var(--amber);}
+  .steps{
+    display:flex; gap:6px; margin:22px 0 18px;
+  }
+  .steps span{
+    flex:1; height:5px; border-radius:3px; background:var(--line); transition:background .3s;
+  }
+  .steps span.on{background:var(--teal);}
+  .card{
+    background:var(--white); border:1px solid var(--line); border-radius:12px;
+    padding:20px 18px; margin-bottom:16px;
+  }
+  .card h2{font-size:19px; font-weight:700; margin-bottom:2px;}
+  .card .hint{color:var(--muted); font-size:14px; margin-bottom:14px;}
+  label{display:block; font-size:13px; font-weight:600; margin:12px 0 4px; color:var(--ink);}
+  input[type=text], textarea, select{
+    width:100%; padding:10px 12px; font-size:16px; border:1px solid var(--line);
+    border-radius:8px; background:var(--paper); color:var(--ink); font-family:inherit;
+  }
+  input:focus, textarea:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:var(--teal);}
+  textarea{min-height:88px; resize:vertical;}
+  .row{display:flex; gap:10px;}
+  .row > div{flex:1;}
+  .btn{
+    display:inline-block; border:none; border-radius:8px; padding:12px 20px;
+    font-size:16px; font-weight:600; cursor:pointer; font-family:inherit;
+  }
+  .btn:focus-visible{outline:3px solid var(--amber); outline-offset:2px;}
+  .btn-primary{background:var(--teal); color:#fff;}
+  .btn-primary:hover{background:#0B5743;}
+  .btn-ghost{background:transparent; color:var(--teal); border:1px solid var(--teal);}
+  .btn-ghost:hover{background:var(--teal-soft);}
+  .btn-quiet{background:transparent; color:var(--muted); border:1px solid var(--line); font-size:14px; padding:9px 14px;}
+  .btn-row{display:flex; justify-content:space-between; gap:10px; margin-top:18px; flex-wrap:wrap;}
+  .job-block{
+    border:1px dashed var(--line); border-radius:10px; padding:14px; margin-top:14px;
+    position:relative;
+  }
+  .job-block .remove{
+    position:absolute; top:8px; right:10px; background:none; border:none;
+    color:var(--danger); cursor:pointer; font-size:13px; font-weight:600;
+  }
+  .small{font-size:13px; color:var(--muted);}
+  .status{
+    margin-top:14px; font-size:14px; padding:10px 12px; border-radius:8px; display:none;
+  }
+  .status.show{display:block;}
+  .status.work{background:var(--teal-soft); color:var(--teal);}
+  .status.err{background:#FCEBEB; color:var(--danger);}
+  /* paper preview */
+  .paper-zone{margin-top:8px;}
+  .paper{
+    background:var(--white); border:1px solid var(--line); border-radius:4px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.07);
+    padding:42px 46px; min-height:500px;
+    font-family:Georgia, "Times New Roman", serif; color:#111; font-size:14.5px; line-height:1.5;
+  }
+  .paper[contenteditable=true]:focus{outline:2px solid var(--teal);}
+  .paper h2{font-size:24px; font-weight:700; letter-spacing:0.01em; font-family:inherit; margin-bottom:0;}
+  .paper .contact{font-size:12.5px; color:#444; margin-bottom:14px;}
+  .paper h3{
+    font-size:12.5px; letter-spacing:0.12em; text-transform:uppercase;
+    border-bottom:1.5px solid #111; padding-bottom:3px; margin:16px 0 8px; font-family:inherit;
+  }
+  .paper .jobhead{display:flex; justify-content:space-between; font-weight:700; margin-top:10px; font-size:14px;}
+  .paper .jobsub{font-style:italic; font-size:13px; color:#333;}
+  .paper ul{margin:5px 0 4px 18px;}
+  .paper li{margin-bottom:3px;}
+  .paper p.summary{margin-bottom:4px;}
+  .edit-note{font-size:13px; color:var(--muted); margin:10px 0;}
+  footer.site{margin-top:40px; text-align:center; font-size:13px; color:var(--muted);}
+  footer.site a{color:var(--teal); text-decoration:none;}
+  .hidden{display:none;}
+  @media (max-width:560px){
+    .row{flex-direction:column; gap:0;}
+    .paper{padding:26px 20px;}
+    h1{font-size:25px;}
+  }
+  @media print{
+    body{background:#fff;}
+    .no-print{display:none !important;}
+    .wrap{max-width:none; padding:0;}
+    .paper{border:none; box-shadow:none; border-radius:0; padding:0.4in 0.5in; min-height:0;}
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site no-print">
+    <div class="eyebrow">Free tool · No account · Nothing saved</div>
+    <h1>Build your resume by answering plain questions</h1>
+    <p class="sub">Tell it about your work the way you'd tell a friend. It turns your words into a clean, one-page resume you can print or save as a PDF.</p>
+    <div class="honesty"><strong>The honesty rule:</strong> this tool never invents your experience. It only organizes what you tell it. Read every line before you send it to anyone.</div>
+  </header>
+
+  <div class="steps no-print" id="steps">
+    <span class="on"></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="card no-print" id="step1">
+    <h2>First, the basics</h2>
+    <p class="hint">This goes at the top of your resume so they can reach you.</p>
+    <label for="f-name">Your name</label>
+    <input type="text" id="f-name" autocomplete="name" placeholder="Seth Johnson">
+    <div class="row">
+      <div>
+        <label for="f-phone">Phone</label>
+        <input type="text" id="f-phone" autocomplete="tel" placeholder="(435) 555-0123">
+      </div>
+      <div>
+        <label for="f-email">Email</label>
+        <input type="text" id="f-email" autocomplete="email" placeholder="seth@email.com">
+      </div>
+    </div>
+    <label for="f-city">City and state</label>
+    <input type="text" id="f-city" placeholder="Hildale, UT">
+    <div class="btn-row">
+      <span></span>
+      <button class="btn btn-primary" onclick="go(2)">Next</button>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="card no-print hidden" id="step2">
+    <h2>What job are you going for?</h2>
+    <p class="hint">If you have a specific job posting, paste it in. The resume will be shaped to fit it. If not, just give a job title and skip the rest.</p>
+    <label for="f-target">Job title you want</label>
+    <input type="text" id="f-target" placeholder="Warehouse associate, cashier, ranch hand, anything">
+    <label for="f-posting">Paste the job posting here (optional)</label>
+    <textarea id="f-posting" placeholder="Copy the whole job ad from Indeed or wherever you found it and paste it here."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-quiet" onclick="go(1)">Back</button>
+      <button class="btn btn-primary" onclick="go(3)">Next</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="card no-print hidden" id="step3">
+    <h2>Tell me about your work</h2>
+    <p class="hint">In your own words. Don't worry about sounding fancy, that's the tool's job. Never had a formal job? Helping family, volunteering, church work, yard work for neighbors, all of it counts.</p>
+    <div id="jobs"></div>
+    <button class="btn btn-ghost" onclick="addJob()" style="margin-top:14px;">+ Add another job</button>
+    <div class="btn-row">
+      <button class="btn btn-quiet" onclick="go(2)">Back</button>
+      <button class="btn btn-primary" onclick="go(4)">Next</button>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="card no-print hidden" id="step4">
+    <h2>School and skills</h2>
+    <p class="hint">Both optional. Skip anything that doesn't apply.</p>
+    <label for="f-edu">Education or training</label>
+    <textarea id="f-edu" placeholder="High school diploma, GED, a certificate, a course you took. School name and year if you remember."></textarea>
+    <label for="f-skills">Things you're good at</label>
+    <textarea id="f-skills" placeholder="Forklift, Excel, fixing engines, talking to customers, showing up on time every day for three years."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-quiet" onclick="go(3)">Back</button>
+      <button class="btn btn-primary" onclick="go(5)">Next</button>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="card no-print hidden" id="step5">
+    <h2>Build it</h2>
+    <p class="hint">Two ways to finish. The smart draft writes professional wording from what you told it. The simple version just lays your own words out cleanly. Both are yours to edit.</p>
+    <div class="btn-row" style="justify-content:flex-start;">
+      <button class="btn btn-primary" id="aiBtn" onclick="buildAI()">Write my resume (smart draft)</button>
+      <button class="btn btn-ghost" onclick="buildManual()">Just format my words</button>
+    </div>
+    <div class="status" id="status"></div>
+    <div class="btn-row">
+      <button class="btn btn-quiet" onclick="go(4)">Back</button>
+      <span></span>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="paper-zone hidden" id="result">
+    <p class="edit-note no-print">Tap anywhere on the page below to edit it directly. Fix anything, then read the honesty rule one more time: <strong>is every line true?</strong></p>
+    <div class="btn-row no-print" style="justify-content:flex-start; margin-bottom:12px;">
+      <button class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button class="btn btn-ghost" onclick="copyText()">Copy as text</button>
+      <button class="btn btn-quiet" onclick="backToEdit()">Change my answers</button>
+    </div>
+    <div class="paper" id="paper" contenteditable="true" spellcheck="true"></div>
+  </section>
+
+  <footer class="site no-print">
+    Built by <a href="https://symbeyond.ai">SYMBEYOND AI</a> · Your answers never leave this page unless you use the smart draft · Refreshing the page clears everything
+  </footer>
+</div>
+
+<script>
+let step = 1;
+const TOTAL = 5;
+
+function go(n){
+  document.getElementById('step'+step).classList.add('hidden');
+  step = n;
+  document.getElementById('step'+step).classList.remove('hidden');
+  const dots = document.querySelectorAll('#steps span');
+  dots.forEach((d,i)=> d.classList.toggle('on', i < step));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+let jobCount = 0;
+function addJob(prefill){
+  jobCount++;
+  const id = jobCount;
+  const div = document.createElement('div');
+  div.className = 'job-block';
+  div.id = 'job'+id;
+  div.innerHTML = `
+    ${id>1 ? '<button class="remove" onclick="removeJob('+id+')">remove</button>' : ''}
+    <label for="j-place-${id}">Where did you work?</label>
+    <input type="text" id="j-place-${id}" placeholder="Company, farm, family business, 'neighbors around town'">
+    <div class="row">
+      <div>
+        <label for="j-role-${id}">What were you called?</label>
+        <input type="text" id="j-role-${id}" placeholder="Crew member, helper, driver">
+      </div>
+      <div>
+        <label for="j-when-${id}">When? (roughly is fine)</label>
+        <input type="text" id="j-when-${id}" placeholder="2023 to now">
+      </div>
+    </div>
+    <label for="j-what-${id}">What did you actually do there? Tell it plain.</label>
+    <textarea id="j-what-${id}" placeholder="I loaded trucks, kept the yard organized, trained two new guys, never missed a shift."></textarea>
+    <label for="j-proud-${id}">Anything you're proud of from that job? (optional)</label>
+    <input type="text" id="j-proud-${id}" placeholder="Boss put me in charge when he was gone.">
+  `;
+  document.getElementById('jobs').appendChild(div);
+}
+function removeJob(id){
+  const el = document.getElementById('job'+id);
+  if(el) el.remove();
+}
+addJob();
+
+function gather(){
+  const jobs = [];
+  document.querySelectorAll('.job-block').forEach(b=>{
+    const id = b.id.replace('job','');
+    const place = val('j-place-'+id), role = val('j-role-'+id);
+    const when = val('j-when-'+id), what = val('j-what-'+id), proud = val('j-proud-'+id);
+    if(place || role || what){
+      jobs.push({place, role, when, what, proud});
+    }
+  });
+  return {
+    name: val('f-name'), phone: val('f-phone'), email: val('f-email'), city: val('f-city'),
+    target: val('f-target'), posting: val('f-posting'),
+    edu: val('f-edu'), skills: val('f-skills'), jobs
+  };
+}
+function val(id){ const e = document.getElementById(id); return e ? e.value.trim() : ''; }
+
+function setStatus(msg, cls){
+  const s = document.getElementById('status');
+  s.textContent = msg;
+  s.className = 'status show ' + cls;
+}
+function clearStatus(){ document.getElementById('status').className = 'status'; }
+
+function esc(t){
+  const d = document.createElement('div'); d.textContent = t || ''; return d.innerHTML;
+}
+
+function renderResume(data){
+  const d = gather();
+  const contactBits = [d.phone, d.email, d.city].filter(Boolean).join(' · ');
+  let html = '<h2>'+esc(d.name || 'Your Name')+'</h2>';
+  html += '<div class="contact">'+esc(contactBits)+'</div>';
+  if(data.summary){
+    html += '<h3>Summary</h3><p class="summary">'+esc(data.summary)+'</p>';
+  }
+  if(data.jobs && data.jobs.length){
+    html += '<h3>Experience</h3>';
+    data.jobs.forEach(j=>{
+      html += '<div class="jobhead"><span>'+esc(j.role || 'Role')+'</span><span>'+esc(j.dates || '')+'</span></div>';
+      html += '<div class="jobsub">'+esc(j.place || '')+'</div>';
+      if(j.bullets && j.bullets.length){
+        html += '<ul>' + j.bullets.map(b=>'<li>'+esc(b)+'</li>').join('') + '</ul>';
+      }
+    });
+  }
+  if(data.education){
+    html += '<h3>Education & Training</h3><p>'+esc(data.education)+'</p>';
+  }
+  if(data.skills && data.skills.length){
+    html += '<h3>Skills</h3><p>'+ data.skills.map(esc).join(' · ') +'</p>';
+  }
+  document.getElementById('paper').innerHTML = html;
+  document.querySelectorAll('.no-print .card, section.card').forEach(c=>c.classList.add('hidden'));
+  document.getElementById('steps').classList.add('hidden');
+  document.getElementById('result').classList.remove('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function backToEdit(){
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('steps').classList.remove('hidden');
+  document.getElementById('step5').classList.remove('hidden');
+  clearStatus();
+}
+
+function buildManual(){
+  const d = gather();
+  const jobs = d.jobs.map(j=>({
+    role: j.role || 'Worker',
+    place: j.place,
+    dates: j.when,
+    bullets: splitSentences(j.what).concat(j.proud ? [j.proud] : [])
+  }));
+  renderResume({
+    summary: d.target ? ('Seeking a position as ' + d.target + '.') : '',
+    jobs,
+    education: d.edu,
+    skills: d.skills ? d.skills.split(/,|\n/).map(s=>s.trim()).filter(Boolean) : []
+  });
+}
+function splitSentences(t){
+  if(!t) return [];
+  return t.split(/(?<=[.!?])\s+|\n/).map(s=>s.trim().replace(/^[-•]\s*/,'')).filter(s=>s.length>1);
+}
+
+async function buildAI(){
+  const d = gather();
+  if(!d.name && !d.jobs.length){
+    setStatus('Add at least your name and one job first.', 'err');
+    return;
+  }
+  const btn = document.getElementById('aiBtn');
+  btn.disabled = true;
+  setStatus('Writing your draft. This takes about fifteen seconds...', 'work');
+
+  // Prompt is built server-side in /api/resume for safety.
+
+  try{
+    const response = await fetch("/api/resume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(d)
+    });
+    const parsed = await response.json();
+    if(!response.ok){
+      setStatus(parsed.error || 'The smart draft is not available right now. Use "Just format my words" instead, it works everywhere.', 'err');
+      return;
+    }
+    clearStatus();
+    renderResume(parsed);
+  } catch(err){
+    console.error(err);
+    setStatus('The smart draft is not available right now (it needs an internet connection). Use "Just format my words" instead, it works everywhere.', 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function copyText(){
+  const paper = document.getElementById('paper');
+  const text = paper.innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    setStatusInline('Copied.');
+  }).catch(()=>{
+    const r = document.createRange();
+    r.selectNodeContents(paper);
+    const sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(r);
+    document.execCommand('copy');
+    sel.removeAllRanges();
+    setStatusInline('Copied.');
+  });
+}
+function setStatusInline(msg){
+  const note = document.querySelector('.edit-note');
+  if(note){ note.textContent = msg + ' Paste it into any application form or document.'; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Get Hired — free tools and resources from today's class. Resume builder, safety guide, demo prompts, and more.">
+<title>Get Hired | SYMBEYOND AI</title>
+<style>
+  :root {
+    --navy:   #1B3A6B;
+    --blue:   #2E75B6;
+    --teal:   #17706E;
+    --gold:   #B8860B;
+    --red:    #C0392B;
+    --green:  #2E7D32;
+    --ink:    #1A1A2E;
+    --mist:   #F2F6FB;
+    --white:  #FFFFFF;
+    --mid:    #6B7280;
+    --rule:   #D1D9E6;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--mist);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ─────────────────────────────── */
+  .hero {
+    background: var(--navy);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 0%, rgba(46,117,182,0.35) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-size: clamp(36px, 9vw, 56px);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.5;
+    max-width: 320px;
+    margin: 0 auto 28px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 40px;
+    padding: 7px 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+  }
+  .hero-badge span { font-size: 15px; }
+
+  /* ── SAFETY BANNER ────────────────────── */
+  .safety-banner {
+    background: var(--red);
+    padding: 16px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .safety-banner .icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .safety-banner-text { }
+  .safety-banner-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 3px;
+  }
+  .safety-banner-msg {
+    font-size: 14px;
+    color: var(--white);
+    line-height: 1.45;
+    font-weight: 500;
+  }
+  .safety-banner-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── CONTENT ──────────────────────────── */
+  .content {
+    padding: 28px 20px 60px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 14px;
+    padding-left: 2px;
+  }
+
+  /* ── TOOL CARDS ───────────────────────── */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(27,58,107,0.08), 0 0 0 1px rgba(27,58,107,0.06);
+    text-decoration: none;
+    display: block;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .card:active { transform: scale(0.985); box-shadow: 0 1px 4px rgba(27,58,107,0.10); }
+
+  .card-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+  }
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .card-text { flex: 1; min-width: 0; }
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--mid);
+    line-height: 1.4;
+  }
+  .card-arrow {
+    font-size: 20px;
+    color: var(--rule);
+    flex-shrink: 0;
+    font-weight: 300;
+  }
+
+  .card-footer {
+    background: var(--mist);
+    padding: 10px 20px;
+    font-size: 12px;
+    color: var(--mid);
+    font-weight: 500;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* color variants */
+  .icon-blue   { background: #EAF2FB; }
+  .icon-teal   { background: #E0F2F1; }
+  .icon-green  { background: #E8F5E9; }
+  .icon-gold   { background: #FFF8E1; }
+  .icon-red    { background: #FDECEA; }
+  .icon-purple { background: #EDE7F6; }
+
+  /* ── DICTATION TIP ────────────────────── */
+  .tip-card {
+    background: linear-gradient(135deg, #E8F5E9 0%, #E0F2F1 100%);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(46,125,50,0.15);
+  }
+  .tip-eyebrow {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .tip-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.25;
+  }
+  .tip-body {
+    font-size: 14px;
+    color: #2D4A2D;
+    line-height: 1.55;
+  }
+  .tip-steps {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .tip-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #2D4A2D;
+    line-height: 1.4;
+  }
+  .tip-step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── AI TOOLS NOTE ────────────────────── */
+  .note-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 14px;
+    border-left: 4px solid var(--blue);
+    box-shadow: 0 2px 8px rgba(27,58,107,0.06);
+  }
+  .note-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .note-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .note-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--mid);
+    line-height: 1.4;
+  }
+  .note-list li::before {
+    content: "→";
+    font-weight: 700;
+    color: var(--blue);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── SAFETY SECTION ───────────────────── */
+  .safety-section {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(27,58,107,0.06);
+  }
+  .safety-header {
+    background: var(--red);
+    padding: 16px 20px;
+  }
+  .safety-header-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 4px;
+  }
+  .safety-header-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .safety-body { padding: 18px 20px; }
+  .safety-intro {
+    font-size: 14px;
+    color: var(--mid);
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+  .scam-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .scam-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .scam-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #FDECEA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .scam-text { }
+  .scam-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .scam-detail {
+    font-size: 13px;
+    color: var(--mid);
+    line-height: 1.4;
+  }
+  .safety-rule {
+    margin-top: 16px;
+    background: #FDECEA;
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--red);
+  }
+  .safety-rule-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--red);
+    line-height: 1.5;
+  }
+
+  /* ── BUILT IN A DAY ───────────────────── */
+  .story-card {
+    background: var(--navy);
+    border-radius: 16px;
+    padding: 22px 20px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .story-card::before {
+    content: "";
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(46,117,182,0.25);
+    pointer-events: none;
+  }
+  .story-eyebrow {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+  }
+  .story-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .story-body {
+    font-size: 14px;
+    color: rgba(255,255,255,0.72);
+    line-height: 1.55;
+  }
+  .story-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 30px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ── FOOTER ───────────────────────────── */
+  .footer {
+    text-align: center;
+    padding: 0 24px 40px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .footer-logo {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .footer-sub {
+    font-size: 12px;
+    color: var(--mid);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Washington County Library System</div>
+  <div class="hero-title">Get Hired</div>
+  <div class="hero-sub">Everything from today's class, right on your phone. Tap any card to open it.</div>
+  <div class="hero-badge"><span>📍</span> Hildale Branch &nbsp;·&nbsp; Free Workshop</div>
+</div>
+
+<!-- SAFETY BANNER -->
+<div class="safety-banner">
+  <div class="icon">🛡️</div>
+  <div class="safety-banner-text">
+    <div class="safety-banner-label">Safety First</div>
+    <div class="safety-banner-msg">Job scams are real and they target people who are looking for work. Know the signs before you apply anywhere.</div>
+    <a href="#safety" class="safety-banner-link">See the warning signs below</a>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- TOOLS -->
+  <div class="section-label">Your tools</div>
+
+  <!-- Resume Builder -->
+  <a class="card" href="https://symbeyond.ai/resume" target="_blank" rel="noopener">
+    <div class="card-inner">
+      <div class="card-icon icon-blue">📄</div>
+      <div class="card-text">
+        <div class="card-title">Resume Builder</div>
+        <div class="card-desc">Answer a few questions, get a real resume. Works on your phone.</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">symbeyond.ai/resume &nbsp;·&nbsp; Free, no account needed</div>
+  </a>
+
+  <!-- Demo Prompts -->
+  <a class="card" href="https://symbeyond.ai/gethired-prompts.pdf" target="_blank" rel="noopener">
+    <div class="card-inner">
+      <div class="card-icon icon-teal">💬</div>
+      <div class="card-text">
+        <div class="card-title">Demo Prompts</div>
+        <div class="card-desc">The exact prompts from class. Copy and paste into any AI.</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">Works with Claude, ChatGPT, Meta AI, Grok &nbsp;·&nbsp; Any of them</div>
+  </a>
+
+  <!-- De-AI Checklist -->
+  <a class="card" href="https://symbeyond.ai/gethired-checklist.pdf" target="_blank" rel="noopener">
+    <div class="card-inner">
+      <div class="card-icon icon-gold">✅</div>
+      <div class="card-text">
+        <div class="card-title">De-AI Checklist</div>
+        <div class="card-desc">Run this before you submit anything. 13 things that give away AI writing.</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">5-minute sweep &nbsp;·&nbsp; The interview test</div>
+  </a>
+
+  <!-- Participant Handout -->
+  <a class="card" href="https://symbeyond.ai/gethired-handout.pdf" target="_blank" rel="noopener">
+    <div class="card-inner">
+      <div class="card-icon icon-purple">📋</div>
+      <div class="card-text">
+        <div class="card-title">Class Handout</div>
+        <div class="card-desc">Resume essentials, LinkedIn tips, cover letter rule, free tools list.</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">Take-home reference &nbsp;·&nbsp; Print or save</div>
+  </a>
+
+  <!-- DICTATION TIP -->
+  <div class="tip-card">
+    <div class="tip-eyebrow">Phone tip</div>
+    <div class="tip-title">Your phone can type for you</div>
+    <div class="tip-body">No keyboard? No problem. Every iPhone and Android has a built-in microphone on the keyboard. Tap it and talk. It types what you say.</div>
+    <div class="tip-steps">
+      <div class="tip-step">
+        <div class="tip-step-num">1</div>
+        <div>Tap any text box (like in Resume Builder)</div>
+      </div>
+      <div class="tip-step">
+        <div class="tip-step-num">2</div>
+        <div>Look for the microphone icon on your keyboard</div>
+      </div>
+      <div class="tip-step">
+        <div class="tip-step-num">3</div>
+        <div>Tap it and speak normally. It types as you talk.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI TOOLS NOTE -->
+  <div class="note-card">
+    <div class="note-title">Which AI should I use?</div>
+    <ul class="note-list">
+      <li><strong>Claude</strong> — claude.ai &nbsp;·&nbsp; Free, great for writing and editing</li>
+      <li><strong>ChatGPT</strong> — chatgpt.com &nbsp;·&nbsp; Free, excellent for resume drafts</li>
+      <li><strong>Meta AI</strong> — meta.ai &nbsp;·&nbsp; Free, built into Facebook and Instagram</li>
+      <li><strong>Grok</strong> — x.ai &nbsp;·&nbsp; Free, available on X (formerly Twitter)</li>
+      <li>The prompts from class work in all of them. Use whatever you have.</li>
+    </ul>
+  </div>
+
+  <!-- BUILT IN A DAY STORY -->
+  <div class="story-card">
+    <div class="story-eyebrow">How the Resume Builder exists</div>
+    <div class="story-title">Someone asked Thursday night. The tool was live Friday afternoon.</div>
+    <div class="story-body">A mom reached out asking for help with her son's resume. That ask became this tool, built with AI, tested, and deployed in under 20 hours. That is what ethical AI collaboration looks like in practice. You are using it right now.</div>
+    <div class="story-stat">⏱ Built in under 20 hours &nbsp;·&nbsp; Free for everyone</div>
+  </div>
+
+  <!-- SAFETY SECTION -->
+  <div id="safety"></div>
+  <div class="section-label" style="margin-top:8px;">Job scam warning signs</div>
+
+  <div class="safety-section">
+    <div class="safety-header">
+      <div class="safety-header-label">Know before you apply</div>
+      <div class="safety-header-title">These are not real job offers</div>
+    </div>
+    <div class="safety-body">
+      <div class="safety-intro">Scammers target people who are actively looking for work. If you see any of these, do not apply, do not click, do not pay.</div>
+      <div class="scam-list">
+        <div class="scam-item">
+          <div class="scam-icon">💸</div>
+          <div class="scam-text">
+            <div class="scam-name">They ask you to pay</div>
+            <div class="scam-detail">Real employers never charge you to apply, for training, for a background check, or for equipment. If they ask for money, it is a scam.</div>
+          </div>
+        </div>
+        <div class="scam-item">
+          <div class="scam-icon">💬</div>
+          <div class="scam-text">
+            <div class="scam-name">Hired without an interview</div>
+            <div class="scam-detail">You got the job after only a text chat, or with no interview at all. Real employers talk to you first.</div>
+          </div>
+        </div>
+        <div class="scam-item">
+          <div class="scam-icon">🏦</div>
+          <div class="scam-text">
+            <div class="scam-name">They send you a check to deposit</div>
+            <div class="scam-detail">They mail or text you a check and ask you to send part of it back, or buy gift cards. The check will bounce and you lose the money.</div>
+          </div>
+        </div>
+        <div class="scam-item">
+          <div class="scam-icon">🔗</div>
+          <div class="scam-text">
+            <div class="scam-name">Strange links or unknown sites</div>
+            <div class="scam-detail">The job posting links to a site you have never heard of, or the email comes from a personal Gmail or Yahoo account instead of a company address.</div>
+          </div>
+        </div>
+        <div class="scam-item">
+          <div class="scam-icon">🤑</div>
+          <div class="scam-text">
+            <div class="scam-name">Way too much money</div>
+            <div class="scam-detail">The pay sounds too good for the work described. Mystery shopper, package reshipping, and "brand ambassador" roles are common scam covers.</div>
+          </div>
+        </div>
+        <div class="scam-item">
+          <div class="scam-icon">⚡</div>
+          <div class="scam-text">
+            <div class="scam-name">Pressure to decide right now</div>
+            <div class="scam-detail">They say the offer expires today, or they need your Social Security number and bank account before you have signed anything or met anyone.</div>
+          </div>
+        </div>
+      </div>
+      <div class="safety-rule">
+        <div class="safety-rule-text">If something feels off, it probably is. Search the company name plus the word "scam" before you do anything. Real jobs will still be there after you check.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FREE TOOLS -->
+  <div class="section-label">Other free tools</div>
+
+  <a class="card" href="https://jobscan.co" target="_blank" rel="noopener">
+    <div class="card-inner">
+      <div class="card-icon icon-blue">🔍</div>
+      <div class="card-text">
+        <div class="card-title">Jobscan</div>
+        <div class="card-desc">Paste your resume and the job posting. See your ATS match score instantly.</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">jobscan.co &nbsp;·&nbsp; Free tier available</div>
+  </a>
+
+  <a class="card" href="https://grammarly.com" target="_blank" rel="noopener">
+    <div class="card-inner">
+      <div class="card-icon icon-green">✏️</div>
+      <div class="card-text">
+        <div class="card-title">Grammarly</div>
+        <div class="card-desc">Catches grammar errors and flags AI-sounding phrases before you submit.</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">grammarly.com &nbsp;·&nbsp; Free version works great</div>
+  </a>
+
+  <a class="card" href="https://linkedin.com" target="_blank" rel="noopener">
+    <div class="card-inner">
+      <div class="card-icon icon-blue">💼</div>
+      <div class="card-text">
+        <div class="card-title">LinkedIn</div>
+        <div class="card-desc">87% of recruiters use this to find people. Free account takes 20 minutes.</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">linkedin.com &nbsp;·&nbsp; Free</div>
+  </a>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-logo">SYMBEYOND AI LLC</div>
+  <div class="footer-sub">symbeyond.ai &nbsp;·&nbsp; Built for this community</div>
+</div>
+
+</body>
+</html>

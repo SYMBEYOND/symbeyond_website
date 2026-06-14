@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYMBEYOND Builder Toolkit</title>
+<meta name="description" content="Practical tools for builders and teams. Resume builder, ecosystem map, SolidWorks tutoring. Included for SYMB-Builder supporters.">
+<!-- Favicons -->
+<link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
+<link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
+<link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
+<meta property="og:title" content="SYMBEYOND Builder Toolkit">
+<meta property="og:description" content="Practical tools for builders. Free for SYMB-Builder supporters.">
+<meta property="og:url" content="https://symbeyond.ai/builder-toolkit">
+<meta property="og:image" content="https://symbeyond.ai/assets/icons/SYMBEYOND_logo_mac.png">
+<style>
+  :root{
+    --paper:#FBFBF8; --ink:#20242B; --muted:#5F6672;
+    --teal:#0F6E56; --teal-soft:#E1F5EE;
+    --amber:#BA7517; --amber-soft:#FAEEDA;
+    --line:#D9D7CF; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:-apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height:1.6; font-size:16px;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:40px 20px 80px;}
+  header.site{padding:28px 0 8px;}
+  h1{font-size:32px; line-height:1.15; font-weight:700; margin:0 0 8px;}
+  .sub{color:var(--muted); font-size:16px; max-width:60ch; margin:0 0 28px;}
+  .badge{
+    display:inline-block; background:var(--amber-soft); color:var(--amber);
+    padding:6px 12px; border-radius:20px; font-size:13px; font-weight:600;
+    margin:0 0 24px;
+  }
+  .intro{
+    background:var(--white); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; margin-bottom:32px; font-size:15px; line-height:1.7;
+  }
+  .intro strong{color:var(--ink); font-weight:600;}
+  .intro a{color:var(--teal); text-decoration:none;}
+  .intro a:hover{text-decoration:underline;}
+  .tools-grid{display:grid; gap:18px; margin-bottom:40px;}
+  .tool-card{
+    background:var(--white); border:1px solid var(--line); border-radius:12px;
+    padding:24px; transition:all 0.2s;
+  }
+  .tool-card:hover{border-color:var(--teal); box-shadow:0 2px 8px rgba(15,110,86,0.1);}
+  .tool-name{
+    font-size:20px; font-weight:700; color:var(--ink); margin:0 0 6px;
+  }
+  .tool-desc{
+    font-size:14px; color:var(--muted); margin:0 0 14px; line-height:1.6;
+  }
+  .tool-link{
+    display:inline-block; padding:10px 16px; background:var(--teal);
+    color:#fff; text-decoration:none; border-radius:6px; font-weight:600;
+    font-size:14px; transition:background 0.2s;
+  }
+  .tool-link:hover{background:#0B5743;}
+  .coming-soon{
+    background:var(--white); border:1px solid var(--line); border-radius:12px;
+    padding:24px; margin-bottom:40px;
+  }
+  .coming-soon .tool-name{color:var(--muted);}
+  .coming-soon .badge-cs{
+    display:inline-block; background:var(--line); color:var(--muted);
+    padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;
+    margin-left:8px;
+  }
+  .faq{margin-top:40px;}
+  .faq h2{font-size:18px; font-weight:700; margin:0 0 18px; color:var(--ink);}
+  .faq-item{margin-bottom:20px;}
+  .faq-q{font-weight:600; color:var(--ink); margin-bottom:6px; font-size:15px;}
+  .faq-a{color:var(--muted); font-size:14px; line-height:1.7;}
+  .faq-a a{color:var(--teal); text-decoration:none;}
+  .faq-a a:hover{text-decoration:underline;}
+  footer.site{
+    margin-top:40px; text-align:center; font-size:13px; color:var(--muted);
+    padding-top:20px; border-top:1px solid var(--line);
+  }
+  footer.site a{color:var(--teal); text-decoration:none;}
+  footer.site a:hover{text-decoration:underline;}
+  @media (max-width:560px){
+    .wrap{padding:24px 16px 60px;}
+    h1{font-size:26px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="site">
+    <h1>Builder Toolkit</h1>
+    <p class="sub">Practical tools and resources for builders, makers, and teams.</p>
+    <span class="badge">Included for SYMB-Builder supporters ($5/month)</span>
+  </header>
+
+  <div class="intro">
+    <p>These tools complement the SYMB-FER protocol. They're built for real work: no account, no signup, no tracking. Use them freely. They're included with your <strong>SYMB-Builder</strong> membership on <a href="https://www.patreon.com/c/SYMBEYONDAI" target="_blank">Patreon</a>.</p>
+  </div>
+
+  <div class="tools-grid">
+    <!-- Resume Builder -->
+    <div class="tool-card">
+      <div class="tool-name">Resume Builder</div>
+      <p class="tool-desc">Answer plain questions, get a clean one-page resume you can print or save as PDF. No account, nothing saved. Portable format you own completely.</p>
+      <a href="/resume" class="tool-link">Open Resume Builder →</a>
+    </div>
+
+    <!-- Ecosystem Map -->
+    <div class="tool-card">
+      <div class="tool-name">Ecosystem Map</div>
+      <p class="tool-desc">Interactive visualization of the SYMBEYOND network. Explore the people, projects, and tools connected to the protocol. Click to learn more.</p>
+      <a href="/ecosystem" class="tool-link">Open Ecosystem Map →</a>
+    </div>
+
+    <!-- SolidWorks Tutor -->
+    <div class="tool-card">
+      <div class="tool-name">SolidWorks Tutor</div>
+      <p class="tool-desc">Quick reference for Part Modeling, Assemblies, and Drawings. Shortcuts, workflows, how-tos. Ask questions and get instant help from a tutor trained on real industry work.</p>
+      <a href="/solidworks-tutor" class="tool-link">Open SolidWorks Tutor →</a>
+    </div>
+  </div>
+
+  <!-- Coming Soon -->
+  <div class="coming-soon">
+    <div class="tool-name">Get Hired
+      <span class="badge-cs">Coming soon</span>
+    </div>
+    <p class="tool-desc">Interview coaching and job search tools built for builders. Being rebuilt for clarity and usefulness.</p>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <h2>About This Toolkit</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Do I need SYMB-Builder to use these tools?</div>
+      <div class="faq-a">No. Each tool is available freely. SYMB-Builder membership on <a href="https://www.patreon.com/c/SYMBEYONDAI" target="_blank">Patreon</a> gives you access to advanced materials, protocol implementations, integration guides, and team-scale tools in the <strong>SYMB-FER Pro</strong> layer. The toolkit is a bonus, not a gate.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What is SYMB-Builder?</div>
+      <div class="faq-a">SYMB-Builder is a $5/month Patreon tier that funds continued development of SYMB-FER and related tools. Members get read access to advanced protocol implementations, configuration packs, integrity workflows, and team resources. No account required — Patreon handles membership.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I use these tools offline?</div>
+      <div class="faq-a">Resume Builder and SolidWorks Tutor work best with an internet connection. The Ecosystem Map is fully interactive and requires a browser. All tools are free to use; nothing you create is stored or tracked.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How do these tools relate to SYMB-FER?</div>
+      <div class="faq-a">They don't. SYMB-FER is a protocol for context continuity across AI sessions. These tools are practical utilities that complement that work. They're useful on their own, with or without SYMB-FER.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Is there more?</div>
+      <div class="faq-a">Yes. The SYMB-FER Pro layer (accessible to SYMB-Builder members) includes protocol harnesses, integrity workflows, chain-of-custody templates, and team-scale resources. See the <a href="/" target="_blank">main site</a> for details.</div>
+    </div>
+  </div>
+
+  <footer class="site">
+    <p><a href="https://symbeyond.ai" target="_blank">SYMBEYOND AI</a> — <a href="https://www.patreon.com/c/SYMBEYONDAI" target="_blank">Join SYMB-Builder on Patreon</a></p>
+  </footer>
+</div>
+
+</body>
+</html>

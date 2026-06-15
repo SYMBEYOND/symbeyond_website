@@ -4,6 +4,12 @@
 
 ---
 
+## Using an AI assistant?
+
+Start with [REPO_BOOT.md](REPO_BOOT.md) — a quick orientation for any LLM (Claude, ChatGPT, or other) on what this repo is, how it works, and how to collaborate with it effectively.
+
+---
+
 ## What This Is
 
 This repository contains the full website for **SYMBEYOND AI LLC** (ACC #25025155), a mobile technology consulting firm based in Colorado City, AZ — and the public home of the **SYMBEYOND** human-AI collaboration research framework.

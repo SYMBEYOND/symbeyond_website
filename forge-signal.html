@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forge Signal Composer - SYMBEYOND Builder Toolkit</title>
+<meta name="description" content="Turn raw thoughts into structured copy/paste prompts. SYMB-Builder exclusive.">
+<link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
+<link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
+<link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
+<style>
+  :root{
+    --paper:#FBFBF8; --ink:#20242B; --muted:#5F6672;
+    --teal:#0F6E56; --teal-soft:#E1F5EE;
+    --amber:#BA7517; --amber-soft:#FAEEDA;
+    --line:#D9D7CF; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:-apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height:1.6; font-size:16px;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:40px 20px 80px;}
+  header.site{padding:28px 0 8px; margin-bottom:32px;}
+  h1{font-size:32px; line-height:1.15; font-weight:700; margin:0 0 8px;}
+  .sub{color:var(--muted); font-size:16px; max-width:70ch; margin:0;}
+  .tool-container{display:none;}
+  .tool-container.active{display:block;}
+  .panel{
+    background:var(--white); border:1px solid var(--line); border-radius:12px;
+    padding:24px; margin-bottom:24px;
+  }
+  .section-title{
+    font-size:18px; font-weight:700; color:var(--ink); margin:0 0 16px;
+  }
+  .form-group{margin-bottom:20px;}
+  .form-group label{
+    display:block; font-weight:600; color:var(--ink); margin-bottom:8px; font-size:14px;
+  }
+  .mode-selector{display:flex; gap:12px; margin-bottom:20px;}
+  .mode-btn{
+    flex:1; padding:12px 16px; border:1px solid var(--line); background:var(--white);
+    color:var(--muted); border-radius:6px; font-weight:600; cursor:pointer;
+    transition:all 0.2s;
+  }
+  .mode-btn.active{
+    background:var(--teal); color:#fff; border-color:var(--teal);
+  }
+  .mode-btn:hover{border-color:var(--teal);}
+  textarea, select{
+    width:100%; padding:12px; border:1px solid var(--line); border-radius:6px;
+    font-family:inherit; font-size:14px; color:var(--ink);
+  }
+  textarea{
+    resize:vertical; min-height:120px; font-family:monospace;
+  }
+  textarea:focus, select:focus{
+    outline:none; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal-soft);
+  }
+  select{
+    appearance:none; background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235F6672' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat:no-repeat; background-position:right 8px center; background-size:20px;
+    padding-right:32px;
+  }
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .button-group{display:flex; gap:12px; flex-wrap:wrap; margin-top:24px;}
+  .btn{
+    padding:10px 18px; border:none; border-radius:6px; font-weight:600; font-size:14px;
+    cursor:pointer; transition:all 0.2s;
+  }
+  .btn-primary{background:var(--teal); color:#fff;}
+  .btn-primary:hover{background:#0B5743;}
+  .btn-secondary{background:var(--amber-soft); color:var(--amber);}
+  .btn-secondary:hover{background:#F5D8A8;}
+  .btn-tertiary{background:var(--line); color:var(--muted);}
+  .btn-tertiary:hover{background:#D0C9B8;}
+  .btn:disabled{opacity:0.5; cursor:not-allowed;}
+  .output-section{display:none;}
+  .output-section.active{display:block;}
+  .output-label{
+    font-size:13px; font-weight:600; color:var(--muted); margin:0 0 8px; text-transform:uppercase; letter-spacing:0.5px;
+  }
+  .output-box{
+    background:#F8F7F3; border:1px solid var(--line); border-radius:6px; padding:16px;
+    margin-bottom:16px; word-break:break-word; white-space:pre-wrap; font-family:monospace;
+    font-size:13px; line-height:1.6; color:var(--ink);
+  }
+  .prompt-output{
+    background:var(--white); border:2px solid var(--amber); border-radius:6px; padding:16px;
+    margin-bottom:16px; font-family:monospace; font-size:13px; line-height:1.7; color:var(--ink);
+  }
+  .prompt-output textarea{
+    width:100%; min-height:300px; font-family:monospace; font-size:13px;
+  }
+  .quip-bank{
+    background:#F8F7F3; border:1px solid var(--line); border-radius:6px; padding:12px;
+    max-height:120px; overflow-y:auto; margin-top:8px;
+  }
+  .quip-item{
+    background:var(--white); border:1px solid var(--line); border-radius:4px;
+    padding:8px 12px; margin-bottom:8px; font-size:13px; color:var(--ink);
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+  }
+  .quip-item:last-child{margin-bottom:0;}
+  .quip-del{
+    cursor:pointer; color:var(--muted); font-weight:600; user-select:none;
+  }
+  .quip-del:hover{color:var(--teal);}
+  .quip-note{color:var(--muted); font-size:12px; margin-top:8px; font-style:italic;}
+  .back-link{
+    display:inline-block; margin-bottom:24px; color:var(--teal); text-decoration:none; font-size:14px;
+  }
+  .back-link:hover{text-decoration:underline;}
+  @media (max-width:768px){
+    .wrap{padding:24px 16px 60px;}
+    h1{font-size:26px;}
+    .form-row{grid-template-columns:1fr;}
+    .button-group{flex-direction:column;}
+    .button-group .btn{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a href="/builder-toolkit" class="back-link">← Back to Builder Toolkit</a>
+
+  <header class="site">
+    <h1>Forge Signal Composer</h1>
+    <p class="sub">Turn raw thoughts and incoming messages into structured prompts for AI. No storage, no tracking, no API calls. Local composing only.</p>
+  </header>
+
+  <!-- Mode Selector -->
+  <div class="panel">
+    <div class="form-group">
+      <label>Mode</label>
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="forge">Forge Signal</button>
+        <button class="mode-btn" data-mode="reply">Safe Reply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Raw Input -->
+  <div class="panel">
+    <div class="form-group">
+      <label for="rawInput">Raw Thought / Incoming Message</label>
+      <textarea id="rawInput" placeholder="Paste or type your raw thought, project note, or incoming message here..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="platform">Platform</label>
+      <select id="platform">
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="Facebook">Facebook</option>
+        <option value="Patreon Public">Patreon Public</option>
+        <option value="Patreon Member">Patreon Member</option>
+        <option value="Discord">Discord</option>
+        <option value="General">General</option>
+        <option value="Direct Reply">Direct Reply</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tone">Tone</label>
+        <select id="tone">
+          <option value="Clean">Clean</option>
+          <option value="Warm">Warm</option>
+          <option value="Spicy">Spicy</option>
+          <option value="Technical">Technical</option>
+          <option value="Reflective">Reflective</option>
+          <option value="Garage-Lab">Garage-Lab</option>
+          <option value="Professional">Professional</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="goal">Goal</label>
+        <select id="goal">
+          <option value="Teach">Teach</option>
+          <option value="Invite">Invite</option>
+          <option value="Announce">Announce</option>
+          <option value="Reflect">Reflect</option>
+          <option value="Convert">Convert</option>
+          <option value="Document">Document</option>
+          <option value="Reply">Reply</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="boundary">Public/Builder Boundary</label>
+        <select id="boundary">
+          <option value="Public Only">Public Only</option>
+          <option value="Tease Builder Asset">Tease Builder Asset</option>
+          <option value="Member-Only Depth">Member-Only Depth</option>
+          <option value="No Sensitive Details">No Sensitive Details</option>
+          <option value="Open Source Principle">Open Source Principle / Pro Operational</option>
+          <option value="No Proprietary Disclosure">No Proprietary Disclosure</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="cta">CTA Style</label>
+        <select id="cta">
+          <option value="Soft Invite">Soft Invite</option>
+          <option value="Direct Patreon">Direct Patreon</option>
+          <option value="No CTA">No CTA</option>
+          <option value="Builder Tier Mention">Builder Tier Mention</option>
+          <option value="Ask a Question">Ask a Question</option>
+          <option value="Continue Conversation">Continue Conversation</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" id="generateBtn">Generate Prompt</button>
+      <button class="btn btn-secondary" id="copyBtn" style="display:none;">Copy Prompt</button>
+      <button class="btn btn-tertiary" id="clearBtn">Clear</button>
+      <button class="btn btn-tertiary" id="forgeExampleBtn">Load Forge Example</button>
+      <button class="btn btn-tertiary" id="replyExampleBtn">Load Reply Example</button>
+    </div>
+  </div>
+
+  <!-- Output Section -->
+  <div class="panel" id="outputPanel" style="display:none;">
+    <div class="output-section" id="forgeOutput" style="display:block;">
+      <div class="form-group">
+        <label class="section-title">Generated Prompt</label>
+        <div class="output-label">Full Structured Prompt</div>
+        <div class="prompt-output">
+          <textarea id="promptOutput" readonly></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Core Tension</div>
+        <div class="output-box" id="coreTensionOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Quip Bank (8 Quips)</div>
+        <div class="output-box" id="quipBankOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Forge Signal Draft</div>
+        <div class="output-box" id="forgeSignalOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Platform Post</div>
+        <div class="output-box" id="platformPostOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Patreon Layer (Builder Asset)</div>
+        <div class="output-box" id="patreonLayerOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Final Recommendation</div>
+        <div class="output-box" id="finalRecOutput"></div>
+      </div>
+    </div>
+
+    <div class="output-section" id="replyOutput" style="display:none;">
+      <div class="form-group">
+        <label class="section-title">Generated Prompt</label>
+        <div class="output-label">Full Structured Prompt</div>
+        <div class="prompt-output">
+          <textarea id="promptOutput" readonly></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Intent Read</div>
+        <div class="output-box" id="intentReadOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Risk Boundary</div>
+        <div class="output-box" id="riskBoundaryOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Direct Reply Draft</div>
+        <div class="output-box" id="directReplyOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Alternate Short Reply</div>
+        <div class="output-box" id="shortReplyOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Optional Follow-Up Question</div>
+        <div class="output-box" id="followUpOutput"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="output-label">Final Recommendation</div>
+        <div class="output-box" id="finalRecOutput"></div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-secondary" id="copyBtn2">Copy Prompt</button>
+      <button class="btn btn-tertiary" id="clearBtn2">Clear</button>
+    </div>
+  </div>
+
+  <!-- Quip Bank Panel -->
+  <div class="panel">
+    <div class="section-title">Quip Bank</div>
+    <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">Save short quips for later reuse. Stored locally in this browser only.</p>
+
+    <div class="form-group">
+      <label for="quipInput">New Quip</label>
+      <input type="text" id="quipInput" placeholder="Type a quip and press Save to store it...">
+    </div>
+
+    <button class="btn btn-secondary" id="saveQuipBtn">Save Quip</button>
+    <button class="btn btn-tertiary" id="clearBankBtn">Clear Quip Bank</button>
+
+    <div class="quip-bank" id="quipBank"></div>
+    <p class="quip-note">Saved locally in this browser only.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Gate check
+  if (localStorage.getItem('bt_unlock') !== '1') {
+    alert('Access denied. Please unlock Builder Toolkit first.');
+    window.location.href = '/builder-toolkit';
+    return;
+  }
+
+  var state = {
+    mode: 'forge',
+    currentPrompt: ''
+  };
+
+  // Mode selector
+  document.querySelectorAll('.mode-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.mode-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      state.mode = btn.dataset.mode;
+      updateOutputSection();
+    });
+  });
+
+  function updateOutputSection(){
+    document.getElementById('forgeOutput').style.display = state.mode === 'forge' ? 'block' : 'none';
+    document.getElementById('replyOutput').style.display = state.mode === 'reply' ? 'block' : 'none';
+  }
+
+  // Generate prompt
+  document.getElementById('generateBtn').addEventListener('click', function(){
+    var rawInput = document.getElementById('rawInput').value.trim();
+    if (!rawInput) {
+      alert('Please enter a raw thought or message.');
+      return;
+    }
+
+    var platform = document.getElementById('platform').value;
+    var tone = document.getElementById('tone').value;
+    var goal = document.getElementById('goal').value;
+    var boundary = document.getElementById('boundary').value;
+    var cta = document.getElementById('cta').value;
+
+    var prompt = buildPrompt(rawInput, state.mode, platform, tone, goal, boundary, cta);
+    state.currentPrompt = prompt;
+
+    document.getElementById('promptOutput').value = prompt;
+    document.getElementById('outputPanel').style.display = 'block';
+    document.getElementById('generateBtn').style.display = 'none';
+    document.getElementById('copyBtn').style.display = 'inline-block';
+    document.getElementById('copyBtn2').style.display = 'inline-block';
+
+    populateOutputFields(rawInput, state.mode, tone, goal, boundary, platform, cta);
+  });
+
+  function buildPrompt(raw, mode, platform, tone, goal, boundary, cta){
+    var header = 'You are helping compose a SYMBEYOND Forge Signal or direct reply.\n\n' +
+      'Protocol: SYMB-POST·FORGE\n\n' +
+      'Raw thought / incoming message:\n' + raw + '\n\n' +
+      'Mode: ' + mode + '\n' +
+      'Platform: ' + platform + '\n' +
+      'Tone: ' + tone + '\n' +
+      'Goal: ' + goal + '\n' +
+      'Public/Builder boundary: ' + boundary + '\n' +
+      'CTA style: ' + cta + '\n\n' +
+      'Composition rules:\n' +
+      '1. Do not mimic T. Sommers, Tool Tuesday, or anyone else\'s recurring format.\n' +
+      '2. Preserve SYMBEYOND\'s builder voice: practical, human, slightly witty, not corporate.\n' +
+      '3. Do not include proprietary, legal, Orban, Pappas, SYMB-AIR implementation, NDA-sensitive, or private architecture details.\n' +
+      '4. Convert the raw thought into operational language, not empty inspiration.\n' +
+      '5. Make the public/pro distinction clear when relevant: Public teaches the principle. Builder makes it operational.\n' +
+      '6. Avoid hype.\n' +
+      '7. Avoid begging.\n' +
+      '8. Avoid vague AI futurism.\n' +
+      '9. Use concrete builder language: tool, workflow, proof, friction, shop, repo, prototype, signal, system.\n' +
+      '10. Keep the output honest. If the raw thought/message is not ready to post or send, say so.\n' +
+      '11. For direct replies, keep it warm, concise, and non-disclosing.\n\n';
+
+    if (mode === 'forge') {
+      return header + 'Generate the following outputs:\n\n' +
+        'A. Core Tension - One sentence describing the tension inside the raw thought.\n' +
+        'B. Quip Bank - Give 8 short quips (bullet list).\n' +
+        'C. Forge Signal - Draft with Quip, Shop Problem, Builder Move, Proof Check, Why It Ships.\n' +
+        'D. Platform Post - One polished post for ' + platform + '.\n' +
+        'E. Patreon Layer - What deeper Builder-tier asset this could become (checklist, prompt, template, mini-guide, tool, or build note).\n' +
+        'F. Final Recommendation - Pick the strongest next move (post now / save for later / turn into a tool / turn into Patreon asset / do not post yet).';
+    } else {
+      return header + 'Generate the following outputs:\n\n' +
+        'A. Intent Read - One sentence describing what this message is really about.\n' +
+        'B. Risk Boundary - List anything that should not be disclosed, overplayed, promised, or implied.\n' +
+        'C. Direct Reply - Write a polished message ready to send.\n' +
+        'D. Alternate Short Reply - Shorter version.\n' +
+        'E. Optional Follow-Up Question - One safe question that keeps the conversation open.\n' +
+        'F. Final Recommendation - Pick the strongest next move (send now / revise first / slow down / ask for clarification / do not send yet).';
+    }
+  }
+
+  function populateOutputFields(raw, mode, tone, goal, boundary, platform, cta){
+    if (mode === 'forge') {
+      document.getElementById('coreTensionOutput').textContent = 'Core tension extracted from: "' + raw.substring(0, 60) + '..."';
+      document.getElementById('quipBankOutput').textContent = '• Practical tension\n• Builder friction\n• Real-world gap\n• Signal worth sending\n• Operational proof\n• System thinking\n• Workflow insight\n• Shipping principle';
+      document.getElementById('forgeSignalOutput').textContent = '🔺 Forge Signal\n\nQuip: [strong line]\nShop Problem: [recurring failure this fixes]\nBuilder Move: [practical action]\nProof Check: [how you know it worked]\nWhy It Ships: [why this matters]';
+      document.getElementById('platformPostOutput').textContent = 'Platform: ' + platform + '\nTone: ' + tone + '\nGoal: ' + goal + '\n\n[Polished post ready for ' + platform + ']';
+      document.getElementById('patreonLayerOutput').textContent = 'Potential Builder asset:\n• Mini-guide on [topic]\n• Prompt template for [workflow]\n• Checklist for [process]\n• Behind-the-scenes build note';
+      document.getElementById('finalRecOutput').textContent = 'Recommendation: [post now / save for later / turn into tool / turn into Patreon asset / do not post yet]';
+    } else {
+      document.getElementById('intentReadOutput').textContent = 'Intent: [What the message is really asking or saying]';
+      document.getElementById('riskBoundaryOutput').textContent = 'Risk boundaries:\n• Do not disclose: [private details]\n• Do not overplay: [capabilities]\n• Do not promise: [timelines]\n• Do not imply: [guarantees]';
+      document.getElementById('directReplyOutput').textContent = 'Dear [Name],\n\n[Warm, professional reply that acknowledges intent without over-disclosing]\n\nBest,\n[Your name]';
+      document.getElementById('shortReplyOutput').textContent = '[Shorter version, 2-3 sentences]';
+      document.getElementById('followUpOutput').textContent = 'Safe follow-up: [One question that keeps conversation open without revealing too much]';
+      document.getElementById('finalRecOutput').textContent = 'Recommendation: [send now / revise first / slow down / ask for clarification / do not send yet]';
+    }
+  }
+
+  // Copy prompt
+  function copyPrompt(){
+    var prompt = document.getElementById('promptOutput').value || state.currentPrompt;
+    navigator.clipboard.writeText(prompt).then(function(){
+      alert('Prompt copied to clipboard!');
+    }).catch(function(){
+      alert('Could not copy. Try selecting and copying manually.');
+    });
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', copyPrompt);
+  document.getElementById('copyBtn2').addEventListener('click', copyPrompt);
+
+  // Clear
+  function clearAll(){
+    document.getElementById('rawInput').value = '';
+    document.getElementById('outputPanel').style.display = 'none';
+    document.getElementById('generateBtn').style.display = 'inline-block';
+    document.getElementById('copyBtn').style.display = 'none';
+    document.getElementById('copyBtn2').style.display = 'none';
+    document.getElementById('promptOutput').value = '';
+    state.currentPrompt = '';
+  }
+
+  document.getElementById('clearBtn').addEventListener('click', clearAll);
+  document.getElementById('clearBtn2').addEventListener('click', clearAll);
+
+  // Load examples
+  document.getElementById('forgeExampleBtn').addEventListener('click', function(){
+    document.getElementById('mode-forge').click();
+    document.querySelectorAll('.mode-btn')[0].click();
+    document.getElementById('rawInput').value = 'Open source taught me how to build, but SYMB-Builder helps me keep building. I want people to understand that the public work stays open, but the deeper operational layer belongs in the Builder tier. The vibe should be practical, not corporate.';
+    document.getElementById('platform').value = 'LinkedIn';
+    document.getElementById('tone').value = 'Warm';
+    document.getElementById('goal').value = 'Teach';
+    document.getElementById('boundary').value = 'Open Source Principle';
+    document.getElementById('cta').value = 'Soft Invite';
+  });
+
+  document.getElementById('replyExampleBtn').addEventListener('click', function(){
+    document.querySelectorAll('.mode-btn')[1].click();
+    document.getElementById('rawInput').value = 'Someone reached out about AI governance, industrial automation, execution boundaries, and preventing AI-supported recommendations from becoming real-world action without authority or control. Need a warm professional reply that acknowledges the overlap, does not over-disclose, and keeps the conversation open.';
+    document.getElementById('platform').value = 'Direct Reply';
+    document.getElementById('tone').value = 'Professional';
+    document.getElementById('goal').value = 'Reply';
+    document.getElementById('boundary').value = 'No Proprietary Disclosure';
+    document.getElementById('cta').value = 'Continue Conversation';
+  });
+
+  // Quip bank
+  function loadQuipBank(){
+    var quips = JSON.parse(localStorage.getItem('forge_quips') || '[]');
+    var container = document.getElementById('quipBank');
+    container.innerHTML = '';
+    if (quips.length === 0) {
+      container.innerHTML = '<p style="color:var(--muted); font-size:13px; padding:8px;">No quips saved yet.</p>';
+      return;
+    }
+    quips.forEach(function(quip, idx){
+      var item = document.createElement('div');
+      item.className = 'quip-item';
+      item.innerHTML = '<span>' + quip + '</span><span class="quip-del" onclick="deleteQuip(' + idx + ')">Delete</span>';
+      container.appendChild(item);
+    });
+  }
+
+  window.deleteQuip = function(idx){
+    var quips = JSON.parse(localStorage.getItem('forge_quips') || '[]');
+    quips.splice(idx, 1);
+    localStorage.setItem('forge_quips', JSON.stringify(quips));
+    loadQuipBank();
+  };
+
+  document.getElementById('saveQuipBtn').addEventListener('click', function(){
+    var quipInput = document.getElementById('quipInput').value.trim();
+    if (!quipInput) {
+      alert('Enter a quip to save.');
+      return;
+    }
+    var quips = JSON.parse(localStorage.getItem('forge_quips') || '[]');
+    quips.push(quipInput);
+    localStorage.setItem('forge_quips', JSON.stringify(quips));
+    document.getElementById('quipInput').value = '';
+    loadQuipBank();
+  });
+
+  document.getElementById('clearBankBtn').addEventListener('click', function(){
+    if (confirm('Clear all saved quips?')) {
+      localStorage.setItem('forge_quips', '[]');
+      loadQuipBank();
+    }
+  });
+
+  // Init
+  loadQuipBank();
+  updateOutputSection();
+})();
+</script>
+
+</body>
+</html>

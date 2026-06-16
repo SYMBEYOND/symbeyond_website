@@ -12,29 +12,17 @@
 }
 
 :root {
-  /* SYMBEYOND Dark Forge Theme */
-  --symb-bg: #0D1326;
-  --symb-bg-deep: #0B1020;
-  --symb-panel: #131B31;
-  --symb-panel-soft: #172038;
-  --symb-text: #E8E6DF;
-  --symb-muted: #A7AFC3;
-  --symb-gold: #C9A44C;
-  --symb-gold-dark: #A67E3F;
-  --symb-teal: #1F7A67;
-  --symb-border: #1A2540;
-
-  /* Legacy colors (preserved for gradients/special elements) */
+  /* Colors */
   --bg-card: rgba(12, 20, 38, 0.9);
   --bg-elevated: rgba(15, 23, 42, 0.8);
   --cyan: #22d3ee;
   --cyan-glow: rgba(34, 211, 238, 0.4);
   --violet: #a78bfa;
-  --text-primary: var(--symb-text);
-  --text-muted: var(--symb-muted);
+  --text-primary: #e6eaf2;
+  --text-muted: #8aa0c7;
   --text-dim: #5a6a8a;
-  --border: rgba(201, 164, 76, 0.2);
-
+  --border: rgba(99, 102, 241, 0.4);
+  
   /* Spectrum gradient */
   --spectrum-gradient: linear-gradient(
     124deg,
@@ -55,9 +43,9 @@
 
 body {
   font-family: "Lora", serif;
-  color: var(--symb-text);
+  color: var(--text-primary);
   min-height: 100vh;
-  background: var(--symb-bg);
+  background: #020617;
 }
 
 /* Animations */

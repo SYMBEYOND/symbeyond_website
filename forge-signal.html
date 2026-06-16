@@ -113,6 +113,21 @@
     display:inline-block; margin-bottom:24px; color:var(--gold); text-decoration:none; font-size:14px;
   }
   .back-link:hover{text-decoration:underline;}
+  .advanced-toggle{
+    display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--text-secondary);
+    font-size:14px; font-weight:600; margin:16px 0; user-select:none;
+  }
+  .advanced-toggle:hover{color:var(--gold);}
+  .toggle-icon{
+    display:inline-block; width:20px; height:20px; text-align:center; transition:transform 0.2s;
+  }
+  .advanced-toggle.collapsed .toggle-icon{transform:rotate(-90deg);}
+  .advanced-section{
+    max-height:1000px; overflow:hidden; transition:max-height 0.3s ease;
+  }
+  .advanced-section.collapsed{
+    max-height:0; opacity:0;
+  }
   @media (max-width:768px){
     .wrap{padding:24px 16px 60px;}
     h1{font-size:26px;}
@@ -129,10 +144,10 @@
 
   <header class="site">
     <h1>Forge Signal Composer</h1>
-    <p class="sub">Turn raw thoughts and incoming messages into structured prompts for AI. No storage, no tracking, no API calls. Local composing only.</p>
+    <p class="sub">Paste a rough thought or message. Get a clean prompt you can copy into ChatGPT, Claude, or your AI of choice.</p>
   </header>
 
-  <!-- Mode Selector -->
+  <!-- Simple Workflow Panel -->
   <div class="panel">
     <div class="form-group">
       <label>Mode</label>
@@ -141,88 +156,96 @@
         <button class="mode-btn" data-mode="reply">Safe Reply</button>
       </div>
     </div>
-  </div>
-
-  <!-- Raw Input -->
-  <div class="panel">
-    <div class="form-group">
-      <label for="rawInput">Raw Thought / Incoming Message</label>
-      <textarea id="rawInput" placeholder="Paste or type your raw thought, project note, or incoming message here..."></textarea>
-    </div>
 
     <div class="form-group">
-      <label for="platform">Platform</label>
-      <select id="platform">
-        <option value="LinkedIn">LinkedIn</option>
-        <option value="Facebook">Facebook</option>
-        <option value="Patreon Public">Patreon Public</option>
-        <option value="Patreon Member">Patreon Member</option>
-        <option value="Discord">Discord</option>
-        <option value="General">General</option>
-        <option value="Direct Reply">Direct Reply</option>
-      </select>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="tone">Tone</label>
-        <select id="tone">
-          <option value="Clean">Clean</option>
-          <option value="Warm">Warm</option>
-          <option value="Spicy">Spicy</option>
-          <option value="Technical">Technical</option>
-          <option value="Reflective">Reflective</option>
-          <option value="Garage-Lab">Garage-Lab</option>
-          <option value="Professional">Professional</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="goal">Goal</label>
-        <select id="goal">
-          <option value="Teach">Teach</option>
-          <option value="Invite">Invite</option>
-          <option value="Announce">Announce</option>
-          <option value="Reflect">Reflect</option>
-          <option value="Convert">Convert</option>
-          <option value="Document">Document</option>
-          <option value="Reply">Reply</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="boundary">Public/Builder Boundary</label>
-        <select id="boundary">
-          <option value="Public Only">Public Only</option>
-          <option value="Tease Builder Asset">Tease Builder Asset</option>
-          <option value="Member-Only Depth">Member-Only Depth</option>
-          <option value="No Sensitive Details">No Sensitive Details</option>
-          <option value="Open Source Principle">Open Source Principle / Pro Operational</option>
-          <option value="No Proprietary Disclosure">No Proprietary Disclosure</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="cta">CTA Style</label>
-        <select id="cta">
-          <option value="Soft Invite">Soft Invite</option>
-          <option value="Direct Patreon">Direct Patreon</option>
-          <option value="No CTA">No CTA</option>
-          <option value="Builder Tier Mention">Builder Tier Mention</option>
-          <option value="Ask a Question">Ask a Question</option>
-          <option value="Continue Conversation">Continue Conversation</option>
-        </select>
-      </div>
+      <label for="rawInput">Your Thought or Message</label>
+      <textarea id="rawInput" placeholder="Paste or type your rough thought, project note, or incoming message here..."></textarea>
     </div>
 
     <div class="button-group">
-      <button class="btn btn-primary" id="generateBtn">Generate Prompt</button>
+      <button class="btn btn-primary" id="generateBtn">Generate Builder Prompt</button>
       <button class="btn btn-secondary" id="copyBtn" style="display:none;">Copy Prompt</button>
       <button class="btn btn-tertiary" id="clearBtn">Clear</button>
+    </div>
+
+    <div class="button-group">
       <button class="btn btn-tertiary" id="forgeExampleBtn">Load Forge Example</button>
       <button class="btn btn-tertiary" id="replyExampleBtn">Load Reply Example</button>
+    </div>
+
+    <!-- Advanced Options Section -->
+    <div class="advanced-toggle" id="advancedToggle">
+      <span class="toggle-icon">▶</span>
+      <span>Advanced Options</span>
+    </div>
+
+    <div class="advanced-section collapsed" id="advancedSection">
+      <div class="form-group" style="margin-top:16px;">
+        <label for="platform">Platform</label>
+        <select id="platform">
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Patreon Public">Patreon Public</option>
+          <option value="Patreon Member">Patreon Member</option>
+          <option value="Discord">Discord</option>
+          <option value="General">General</option>
+          <option value="Direct Reply">Direct Reply</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="tone">Tone</label>
+          <select id="tone">
+            <option value="Clean">Clean</option>
+            <option value="Warm">Warm</option>
+            <option value="Spicy">Spicy</option>
+            <option value="Technical">Technical</option>
+            <option value="Reflective">Reflective</option>
+            <option value="Garage-Lab">Garage-Lab</option>
+            <option value="Professional">Professional</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="goal">Goal</label>
+          <select id="goal">
+            <option value="Teach">Teach</option>
+            <option value="Invite">Invite</option>
+            <option value="Announce">Announce</option>
+            <option value="Reflect">Reflect</option>
+            <option value="Convert">Convert</option>
+            <option value="Document">Document</option>
+            <option value="Reply">Reply</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="boundary">Public/Builder Boundary</label>
+          <select id="boundary">
+            <option value="Public Only">Public Only</option>
+            <option value="Tease Builder Asset">Tease Builder Asset</option>
+            <option value="Member-Only Depth">Member-Only Depth</option>
+            <option value="No Sensitive Details">No Sensitive Details</option>
+            <option value="Open Source Principle">Open Source Principle / Pro Operational</option>
+            <option value="No Proprietary Disclosure">No Proprietary Disclosure</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cta">CTA Style</label>
+          <select id="cta">
+            <option value="Soft Invite">Soft Invite</option>
+            <option value="Direct Patreon">Direct Patreon</option>
+            <option value="No CTA">No CTA</option>
+            <option value="Builder Tier Mention">Builder Tier Mention</option>
+            <option value="Ask a Question">Ask a Question</option>
+            <option value="Continue Conversation">Continue Conversation</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -317,7 +340,7 @@
   <!-- Quip Bank Panel -->
   <div class="panel">
     <div class="section-title">Quip Bank</div>
-    <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">Save short quips for later reuse. Stored locally in this browser only.</p>
+    <p style="color:var(--text-secondary); font-size:14px; margin-bottom:16px;">Save short quips for later reuse. Stored locally in this browser only.</p>
 
     <div class="form-group">
       <label for="quipInput">New Quip</label>
@@ -343,8 +366,45 @@
 
   var state = {
     mode: 'forge',
-    currentPrompt: ''
+    currentPrompt: '',
+    userModifiedSettings: false
   };
+
+  var DEFAULTS = {
+    forge: {
+      platform: 'LinkedIn',
+      tone: 'Garage-Lab',
+      goal: 'Teach',
+      boundary: 'Open Source Principle',
+      cta: 'Soft Invite'
+    },
+    reply: {
+      platform: 'Direct Reply',
+      tone: 'Professional',
+      goal: 'Reply',
+      boundary: 'No Proprietary Disclosure',
+      cta: 'Continue Conversation'
+    }
+  };
+
+  function applyDefaults(mode) {
+    if (!state.userModifiedSettings) {
+      var defaults = DEFAULTS[mode];
+      document.getElementById('platform').value = defaults.platform;
+      document.getElementById('tone').value = defaults.tone;
+      document.getElementById('goal').value = defaults.goal;
+      document.getElementById('boundary').value = defaults.boundary;
+      document.getElementById('cta').value = defaults.cta;
+    }
+  }
+
+  function trackSettingsModification() {
+    state.userModifiedSettings = true;
+  }
+
+  ['platform', 'tone', 'goal', 'boundary', 'cta'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', trackSettingsModification);
+  });
 
   // Mode selector
   document.querySelectorAll('.mode-btn').forEach(function(btn){
@@ -352,6 +412,7 @@
       document.querySelectorAll('.mode-btn').forEach(function(b){ b.classList.remove('active'); });
       btn.classList.add('active');
       state.mode = btn.dataset.mode;
+      applyDefaults(state.mode);
       updateOutputSection();
     });
   });
@@ -360,6 +421,13 @@
     document.getElementById('forgeOutput').style.display = state.mode === 'forge' ? 'block' : 'none';
     document.getElementById('replyOutput').style.display = state.mode === 'reply' ? 'block' : 'none';
   }
+
+  // Advanced Options toggle
+  document.getElementById('advancedToggle').addEventListener('click', function(){
+    var section = document.getElementById('advancedSection');
+    this.classList.toggle('collapsed');
+    section.classList.toggle('collapsed');
+  });
 
   // Generate prompt
   document.getElementById('generateBtn').addEventListener('click', function(){
@@ -502,7 +570,7 @@
     var container = document.getElementById('quipBank');
     container.innerHTML = '';
     if (quips.length === 0) {
-      container.innerHTML = '<p style="color:var(--muted); font-size:13px; padding:8px;">No quips saved yet.</p>';
+      container.innerHTML = '<p style="color:var(--text-secondary); font-size:13px; padding:8px;">No quips saved yet.</p>';
       return;
     }
     quips.forEach(function(quip, idx){
@@ -541,6 +609,7 @@
   });
 
   // Init
+  applyDefaults('forge');
   loadQuipBank();
   updateOutputSection();
 })();

@@ -465,7 +465,7 @@
         autocapitalize="off"
         spellcheck="false"
       >
-      <button class="gate-btn" onclick="checkGate()">Enter</button>
+      <button class="gate-btn" id="gate-btn" onclick="tryUnlock()">Enter</button>
       <div class="gate-error" id="gate-error"></div>
       <div class="gate-join">
         Not a member? <a href="https://www.patreon.com/16163910/join" target="_blank">Join on Patreon →</a>
@@ -700,35 +700,54 @@
 
   <script>
     // ── GATE LOGIC ──
-    // Key is set server-side via Vercel environment variable BOSS_KEY
-    // For local/static use, set the key here directly
-    // In production: wire this to api/boss-auth.js (same pattern as builder-toolkit-auth.js)
-    const BOSS_KEY = 'SYMB-BUILDER-2026'; // Replace with env var in production
+    // Validates against BOSS_CODES env var via /api/boss-auth
+    // Same pattern as builder-toolkit-auth.js
+    const KEY = 'boss_auth';
+    const gate = document.getElementById('gate');
+    const content = document.getElementById('content');
+    const input = document.getElementById('gate-pass');
+    const btn = document.getElementById('gate-btn');
+    const err = document.getElementById('gate-error');
 
-    function checkGate() {
-      const input = document.getElementById('gate-pass').value.trim();
-      const err = document.getElementById('gate-error');
-      if (input === BOSS_KEY) {
-        document.getElementById('gate').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
-        sessionStorage.setItem('boss_auth', '1');
-      } else {
-        err.textContent = 'Access denied. Check your key and try again.';
-        document.getElementById('gate-pass').value = '';
-        document.getElementById('gate-pass').focus();
-      }
+    function unlock() {
+      gate.style.display = 'none';
+      content.style.display = 'block';
+      sessionStorage.setItem(KEY, '1');
     }
 
-    // Allow Enter key to submit
-    document.getElementById('gate-pass').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') checkGate();
+    function tryUnlock() {
+      const code = input.value.trim();
+      if (!code) return;
+      btn.disabled = true;
+      err.textContent = '';
+      fetch('/api/boss-auth', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({code: code})
+      }).then(function(r) {
+        return r.json();
+      }).then(function(data) {
+        btn.disabled = false;
+        if (data.ok) {
+          unlock();
+        } else {
+          err.textContent = data.error || 'Code not recognized.';
+          input.value = '';
+          input.focus();
+        }
+      }).catch(function() {
+        btn.disabled = false;
+        err.textContent = 'Something went wrong. Try again.';
+      });
+    }
+
+    btn.addEventListener('click', tryUnlock);
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') tryUnlock();
     });
 
-    // Check session (so refresh doesn't re-gate within same session)
-    if (sessionStorage.getItem('boss_auth') === '1') {
-      document.getElementById('gate').style.display = 'none';
-      document.getElementById('content').style.display = 'block';
-    }
+    // Session persistence -- refresh doesn't re-gate
+    if (sessionStorage.getItem(KEY) === '1') unlock();
   </script>
 
 </body>

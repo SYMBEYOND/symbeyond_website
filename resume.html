@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Resume Builder | SYMBEYOND AI</title>
-<meta name="description" content="Free resume builder. Answer plain questions, get a clean one-page resume you can print or save as a PDF. No account, nothing saved.">
-<!-- Favicons -->
+<meta name="description" content="Free resume builder. Answer plain questions, get a clean one-page resume that passes AI detection checks. No account, nothing saved.">
 <link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
 <link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
 <link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
 <meta property="og:title" content="Resume Builder | SYMBEYOND AI">
-<meta property="og:description" content="Answer plain questions. Get a clean one-page resume. Free, no account.">
+<meta property="og:description" content="Answer plain questions. Get a clean one-page resume that passes AI detection checks. Free, no account.">
 <meta property="og:url" content="https://symbeyond.ai/resume">
 <meta property="og:image" content="https://symbeyond.ai/assets/icons/SYMBEYOND_logo_mac.png">
 <style>
@@ -33,18 +32,19 @@
     color:var(--teal); font-weight:600;
   }
   h1{font-size:30px; line-height:1.15; font-weight:700; margin:6px 0 4px;}
-  .sub{color:var(--muted); font-size:15px; max-width:48ch;}
+  .sub{color:var(--muted); font-size:15px; max-width:52ch;}
   .honesty{
     margin:18px 0 6px; padding:12px 14px; border-left:4px solid var(--amber);
     background:var(--amber-soft); border-radius:0 8px 8px 0; font-size:14px;
   }
   .honesty strong{color:var(--amber);}
-  .steps{
-    display:flex; gap:6px; margin:22px 0 18px;
+  .ai-warning{
+    margin:10px 0 6px; padding:12px 14px; border-left:4px solid var(--teal);
+    background:var(--teal-soft); border-radius:0 8px 8px 0; font-size:14px;
   }
-  .steps span{
-    flex:1; height:5px; border-radius:3px; background:var(--line); transition:background .3s;
-  }
+  .ai-warning strong{color:var(--teal);}
+  .steps{display:flex; gap:6px; margin:22px 0 18px;}
+  .steps span{flex:1; height:5px; border-radius:3px; background:var(--line); transition:background .3s;}
   .steps span.on{background:var(--teal);}
   .card{
     background:var(--white); border:1px solid var(--line); border-radius:12px;
@@ -64,14 +64,24 @@
   .btn{
     display:inline-block; border:none; border-radius:8px; padding:12px 20px;
     font-size:16px; font-weight:600; cursor:pointer; font-family:inherit;
+    transition: background 0.2s;
   }
   .btn:focus-visible{outline:3px solid var(--amber); outline-offset:2px;}
   .btn-primary{background:var(--teal); color:#fff;}
   .btn-primary:hover{background:#0B5743;}
+  .btn-primary:disabled{background:#aaa; cursor:not-allowed;}
   .btn-ghost{background:transparent; color:var(--teal); border:1px solid var(--teal);}
   .btn-ghost:hover{background:var(--teal-soft);}
   .btn-quiet{background:transparent; color:var(--muted); border:1px solid var(--line); font-size:14px; padding:9px 14px;}
   .btn-row{display:flex; justify-content:space-between; gap:10px; margin-top:18px; flex-wrap:wrap;}
+  .btn-download{
+    background:var(--teal); color:#fff; border:none; border-radius:8px;
+    padding:12px 24px; font-size:15px; font-weight:700; cursor:pointer;
+    font-family:inherit; display:inline-flex; align-items:center; gap:8px;
+    transition: background 0.2s;
+  }
+  .btn-download:hover{background:#0B5743;}
+  .btn-download:disabled{background:#aaa; cursor:not-allowed;}
   .job-block{
     border:1px dashed var(--line); border-radius:10px; padding:14px; margin-top:14px;
     position:relative;
@@ -87,19 +97,28 @@
   .status.show{display:block;}
   .status.work{background:var(--teal-soft); color:var(--teal);}
   .status.err{background:#FCEBEB; color:var(--danger);}
-  /* paper preview */
+
+  /* RESULT SECTION */
+  .result-actions{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    margin-bottom:16px; padding:16px; background:var(--white);
+    border:1px solid var(--line); border-radius:12px;
+  }
+  .result-note{font-size:13px; color:var(--muted); margin-bottom:12px;}
+
+  /* PAPER PREVIEW */
   .paper-zone{margin-top:8px;}
   .paper{
     background:var(--white); border:1px solid var(--line); border-radius:4px;
-    box-shadow:0 1px 3px rgba(0,0,0,0.07);
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
     padding:42px 46px; min-height:500px;
     font-family:Georgia, "Times New Roman", serif; color:#111; font-size:14.5px; line-height:1.5;
   }
   .paper[contenteditable=true]:focus{outline:2px solid var(--teal);}
   .paper h2{font-size:24px; font-weight:700; letter-spacing:0.01em; font-family:inherit; margin-bottom:0;}
-  .paper .contact{font-size:12.5px; color:#444; margin-bottom:14px;}
+  .paper .contact{font-size:12.5px; color:#444; margin-bottom:14px; border-bottom:1px solid #ddd; padding-bottom:8px;}
   .paper h3{
-    font-size:12.5px; letter-spacing:0.12em; text-transform:uppercase;
+    font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase;
     border-bottom:1.5px solid #111; padding-bottom:3px; margin:16px 0 8px; font-family:inherit;
   }
   .paper .jobhead{display:flex; justify-content:space-between; font-weight:700; margin-top:10px; font-size:14px;}
@@ -107,7 +126,6 @@
   .paper ul{margin:5px 0 4px 18px;}
   .paper li{margin-bottom:3px;}
   .paper p.summary{margin-bottom:4px;}
-  .edit-note{font-size:13px; color:var(--muted); margin:10px 0;}
   footer.site{margin-top:40px; text-align:center; font-size:13px; color:var(--muted);}
   footer.site a{color:var(--teal); text-decoration:none;}
   .hidden{display:none;}
@@ -115,12 +133,7 @@
     .row{flex-direction:column; gap:0;}
     .paper{padding:26px 20px;}
     h1{font-size:25px;}
-  }
-  @media print{
-    body{background:#fff;}
-    .no-print{display:none !important;}
-    .wrap{max-width:none; padding:0;}
-    .paper{border:none; box-shadow:none; border-radius:0; padding:0.4in 0.5in; min-height:0;}
+    .result-actions{flex-direction:column; align-items:stretch;}
   }
   @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
 </style>
@@ -129,10 +142,11 @@
 <div class="wrap">
 
   <header class="site no-print">
-    <div class="eyebrow">Free tool · No account · Nothing saved</div>
-    <h1>Build your resume by answering plain questions</h1>
-    <p class="sub">Tell it about your work the way you'd tell a friend. It turns your words into a clean, one-page resume you can print or save as a PDF.</p>
-    <div class="honesty"><strong>The honesty rule:</strong> this tool never invents your experience. It only organizes what you tell it. Read every line before you send it to anyone.</div>
+    <div class="eyebrow">SYMBEYOND AI · Free tool · No account · Nothing saved</div>
+    <h1>Build a resume that passes the AI check.</h1>
+    <p class="sub">Employers run resumes through AI detection tools. If it fails, it gets tossed. This tool builds from your own words — no AI writing, no AI fingerprint.</p>
+    <div class="ai-warning"><strong>Why this exists:</strong> AI-generated resumes are being rejected automatically. This tool formats your real words into a clean, professional resume. You write it. You own it. It passes.</div>
+    <div class="honesty"><strong>The honesty rule:</strong> this tool never invents your experience. It only organizes what you tell it. Read every line before you send it.</div>
   </header>
 
   <div class="steps no-print" id="steps">
@@ -166,9 +180,9 @@
   <!-- STEP 2 -->
   <section class="card no-print hidden" id="step2">
     <h2>What job are you going for?</h2>
-    <p class="hint">If you have a specific job posting, paste it in. The resume will be shaped to fit it. If not, just give a job title and skip the rest.</p>
+    <p class="hint">If you have a specific job posting, paste it in. If not, just give a job title and skip the rest.</p>
     <label for="f-target">Job title you want</label>
-    <input type="text" id="f-target" placeholder="Warehouse associate, cashier, ranch hand, anything">
+    <input type="text" id="f-target" placeholder="Warehouse associate, cashier, ranch hand">
     <label for="f-posting">Paste the job posting here (optional)</label>
     <textarea id="f-posting" placeholder="Copy the whole job ad from Indeed or wherever you found it and paste it here."></textarea>
     <div class="btn-row">
@@ -180,7 +194,7 @@
   <!-- STEP 3 -->
   <section class="card no-print hidden" id="step3">
     <h2>Tell me about your work</h2>
-    <p class="hint">In your own words. Don't worry about sounding fancy, that's the tool's job. Never had a formal job? Helping family, volunteering, church work, yard work for neighbors, all of it counts.</p>
+    <p class="hint">In your own words. Don't worry about sounding fancy — that's the tool's job. Helping family, volunteering, church work, yard work for neighbors — all of it counts.</p>
     <div id="jobs"></div>
     <button class="btn btn-ghost" onclick="addJob()" style="margin-top:14px;">+ Add another job</button>
     <div class="btn-row">
@@ -206,10 +220,10 @@
   <!-- STEP 5 -->
   <section class="card no-print hidden" id="step5">
     <h2>Build it</h2>
-    <p class="hint">Two ways to finish. The smart draft writes professional wording from what you told it. The simple version just lays your own words out cleanly. Both are yours to edit.</p>
+    <p class="hint">Two options. <strong>Format my words</strong> takes exactly what you wrote and lays it out cleanly — zero AI involvement, guaranteed to pass any AI check. <strong>Smart draft</strong> rewrites your words professionally but uses AI, so use it only if you plan to heavily edit the result.</p>
     <div class="btn-row" style="justify-content:flex-start;">
-      <button class="btn btn-primary" id="aiBtn" onclick="buildAI()">Write my resume (smart draft)</button>
-      <button class="btn btn-ghost" onclick="buildManual()">Just format my words</button>
+      <button class="btn btn-primary" onclick="buildManual()">Format my words</button>
+      <button class="btn btn-ghost" id="aiBtn" onclick="buildAI()">Smart draft (uses AI)</button>
     </div>
     <div class="status" id="status"></div>
     <div class="btn-row">
@@ -220,19 +234,25 @@
 
   <!-- RESULT -->
   <section class="paper-zone hidden" id="result">
-    <p class="edit-note no-print">Tap anywhere on the page below to edit it directly. Fix anything, then read the honesty rule one more time: <strong>is every line true?</strong></p>
-    <div class="btn-row no-print" style="justify-content:flex-start; margin-bottom:12px;">
-      <button class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+    <div class="result-actions no-print">
+      <button class="btn-download" id="downloadBtn" onclick="downloadPDF()">
+        ⬇ Download PDF
+      </button>
       <button class="btn btn-ghost" onclick="copyText()">Copy as text</button>
-      <button class="btn btn-quiet" onclick="backToEdit()">Change my answers</button>
+      <button class="btn btn-quiet" onclick="backToEdit()">Edit my answers</button>
     </div>
+    <p class="result-note no-print">Click anywhere on the resume below to edit it directly. Make it yours. Read every line — is it true?</p>
     <div class="paper" id="paper" contenteditable="true" spellcheck="true"></div>
   </section>
 
   <footer class="site no-print">
-    Built by <a href="https://symbeyond.ai">SYMBEYOND AI</a> · Your answers never leave this page unless you use the smart draft · Refreshing the page clears everything
+    Built by <a href="https://symbeyond.ai">SYMBEYOND AI</a> · Your answers never leave this page unless you use the smart draft · Refreshing clears everything
   </footer>
 </div>
+
+<!-- jsPDF via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
 let step = 1;
@@ -248,7 +268,7 @@ function go(n){
 }
 
 let jobCount = 0;
-function addJob(prefill){
+function addJob(){
   jobCount++;
   const id = jobCount;
   const div = document.createElement('div');
@@ -377,9 +397,6 @@ async function buildAI(){
   const btn = document.getElementById('aiBtn');
   btn.disabled = true;
   setStatus('Writing your draft. This takes about fifteen seconds...', 'work');
-
-  // Prompt is built server-side in /api/resume for safety.
-
   try{
     const response = await fetch("/api/resume", {
       method: "POST",
@@ -388,14 +405,14 @@ async function buildAI(){
     });
     const parsed = await response.json();
     if(!response.ok){
-      setStatus(parsed.error || 'The smart draft is not available right now. Use "Just format my words" instead, it works everywhere.', 'err');
+      setStatus(parsed.error || 'The smart draft is not available right now. Use "Format my words" instead — it works everywhere and passes all AI checks.', 'err');
       return;
     }
     clearStatus();
     renderResume(parsed);
   } catch(err){
     console.error(err);
-    setStatus('The smart draft is not available right now (it needs an internet connection). Use "Just format my words" instead, it works everywhere.', 'err');
+    setStatus('The smart draft is not available right now. Use "Format my words" instead — it works everywhere and passes all AI checks.', 'err');
   } finally {
     btn.disabled = false;
   }
@@ -405,7 +422,7 @@ function copyText(){
   const paper = document.getElementById('paper');
   const text = paper.innerText;
   navigator.clipboard.writeText(text).then(()=>{
-    setStatusInline('Copied.');
+    alert('Copied. Paste it into any document or form.');
   }).catch(()=>{
     const r = document.createRange();
     r.selectNodeContents(paper);
@@ -413,12 +430,71 @@ function copyText(){
     sel.removeAllRanges(); sel.addRange(r);
     document.execCommand('copy');
     sel.removeAllRanges();
-    setStatusInline('Copied.');
+    alert('Copied. Paste it into any document or form.');
   });
 }
-function setStatusInline(msg){
-  const note = document.querySelector('.edit-note');
-  if(note){ note.textContent = msg + ' Paste it into any application form or document.'; }
+
+// ── PDF DOWNLOAD ──
+async function downloadPDF(){
+  const btn = document.getElementById('downloadBtn');
+  btn.disabled = true;
+  btn.textContent = 'Building PDF...';
+
+  try {
+    const paper = document.getElementById('paper');
+    const name = (document.getElementById('f-name') ? document.getElementById('f-name').value.trim() : '') || 'resume';
+    const filename = name.replace(/\s+/g, '_').toLowerCase() + '_resume.pdf';
+
+    // Use html2canvas to capture the paper element
+    const canvas = await html2canvas(paper, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      width: paper.offsetWidth,
+      height: paper.scrollHeight
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.98);
+
+    // A4 page dimensions in mm
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+
+    // Scale image to fit page width with margins
+    const margin = 12;
+    const imgW = pageW - (margin * 2);
+    const imgH = (canvas.height * imgW) / canvas.width;
+
+    // If content is taller than one page, scale to fit
+    const maxH = pageH - (margin * 2);
+    let finalW = imgW;
+    let finalH = imgH;
+
+    if(imgH > maxH){
+      const scale = maxH / imgH;
+      finalW = imgW * scale;
+      finalH = maxH;
+    }
+
+    const xOffset = (pageW - finalW) / 2;
+    pdf.addImage(imgData, 'JPEG', xOffset, margin, finalW, finalH);
+    pdf.save(filename);
+
+  } catch(err){
+    console.error('PDF error:', err);
+    alert('PDF download failed. Use "Copy as text" instead and paste into a Word or Google Doc.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '⬇ Download PDF';
+  }
 }
 </script>
 </body>

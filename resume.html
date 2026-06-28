@@ -14,14 +14,38 @@
 <meta property="og:image" content="https://symbeyond.ai/assets/icons/SYMBEYOND_logo_mac.png">
 <style>
   :root{
-    --paper:#FBFBF8; --ink:#20242B; --muted:#5F6672;
-    --teal:#0F6E56; --teal-soft:#E1F5EE;
-    --amber:#BA7517; --amber-soft:#FAEEDA;
-    --line:#D9D7CF; --white:#FFFFFF; --danger:#A32D2D;
+    --bg: hsl(25, 10%, 8%);
+    --surface: hsl(20, 22%, 13%);
+    --surface-border: hsl(20, 18%, 19%);
+    --text-primary: hsl(35, 15%, 84%);
+    --text-muted: hsl(15, 45%, 68%);
+    --text-dim: hsl(15, 35%, 52%);
+    --accent: hsl(14, 75%, 52%);
+    --accent-dim: hsl(14, 60%, 38%);
+    --gold: hsl(42, 80%, 52%);
+    --gold-dim: hsl(42, 60%, 35%);
+    --green: hsl(140, 55%, 42%);
+    --green-dim: hsl(140, 40%, 12%);
+    --paper: hsl(25, 10%, 8%);
+    --ink: hsl(35, 15%, 84%);
+    --muted: hsl(15, 45%, 68%);
+    --teal: hsl(168, 60%, 38%);
+    --teal-soft: hsl(168, 40%, 11%);
+    --amber: hsl(42, 65%, 42%);
+    --amber-soft: hsl(42, 40%, 10%);
+    --line: hsl(20, 18%, 19%);
+    --white: hsl(20, 22%, 13%);
+    --danger: hsl(6, 80%, 48%);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
-    background:var(--paper); color:var(--ink);
+    background-color: var(--bg);
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 2px,
+        hsla(25,8%,18%,0.07) 2px, hsla(25,8%,18%,0.07) 3px),
+      repeating-linear-gradient(90deg, transparent, transparent 2px,
+        hsla(25,8%,18%,0.04) 2px, hsla(25,8%,18%,0.04) 3px);
+    color: var(--text-primary);
     font-family:-apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height:1.6; font-size:16px;
   }
@@ -29,35 +53,35 @@
   header.site{padding:28px 0 8px;}
   .eyebrow{
     font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
-    color:var(--teal); font-weight:600;
+    color:var(--accent); font-weight:600;
   }
   h1{font-size:30px; line-height:1.15; font-weight:700; margin:6px 0 4px;}
-  .sub{color:var(--muted); font-size:15px; max-width:52ch;}
+  .sub{color:var(--text-muted); font-size:15px; max-width:52ch;}
   .honesty{
-    margin:18px 0 6px; padding:12px 14px; border-left:4px solid var(--amber);
-    background:var(--amber-soft); border-radius:0 8px 8px 0; font-size:14px;
+    margin:18px 0 6px; padding:12px 14px; border-left:4px solid var(--gold-dim);
+    background: hsla(42,30%,8%,0.6); border-radius:0 8px 8px 0; font-size:14px;
   }
-  .honesty strong{color:var(--amber);}
+  .honesty strong{color:var(--gold);}
   .ai-warning{
-    margin:10px 0 6px; padding:12px 14px; border-left:4px solid var(--teal);
-    background:var(--teal-soft); border-radius:0 8px 8px 0; font-size:14px;
+    margin:10px 0 6px; padding:12px 14px; border-left:4px solid var(--accent-dim);
+    background: hsla(14,40%,12%,0.4); border-radius:0 8px 8px 0; font-size:14px;
   }
-  .ai-warning strong{color:var(--teal);}
+  .ai-warning strong{color:var(--accent);}
   .steps{display:flex; gap:6px; margin:22px 0 18px;}
   .steps span{flex:1; height:5px; border-radius:3px; background:var(--line); transition:background .3s;}
-  .steps span.on{background:var(--teal);}
+  .steps span.on{background:var(--gold-dim);}
   .card{
-    background:var(--white); border:1px solid var(--line); border-radius:12px;
+    background:var(--surface); border:1px solid var(--surface-border); border-radius:12px;
     padding:20px 18px; margin-bottom:16px;
   }
   .card h2{font-size:19px; font-weight:700; margin-bottom:2px;}
-  .card .hint{color:var(--muted); font-size:14px; margin-bottom:14px;}
+  .card .hint{color:var(--text-muted); font-size:14px; margin-bottom:14px;}
   label{display:block; font-size:13px; font-weight:600; margin:12px 0 4px; color:var(--ink);}
   input[type=text], textarea, select{
-    width:100%; padding:10px 12px; font-size:16px; border:1px solid var(--line);
-    border-radius:8px; background:var(--paper); color:var(--ink); font-family:inherit;
+    width:100%; padding:10px 12px; font-size:16px; border:1px solid var(--surface-border);
+    border-radius:8px; background: hsl(25, 10%, 6%); color:var(--ink); font-family:inherit;
   }
-  input:focus, textarea:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:var(--teal);}
+  input:focus, textarea:focus{outline:2px solid var(--accent-dim); outline-offset:1px; border-color:var(--accent);}
   textarea{min-height:88px; resize:vertical;}
   .row{display:flex; gap:10px;}
   .row > div{flex:1;}
@@ -67,20 +91,20 @@
     transition: background 0.2s;
   }
   .btn:focus-visible{outline:3px solid var(--amber); outline-offset:2px;}
-  .btn-primary{background:var(--teal); color:#fff;}
-  .btn-primary:hover{background:#0B5743;}
+  .btn-primary{background:var(--gold-dim); color: hsl(25,10%,8%);}
+  .btn-primary:hover{background:var(--gold);}
   .btn-primary:disabled{background:#aaa; cursor:not-allowed;}
-  .btn-ghost{background:transparent; color:var(--teal); border:1px solid var(--teal);}
-  .btn-ghost:hover{background:var(--teal-soft);}
-  .btn-quiet{background:transparent; color:var(--muted); border:1px solid var(--line); font-size:14px; padding:9px 14px;}
+  .btn-ghost{background:transparent; color:var(--accent); border:1px solid var(--teal);}
+  .btn-ghost:hover{background: hsla(14,40%,12%,0.4);}
+  .btn-quiet{background:transparent; color:var(--text-muted); border:1px solid var(--surface-border); font-size:14px; padding:9px 14px;}
   .btn-row{display:flex; justify-content:space-between; gap:10px; margin-top:18px; flex-wrap:wrap;}
   .btn-download{
-    background:var(--teal); color:#fff; border:none; border-radius:8px;
+    background:var(--gold-dim); color: hsl(25,10%,8%); border:none; border-radius:8px;
     padding:12px 24px; font-size:15px; font-weight:700; cursor:pointer;
     font-family:inherit; display:inline-flex; align-items:center; gap:8px;
     transition: background 0.2s;
   }
-  .btn-download:hover{background:#0B5743;}
+  .btn-download:hover{background:var(--gold);}
   .btn-download:disabled{background:#aaa; cursor:not-allowed;}
   .job-block{
     border:1px dashed var(--line); border-radius:10px; padding:14px; margin-top:14px;
@@ -90,31 +114,31 @@
     position:absolute; top:8px; right:10px; background:none; border:none;
     color:var(--danger); cursor:pointer; font-size:13px; font-weight:600;
   }
-  .small{font-size:13px; color:var(--muted);}
+  .small{font-size:13px; color:var(--text-muted);}
   .status{
     margin-top:14px; font-size:14px; padding:10px 12px; border-radius:8px; display:none;
   }
   .status.show{display:block;}
-  .status.work{background:var(--teal-soft); color:var(--teal);}
-  .status.err{background:#FCEBEB; color:var(--danger);}
+  .status.work{background: hsla(14,40%,12%,0.4); color:var(--accent);}
+  .status.err{background: hsla(6,40%,8%,0.8); color: hsl(6,80%,55%);}
 
   /* RESULT SECTION */
   .result-actions{
     display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-    margin-bottom:16px; padding:16px; background:var(--white);
-    border:1px solid var(--line); border-radius:12px;
+    margin-bottom:16px; padding:16px; background:var(--surface);
+    border:1px solid var(--surface-border); border-radius:12px;
   }
-  .result-note{font-size:13px; color:var(--muted); margin-bottom:12px;}
+  .result-note{font-size:13px; color:var(--text-muted); margin-bottom:12px;}
 
   /* PAPER PREVIEW */
   .paper-zone{margin-top:8px;}
   .paper{
-    background:var(--white); border:1px solid var(--line); border-radius:4px;
+    background:var(--surface); border:1px solid var(--surface-border); border-radius:4px;
     box-shadow:0 2px 8px rgba(0,0,0,0.08);
     padding:42px 46px; min-height:500px;
     font-family:Georgia, "Times New Roman", serif; color:#111; font-size:14.5px; line-height:1.5;
   }
-  .paper[contenteditable=true]:focus{outline:2px solid var(--teal);}
+  .paper[contenteditable=true]:focus{outline:2px solid var(--accent-dim);}
   .paper h2{font-size:24px; font-weight:700; letter-spacing:0.01em; font-family:inherit; margin-bottom:0;}
   .paper .contact{font-size:12.5px; color:#444; margin-bottom:14px; border-bottom:1px solid #ddd; padding-bottom:8px;}
   .paper h3{
@@ -126,8 +150,8 @@
   .paper ul{margin:5px 0 4px 18px;}
   .paper li{margin-bottom:3px;}
   .paper p.summary{margin-bottom:4px;}
-  footer.site{margin-top:40px; text-align:center; font-size:13px; color:var(--muted);}
-  footer.site a{color:var(--teal); text-decoration:none;}
+  footer.site{margin-top:40px; text-align:center; font-size:13px; color:var(--text-muted);}
+  footer.site a{color:var(--accent); text-decoration:none;}
   .hidden{display:none;}
   @media (max-width:560px){
     .row{flex-direction:column; gap:0;}
@@ -235,8 +259,8 @@
   <!-- RESULT -->
   <section class="paper-zone hidden" id="result">
     <div class="result-actions no-print">
-      <button class="btn-download" id="downloadBtn" onclick="downloadPDF()">
-        ⬇ Download PDF
+      <button class="btn-download" id="downloadBtn" onclick="downloadBoth()">
+        ⬇ Download PDF + Word
       </button>
       <button class="btn btn-ghost" onclick="copyText()">Copy as text</button>
       <button class="btn btn-quiet" onclick="backToEdit()">Edit my answers</button>
@@ -253,6 +277,7 @@
 <!-- jsPDF via CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://unpkg.com/docx@9.7.1/dist/index.umd.cjs"></script>
 
 <script>
 let step = 1;
@@ -493,8 +518,162 @@ async function downloadPDF(){
     alert('PDF download failed. Use "Copy as text" instead and paste into a Word or Google Doc.');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '⬇ Download PDF';
+    btn.innerHTML = '⬇ Download PDF + Word';
   }
+}
+
+// ── DOWNLOAD BOTH ──
+async function downloadBoth(){
+  const btn = document.getElementById('downloadBtn');
+  btn.disabled = true;
+  btn.textContent = 'Building files...';
+
+  try {
+    // Run both downloads in parallel
+    await Promise.all([downloadPDFSilent(), generateDocx()]);
+  } catch(err) {
+    console.error('Download error:', err);
+    alert('One or both downloads failed. Try again or use "Copy as text."');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '⬇ Download PDF + Word';
+  }
+}
+
+// Silent PDF (no button state management -- downloadBoth handles that)
+async function downloadPDFSilent(){
+  const paper = document.getElementById('paper');
+  const nameEl = document.getElementById('f-name');
+  const name = (nameEl ? nameEl.value.trim() : '') || 'resume';
+  const filename = name.replace(/\s+/g, '_').toLowerCase() + '_resume.pdf';
+
+  const canvas = await html2canvas(paper, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    logging: false,
+    width: paper.offsetWidth,
+    height: paper.scrollHeight
+  });
+
+  const imgData = canvas.toDataURL('image/jpeg', 0.98);
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
+  const margin = 12;
+  const imgW = pageW - (margin * 2);
+  const imgH = (canvas.height * imgW) / canvas.width;
+  const maxH = pageH - (margin * 2);
+  let finalW = imgW;
+  let finalH = imgH;
+  if(imgH > maxH){ const scale = maxH / imgH; finalW = imgW * scale; finalH = maxH; }
+  const xOffset = (pageW - finalW) / 2;
+  pdf.addImage(imgData, 'JPEG', xOffset, margin, finalW, finalH);
+  pdf.save(filename);
+}
+
+// ── WORD DOCX GENERATION ──
+async function generateDocx(){
+  const nameEl = document.getElementById('f-name');
+  const name = (nameEl ? nameEl.value.trim() : '') || 'Your Name';
+  const filename = name.replace(/\s+/g, '_').toLowerCase() + '_resume.docx';
+
+  // Get the rendered resume content from the paper div
+  const paper = document.getElementById('paper');
+
+  // Parse the paper HTML into structured data
+  const sections = [];
+  const children = paper.children;
+
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, BorderStyle, UnderlineType } = window.docx;
+
+  const docChildren = [];
+
+  // Name -- h2
+  const h2 = paper.querySelector('h2');
+  if(h2){
+    docChildren.push(new Paragraph({
+      children: [new TextRun({ text: h2.textContent.trim(), bold: true, size: 48, font: 'Calibri' })],
+      alignment: AlignmentType.LEFT,
+      spacing: { after: 40 }
+    }));
+  }
+
+  // Contact line
+  const contact = paper.querySelector('.contact');
+  if(contact){
+    docChildren.push(new Paragraph({
+      children: [new TextRun({ text: contact.textContent.trim(), size: 20, color: '444444', font: 'Calibri' })],
+      spacing: { after: 120 },
+      border: { bottom: { color: 'CCCCCC', space: 1, style: BorderStyle.SINGLE, size: 6 } }
+    }));
+  }
+
+  // Walk remaining elements
+  Array.from(paper.children).forEach(function(el){
+    if(el.tagName === 'H2' || el.classList.contains('contact')) return;
+
+    if(el.tagName === 'H3'){
+      // Section header
+      docChildren.push(new Paragraph({
+        children: [new TextRun({ text: el.textContent.trim().toUpperCase(), bold: true, size: 20, font: 'Calibri', color: '111111' })],
+        spacing: { before: 200, after: 60 },
+        border: { bottom: { color: '111111', space: 1, style: BorderStyle.SINGLE, size: 6 } }
+      }));
+    } else if(el.tagName === 'P'){
+      docChildren.push(new Paragraph({
+        children: [new TextRun({ text: el.textContent.trim(), size: 22, font: 'Calibri' })],
+        spacing: { after: 80 }
+      }));
+    } else if(el.classList.contains('jobhead')){
+      const spans = el.querySelectorAll('span');
+      const left = spans[0] ? spans[0].textContent.trim() : '';
+      const right = spans[1] ? spans[1].textContent.trim() : '';
+      const text = right ? left + '\t' + right : left;
+      docChildren.push(new Paragraph({
+        children: [new TextRun({ text: left, bold: true, size: 22, font: 'Calibri' }),
+                   right ? new TextRun({ text: '    ' + right, size: 22, font: 'Calibri', color: '555555' }) : new TextRun('')],
+        spacing: { before: 120, after: 20 }
+      }));
+    } else if(el.classList.contains('jobsub')){
+      docChildren.push(new Paragraph({
+        children: [new TextRun({ text: el.textContent.trim(), italics: true, size: 20, font: 'Calibri', color: '444444' })],
+        spacing: { after: 40 }
+      }));
+    } else if(el.tagName === 'UL'){
+      el.querySelectorAll('li').forEach(function(li){
+        docChildren.push(new Paragraph({
+          children: [new TextRun({ text: li.textContent.trim(), size: 22, font: 'Calibri' })],
+          bullet: { level: 0 },
+          spacing: { after: 40 }
+        }));
+      });
+    }
+  });
+
+  // Build document
+  const doc = new Document({
+    sections: [{
+      properties: {
+        page: {
+          margin: { top: 720, right: 720, bottom: 720, left: 720 }
+        }
+      },
+      children: docChildren
+    }]
+  });
+
+  // Pack and save
+  const blob = await Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 </script>
 </body>

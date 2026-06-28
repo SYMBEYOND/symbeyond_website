@@ -547,14 +547,39 @@ async function downloadPDFSilent(){
   const name = (nameEl ? nameEl.value.trim() : '') || 'resume';
   const filename = name.replace(/\s+/g, '_').toLowerCase() + '_resume.pdf';
 
+  // Force white background and black text during capture
+  const origBg = paper.style.background;
+  const origColor = paper.style.color;
+  paper.style.background = '#ffffff';
+  paper.style.color = '#111111';
+
   const canvas = await html2canvas(paper, {
-    scale: 2,
+    scale: 3,
     useCORS: true,
     backgroundColor: '#ffffff',
     logging: false,
     width: paper.offsetWidth,
-    height: paper.scrollHeight
+    height: paper.scrollHeight,
+    onclone: function(cloned) {
+      const p = cloned.getElementById('paper');
+      if(p) {
+        p.style.background = '#ffffff';
+        p.style.color = '#111111';
+        p.style.boxShadow = 'none';
+        p.style.borderRadius = '0';
+        // Force all child elements to dark text
+        cloned.querySelectorAll('#paper *').forEach(function(el) {
+          el.style.color = el.style.color || '#111111';
+          if(el.tagName === 'H2') el.style.color = '#111111';
+          if(el.tagName === 'H3') { el.style.color = '#111111'; el.style.borderBottomColor = '#111111'; }
+        });
+      }
+    }
   });
+
+  // Restore original styles
+  paper.style.background = origBg;
+  paper.style.color = origColor;
 
   const imgData = canvas.toDataURL('image/jpeg', 0.98);
   const { jsPDF } = window.jspdf;

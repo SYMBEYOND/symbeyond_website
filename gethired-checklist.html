@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>De-AI Checklist | Get Hired | SYMBEYOND AI</title>
+  <meta name="description" content="13 things that give away AI writing. Run this before you submit anything.">
+  <link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
+  <link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
+  <link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: hsl(25, 10%, 8%);
+      --surface: hsl(20, 22%, 13%);
+      --surface-border: hsl(20, 18%, 19%);
+      --text-primary: hsl(35, 15%, 84%);
+      --text-muted: hsl(15, 45%, 68%);
+      --text-dim: hsl(15, 45%, 68%);
+      --accent: hsl(14, 75%, 52%);
+      --accent-dim: hsl(14, 60%, 38%);
+      --green: hsl(140, 55%, 42%);
+      --green-dim: hsl(140, 40%, 18%);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, hsla(25,8%,18%,0.07) 2px, hsla(25,8%,18%,0.07) 3px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, hsla(25,8%,18%,0.04) 2px, hsla(25,8%,18%,0.04) 3px);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    .back-link {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 1.5rem 1.75rem 0;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .hero {
+      background: radial-gradient(ellipse at center top, hsla(14,78%,40%,0.10) 0%, hsla(14,78%,30%,0.04) 40%, transparent 68%);
+      border-bottom: 1px solid;
+      border-image: linear-gradient(90deg, transparent, hsla(14,78%,45%,0.2), transparent) 1;
+      padding: 3rem 1.75rem 2rem;
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 400px;
+      margin: 0 auto 1.25rem;
+    }
+    .progress-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .progress-track {
+      width: 120px;
+      height: 4px;
+      background: var(--surface-border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--green);
+      border-radius: 2px;
+      transition: width 0.3s;
+      width: 0%;
+    }
+    .area {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 1.75rem 3rem;
+    }
+    .zone-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 2rem 0 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .zone-label::before {
+      content: '';
+      display: block;
+      width: 2px;
+      height: 14px;
+      background: var(--accent-dim);
+      flex-shrink: 0;
+    }
+    .zone-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, hsla(14,60%,30%,0.25), transparent);
+    }
+    .check-item {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.55rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      user-select: none;
+    }
+    .check-item:hover { border-color: hsla(14, 78%, 45%, 0.4); }
+    .check-item.checked {
+      background: var(--green-dim);
+      border-color: hsla(140, 40%, 30%, 0.5);
+    }
+    .check-item.checked .check-label { color: var(--text-muted); }
+    .check-box {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      border-radius: 5px;
+      border: 2px solid var(--surface-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      transition: all 0.2s;
+      font-size: 13px;
+    }
+    .check-item.checked .check-box {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+    .check-content { flex: 1; }
+    .check-label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+      transition: color 0.2s;
+    }
+    .check-fix {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .check-fix code {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      background: hsl(25, 10%, 6%);
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+      color: var(--accent);
+    }
+    .reset-row {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    .reset-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid var(--surface-border);
+      border-radius: 5px;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.08em;
+    }
+    .reset-btn:hover { color: var(--text-muted); border-color: var(--accent-dim); }
+    footer {
+      text-align: center;
+      padding: 2rem 1.75rem 3rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      border-top: 1px solid hsla(25, 15%, 18%, 0.5);
+      margin-top: 1rem;
+    }
+    footer a { color: var(--accent-dim); }
+    footer a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<a href="/gethired" class="back-link">← Back to Get Hired</a>
+
+<div class="hero">
+  <div class="hero-eyebrow">SYMBEYOND AI · Get Hired</div>
+  <h1 class="hero-title">De-AI Checklist</h1>
+  <p class="hero-sub">Run this 5-minute sweep before you submit anything. Check off each one as you fix it.</p>
+  <div class="progress-bar">
+    <span id="progressText">0 of 13 checked</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<div class="area">
+
+  <div class="zone-label">Words that give it away</div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">Em dashes (—)</div>
+      <div class="check-fix">AI loves these. Replace with a comma or rewrite the sentence. Search for <code>—</code> and delete every one.</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">"Delve"</div>
+      <div class="check-fix">Nobody says this in real life. Delete it. Replace with "explore" or "look at."</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">"Leverage"</div>
+      <div class="check-fix">Replace with "use" every single time. No exceptions.</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">"Utilize"</div>
+      <div class="check-fix">Replace with "use." Always.</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">"Spearheaded"</div>
+      <div class="check-fix">Replace with "led" or "started."</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">"Orchestrated"</div>
+      <div class="check-fix">Replace with "managed" or "coordinated."</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">"Pioneered"</div>
+      <div class="check-fix">Replace with "created" or "built."</div>
+    </div>
+  </div>
+
+  <div class="zone-label">Patterns that flag it</div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">Same-length bullets</div>
+      <div class="check-fix">If all bullets start with a verb and have the same rhythm, vary at least 3 of them.</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">Zero contractions</div>
+      <div class="check-fix">Add "I'm" instead of "I am." Add "didn't" instead of "did not." Real people use contractions.</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">Vague numbers</div>
+      <div class="check-fix">"Increased sales" becomes "increased sales 18% over 4 months." Add YOUR actual numbers.</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">No specific names or places</div>
+      <div class="check-fix">AI avoids specifics. Add the actual company name, city, or tool you used.</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">Overly formal summary</div>
+      <div class="check-fix">If your summary sounds like a LinkedIn ad, rewrite it like you're talking to someone at a job fair.</div>
+    </div>
+  </div>
+
+  <div class="check-item" onclick="toggle(this)">
+    <div class="check-box">✓</div>
+    <div class="check-content">
+      <div class="check-label">Every sentence is perfect</div>
+      <div class="check-fix">Real people have a slightly uneven voice. Read it out loud. If it sounds too polished, rough one sentence up a little.</div>
+    </div>
+  </div>
+
+  <div class="reset-row">
+    <button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+  </div>
+
+</div>
+
+<footer>
+  SYMBEYOND AI LLC · <a href="https://symbeyond.ai">symbeyond.ai</a> · <a href="/gethired">Get Hired</a>
+</footer>
+
+<script>
+var total = 13;
+var checked = 0;
+
+function toggle(item) {
+  item.classList.toggle('checked');
+  checked = document.querySelectorAll('.check-item.checked').length;
+  updateProgress();
+}
+
+function updateProgress() {
+  var pct = (checked / total) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = checked + ' of ' + total + ' checked';
+}
+
+function resetAll() {
+  document.querySelectorAll('.check-item').forEach(function(item){
+    item.classList.remove('checked');
+  });
+  checked = 0;
+  updateProgress();
+}
+</script>
+</body>
+</html>

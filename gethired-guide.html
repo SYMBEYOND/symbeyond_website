@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Search Guide | Get Hired | SYMBEYOND AI</title>
+  <meta name="description" content="Resume essentials, LinkedIn tips, cover letter rules, and free tools. Your take-home job search guide.">
+  <link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
+  <link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
+  <link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: hsl(25, 10%, 8%);
+      --surface: hsl(20, 22%, 13%);
+      --surface-border: hsl(20, 18%, 19%);
+      --text-primary: hsl(35, 15%, 84%);
+      --text-muted: hsl(15, 45%, 68%);
+      --text-dim: hsl(15, 45%, 68%);
+      --accent: hsl(14, 75%, 52%);
+      --accent-dim: hsl(14, 60%, 38%);
+      --cool: hsl(220, 50%, 44%);
+      --danger: hsl(6, 90%, 40%);
+      --danger-bg: hsl(6, 45%, 8%);
+      --danger-border: hsl(6, 60%, 16%);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, hsla(25,8%,18%,0.07) 2px, hsla(25,8%,18%,0.07) 3px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, hsla(25,8%,18%,0.04) 2px, hsla(25,8%,18%,0.04) 3px);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    .back-link {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 1.5rem 1.75rem 0;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .hero {
+      background: radial-gradient(ellipse at center top, hsla(14,78%,40%,0.10) 0%, hsla(14,78%,30%,0.04) 40%, transparent 68%);
+      border-bottom: 1px solid;
+      border-image: linear-gradient(90deg, transparent, hsla(14,78%,45%,0.2), transparent) 1;
+      padding: 3rem 1.75rem 2rem;
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .area {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 1.75rem 3rem;
+    }
+    .zone-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 2rem 0 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .zone-label::before { content: ''; display: block; width: 2px; height: 14px; background: var(--accent-dim); flex-shrink: 0; }
+    .zone-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, hsla(14,60%,30%,0.25), transparent); }
+    .zone-label.danger::before { background: var(--danger); }
+    .zone-label.danger::after { background: linear-gradient(90deg, hsla(6,60%,20%,0.2), transparent); }
+    .zone-label.cool::before { background: var(--cool); }
+    .zone-label.cool::after { background: linear-gradient(90deg, hsla(220,30%,30%,0.25), transparent); }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 0.55rem;
+    }
+    .card-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+      margin-bottom: 0.6rem;
+    }
+    .rule-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .rule-list li {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      line-height: 1.5;
+    }
+    .rule-list li::before {
+      content: '·';
+      color: var(--accent);
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .rule-strong { color: var(--text-primary); font-weight: 600; }
+    .scam-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem;
+    }
+    @media (max-width: 480px) { .scam-grid { grid-template-columns: 1fr; } }
+    .scam-card {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: 8px;
+      padding: 0.875rem 1rem;
+    }
+    .scam-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: hsl(6, 80%, 60%);
+      margin-bottom: 0.3rem;
+    }
+    .scam-card-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.55rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: border-color 0.2s;
+    }
+    .tool-card:hover { border-color: hsla(220, 50%, 44%, 0.5); }
+    .tool-card a { display: flex; align-items: center; gap: 1rem; flex: 1; }
+    .tool-icon {
+      width: 36px; height: 36px; min-width: 36px;
+      border-radius: 6px;
+      background: hsl(25, 10%, 9%);
+      border: 1px solid hsla(25, 15%, 22%, 0.6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .tool-name { font-weight: 600; font-size: 13px; margin-bottom: 0.15rem; }
+    .tool-desc { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
+    .tool-arrow { color: var(--text-dim); margin-left: auto; transition: color 0.2s, transform 0.2s; }
+    .tool-card:hover .tool-arrow { color: var(--cool); transform: translateX(2px); }
+    footer {
+      text-align: center;
+      padding: 2rem 1.75rem 3rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      border-top: 1px solid hsla(25, 15%, 18%, 0.5);
+      margin-top: 1rem;
+    }
+    footer a { color: var(--accent-dim); }
+    footer a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<a href="/gethired" class="back-link">← Back to Get Hired</a>
+
+<div class="hero">
+  <div class="hero-eyebrow">SYMBEYOND AI · Get Hired</div>
+  <h1 class="hero-title">Job Search Guide</h1>
+  <p class="hero-sub">Resume essentials, LinkedIn tips, cover letter rules, scam warning signs, and free tools. Everything in one place.</p>
+</div>
+
+<div class="area">
+
+  <div class="zone-label">Resume rules</div>
+
+  <div class="card">
+    <div class="card-title">What every resume needs</div>
+    <ul class="rule-list">
+      <li><span><span class="rule-strong">One page only.</span> Two pages is fine if you have 10+ years of experience. Otherwise one page.</span></li>
+      <li><span><span class="rule-strong">Name and contact at the top.</span> Phone, email, city. No street address needed.</span></li>
+      <li><span><span class="rule-strong">Match the job title.</span> Use the exact title from the job posting somewhere in your resume.</span></li>
+      <li><span><span class="rule-strong">No tables or columns.</span> ATS systems (the software that reads your resume first) can't read them.</span></li>
+      <li><span><span class="rule-strong">Real numbers.</span> "Managed 12 employees" beats "managed a team." Be specific.</span></li>
+      <li><span><span class="rule-strong">Run the De-AI checklist.</span> Before you send anything, check for AI giveaways.</span></li>
+    </ul>
+  </div>
+
+  <div class="zone-label">Cover letter</div>
+
+  <div class="card">
+    <div class="card-title">The one rule that matters</div>
+    <ul class="rule-list">
+      <li><span><span class="rule-strong">Keep it under 200 words.</span> Nobody reads long cover letters. Short and specific beats long and general.</span></li>
+      <li><span>Open with why you want this specific job at this specific company. Not "I am excited to apply."</span></li>
+      <li><span>Name one thing you actually did that's relevant. One specific thing.</span></li>
+      <li><span>End with one sentence asking for the interview. Direct. Not apologetic.</span></li>
+    </ul>
+  </div>
+
+  <div class="zone-label">LinkedIn</div>
+
+  <div class="card">
+    <div class="card-title">What to do today</div>
+    <ul class="rule-list">
+      <li><span><span class="rule-strong">Add a real photo.</span> Profiles with photos get 14x more views. Any clear, front-facing photo works.</span></li>
+      <li><span><span class="rule-strong">Fill in your About section.</span> 3-5 sentences. What you do, what you're good at, what you're looking for.</span></li>
+      <li><span><span class="rule-strong">Set "Open to Work."</span> Go to your profile, click "Open to," select "Finding a new job." Recruiters see this.</span></li>
+      <li><span><span class="rule-strong">Connect with people you actually know.</span> 50 real connections beats 500 strangers.</span></li>
+      <li><span>87% of recruiters use LinkedIn to find candidates. It matters.</span></li>
+    </ul>
+  </div>
+
+  <div class="zone-label danger">Know the warning signs</div>
+
+  <div class="scam-grid">
+    <div class="scam-card">
+      <div class="scam-card-title">They ask you to pay</div>
+      <div class="scam-card-text">Real employers never charge to apply, train, or hire.</div>
+    </div>
+    <div class="scam-card">
+      <div class="scam-card-title">Hired without an interview</div>
+      <div class="scam-card-text">Got the job after only a text? That is not real.</div>
+    </div>
+    <div class="scam-card">
+      <div class="scam-card-title">They send you a check</div>
+      <div class="scam-card-text">They ask you to send part back. It will bounce.</div>
+    </div>
+    <div class="scam-card">
+      <div class="scam-card-title">Too much money offered</div>
+      <div class="scam-card-text">Mystery shopper, reshipping -- common scam covers.</div>
+    </div>
+    <div class="scam-card">
+      <div class="scam-card-title">Pressure to decide now</div>
+      <div class="scam-card-text">They need your SSN before you have signed anything.</div>
+    </div>
+    <div class="scam-card">
+      <div class="scam-card-title">Strange links or emails</div>
+      <div class="scam-card-text">Gmail instead of a company address is a red flag.</div>
+    </div>
+  </div>
+
+  <div class="zone-label cool">Free tools</div>
+
+  <div class="tool-card">
+    <a href="/resume">
+      <div class="tool-icon">📄</div>
+      <div>
+        <div class="tool-name">Resume Builder</div>
+        <div class="tool-desc">Answer plain questions. Download a clean PDF that passes AI checks.</div>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="tool-card">
+    <a href="/gethired-checklist">
+      <div class="tool-icon">✅</div>
+      <div>
+        <div class="tool-name">De-AI Checklist</div>
+        <div class="tool-desc">13 things that give away AI writing. Check them off before you submit.</div>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="tool-card">
+    <a href="/gethired-prompts">
+      <div class="tool-icon">💬</div>
+      <div>
+        <div class="tool-name">Demo Prompts</div>
+        <div class="tool-desc">Copy-ready prompts for Claude, ChatGPT, Meta AI, or Grok.</div>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="tool-card">
+    <a href="https://jobscan.co" target="_blank">
+      <div class="tool-icon">🔍</div>
+      <div>
+        <div class="tool-name">Jobscan</div>
+        <div class="tool-desc">Paste your resume and the job posting. See your ATS match score instantly.</div>
+      </div>
+      <span class="tool-arrow">↗</span>
+    </a>
+  </div>
+
+  <div class="tool-card">
+    <a href="https://linkedin.com" target="_blank">
+      <div class="tool-icon">💼</div>
+      <div>
+        <div class="tool-name">LinkedIn</div>
+        <div class="tool-desc">87% of recruiters use this to find people. Free account takes 20 minutes.</div>
+      </div>
+      <span class="tool-arrow">↗</span>
+    </a>
+  </div>
+
+</div>
+
+<footer>
+  SYMBEYOND AI LLC · <a href="https://symbeyond.ai">symbeyond.ai</a> · <a href="/gethired">Get Hired</a>
+</footer>
+
+</body>
+</html>

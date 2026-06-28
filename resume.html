@@ -79,9 +79,21 @@
   label{display:block; font-size:13px; font-weight:600; margin:12px 0 4px; color:var(--ink);}
   input[type=text], textarea, select{
     width:100%; padding:10px 12px; font-size:16px; border:1px solid var(--surface-border);
-    border-radius:8px; background: hsl(25, 10%, 6%); color:var(--ink); font-family:inherit;
+    border-radius:8px; background: hsl(25, 10%, 6%); color:var(--text-primary); font-family:inherit;
+    -webkit-text-fill-color: var(--text-primary);
+    caret-color: var(--text-primary);
   }
-  input:focus, textarea:focus{outline:2px solid var(--accent-dim); outline-offset:1px; border-color:var(--accent);}
+  input:focus, textarea:focus{outline:2px solid var(--accent-dim); outline-offset:1px; border-color:var(--accent); background: hsl(25, 10%, 6%);}
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px hsl(25, 10%, 6%) inset !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    caret-color: var(--text-primary) !important;
+    border-color: var(--surface-border) !important;
+    transition: background-color 9999s ease-in-out 0s;
+  }
   textarea{min-height:88px; resize:vertical;}
   .row{display:flex; gap:10px;}
   .row > div{flex:1;}
@@ -140,7 +152,7 @@
   }
   .paper[contenteditable=true]:focus{outline:2px solid var(--accent-dim);}
   .paper h2{font-size:24px; font-weight:700; letter-spacing:0.01em; font-family:inherit; margin-bottom:0;}
-  .paper .contact{font-size:12.5px; color:#444; margin-bottom:14px; border-bottom:1px solid #ddd; padding-bottom:8px;}
+  .paper .contact{font-size:12.5px; color:#444444; margin-bottom:14px; border-bottom:1.5px solid #cccccc; padding-bottom:8px; display:block; width:100%;}
   .paper h3{
     font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase;
     border-bottom:1.5px solid #111; padding-bottom:3px; margin:16px 0 8px; font-family:inherit;
@@ -266,7 +278,10 @@
       <button class="btn btn-quiet" onclick="backToEdit()">Edit my answers</button>
     </div>
     <p class="result-note no-print">Click anywhere on the resume below to edit it directly. Make it yours. Read every line — is it true?</p>
-    <div class="paper" id="paper" contenteditable="true" spellcheck="true"></div>
+    <div class="page-warning" id="pageWarning">⚠ Your resume is getting long. Keep it to one page — trim older jobs or shorten descriptions. Employers stop reading after page one.</div>
+    <div class="paper" id="paper" contenteditable="true" spellcheck="true">
+      <div class="page-limit-line" id="pageLimitLine"></div>
+    </div>
   </section>
 
   <footer class="site no-print">
@@ -597,6 +612,41 @@ async function downloadPDFSilent(){
   pdf.addImage(imgData, 'JPEG', xOffset, margin, finalW, finalH);
   pdf.save(filename);
 }
+
+// ── ONE PAGE LIMIT DETECTION ──
+function checkPageLimit(){
+  const paper = document.getElementById('paper');
+  const limitLine = document.getElementById('pageLimitLine');
+  const warning = document.getElementById('pageWarning');
+  if(!paper || !limitLine) return;
+
+  // A4 at 96dpi with our padding: roughly 1050px tall for content area
+  // paper padding is 42px top+bottom = 84px, so content height ~966px at screen res
+  // We use the actual rendered height vs A4 page height equivalent
+  const paperPaddingPx = 84; // 42px top + 42px bottom
+  // A4 is 297mm, at 96dpi = ~1122px, minus padding = ~1038px content
+  const onPageHeightPx = 1038;
+  const limitTop = onPageHeightPx + paperPaddingPx / 2;
+
+  // Position the dashed line
+  limitLine.style.top = (limitTop) + 'px';
+
+  const contentHeight = paper.scrollHeight;
+  const isOver = contentHeight > (limitTop + 40);
+
+  limitLine.classList.toggle('visible', contentHeight > (limitTop - 100));
+  warning.classList.toggle('visible', isOver);
+}
+
+// Watch for content changes in paper
+const paperObserver = new MutationObserver(checkPageLimit);
+document.addEventListener('DOMContentLoaded', function(){
+  const paper = document.getElementById('paper');
+  if(paper){
+    paperObserver.observe(paper, { childList: true, subtree: true, characterData: true });
+    paper.addEventListener('input', checkPageLimit);
+  }
+});
 
 // ── WORD DOCX GENERATION ──
 async function generateDocx(){

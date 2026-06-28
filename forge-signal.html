@@ -150,7 +150,7 @@
 <body>
 
 <div class="wrap">
-  <a href="/builder-toolkit" class="back-link">← Back to Builder Toolkit</a>
+  <a href="/boss" class="back-link">← Back to BOSS</a>
 
   <header class="site">
     <h1>Forge Signal Composer</h1>
@@ -373,13 +373,6 @@
 
 <script>
 (function(){
-  // Gate check
-  if (localStorage.getItem('bt_unlock') !== '1') {
-    alert('Access denied. Please unlock Builder Toolkit first.');
-    window.location.href = '/builder-toolkit';
-    return;
-  }
-
   var state = {
     mode: 'forge',
     currentPrompt: '',

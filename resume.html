@@ -180,7 +180,7 @@
   <header class="site no-print">
     <div class="eyebrow">SYMBEYOND AI · Free tool · No account · Nothing saved</div>
     <h1>Build a resume that passes the AI check.</h1>
-    <p class="sub">Employers run resumes through AI detection tools. If it fails, it gets tossed. This tool builds from your own words — no AI writing, no AI fingerprint.</p>
+    <p class="sub">Employers run resumes through AI detection tools. If it fails, it gets tossed. This tool builds from your own words ,  no AI writing, no AI fingerprint.</p>
     <div class="ai-warning"><strong>Why this exists:</strong> AI-generated resumes are being rejected automatically. This tool formats your real words into a clean, professional resume. You write it. You own it. It passes.</div>
     <div class="honesty"><strong>The honesty rule:</strong> this tool never invents your experience. It only organizes what you tell it. Read every line before you send it.</div>
   </header>
@@ -230,7 +230,7 @@
   <!-- STEP 3 -->
   <section class="card no-print hidden" id="step3">
     <h2>Tell me about your work</h2>
-    <p class="hint">In your own words. Don't worry about sounding fancy — that's the tool's job. Helping family, volunteering, church work, yard work for neighbors — all of it counts.</p>
+    <p class="hint">In your own words. Don't worry about sounding fancy. that's the tool's job. Helping family, volunteering, church work, yard work for neighbors. all of it counts.</p>
     <div id="jobs"></div>
     <button class="btn btn-ghost" onclick="addJob()" style="margin-top:14px;">+ Add another job</button>
     <div class="btn-row">
@@ -256,7 +256,7 @@
   <!-- STEP 5 -->
   <section class="card no-print hidden" id="step5">
     <h2>Build it</h2>
-    <p class="hint">Two options. <strong>Format my words</strong> takes exactly what you wrote and lays it out cleanly — zero AI involvement, guaranteed to pass any AI check. <strong>Smart draft</strong> rewrites your words professionally but uses AI, so use it only if you plan to heavily edit the result.</p>
+    <p class="hint">Two options. <strong>Format my words</strong> takes exactly what you wrote and lays it out cleanly. zero AI involvement, guaranteed to pass any AI check. <strong>Smart draft</strong> rewrites your words professionally but uses AI, so use it only if you plan to heavily edit the result.</p>
     <div class="btn-row" style="justify-content:flex-start;">
       <button class="btn btn-primary" onclick="buildManual()">Format my words</button>
       <button class="btn btn-ghost" id="aiBtn" onclick="buildAI()">Smart draft (uses AI)</button>
@@ -277,8 +277,8 @@
       <button class="btn btn-ghost" onclick="copyText()">Copy as text</button>
       <button class="btn btn-quiet" onclick="backToEdit()">Edit my answers</button>
     </div>
-    <p class="result-note no-print">Click anywhere on the resume below to edit it directly. Make it yours. Read every line — is it true?</p>
-    <div class="page-warning" id="pageWarning">⚠ Your resume is getting long. Keep it to one page — trim older jobs or shorten descriptions. Employers stop reading after page one.</div>
+    <p class="result-note no-print">Click anywhere on the resume below to edit it directly. Make it yours. Read every line. is it true?</p>
+    <div class="page-warning" id="pageWarning">⚠ Your resume is getting long. Keep it to one page. trim older jobs or shorten descriptions. Employers stop reading after page one.</div>
     <div class="paper" id="paper" contenteditable="true" spellcheck="true">
       <div class="page-limit-line" id="pageLimitLine"></div>
     </div>
@@ -445,14 +445,14 @@ async function buildAI(){
     });
     const parsed = await response.json();
     if(!response.ok){
-      setStatus(parsed.error || 'The smart draft is not available right now. Use "Format my words" instead — it works everywhere and passes all AI checks.', 'err');
+      setStatus(parsed.error || 'The smart draft is not available right now. Use "Format my words" instead. it works everywhere and passes all AI checks.', 'err');
       return;
     }
     clearStatus();
     renderResume(parsed);
   } catch(err){
     console.error(err);
-    setStatus('The smart draft is not available right now. Use "Format my words" instead — it works everywhere and passes all AI checks.', 'err');
+    setStatus('The smart draft is not available right now. Use "Format my words" instead. it works everywhere and passes all AI checks.', 'err');
   } finally {
     btn.disabled = false;
   }

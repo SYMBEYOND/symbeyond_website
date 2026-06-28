@@ -397,7 +397,7 @@
 
   <!-- OUTPUT -->
   <div class="output-panel" id="outputPanel">
-    <div class="output-header">Your Prompt — Ready to Copy</div>
+    <div class="output-header">Your Prompt, Ready to Copy</div>
     <div class="output-note" id="outputNote">Copy this and paste it into Claude, ChatGPT, or any AI. It tells the AI exactly what to do with your idea.</div>
     <textarea id="promptOutput" readonly></textarea>
     <div class="btn-row">
@@ -490,19 +490,19 @@
     if(mode === 'forge'){
       return header +
         'Generate:\n\n' +
-        'A. Core Tension — One sentence: what is the real friction or insight in this input?\n' +
-        'B. Quip Bank — 5 short punchy lines that could open a post.\n' +
-        'C. Forge Signal Draft — Format: [Opening quip] / [The problem this solves] / [What the builder does] / [Proof it works] / [Why it matters]\n' +
-        'D. Platform Post — One polished post ready for ' + platform + '. Short paragraphs, no em dashes.\n' +
-        'E. Final Recommendation — Post now / save for later / turn into a tool / turn into Patreon asset / do not post yet. One sentence explaining why.';
+        'A. Core Tension: One sentence: what is the real friction or insight in this input?\n' +
+        'B. Quip Bank: 5 short punchy lines that could open a post.\n' +
+        'C. Forge Signal Draft: Format: [Opening quip] / [The problem this solves] / [What the builder does] / [Proof it works] / [Why it matters]\n' +
+        'D. Platform Post: One polished post ready for ' + platform + '. Short paragraphs, no em dashes.\n' +
+        'E. Final Recommendation: Post now / save for later / turn into a tool / turn into Patreon asset / do not post yet. One sentence explaining why.';
     } else {
       return header +
         'Generate:\n\n' +
-        'A. Intent Read — One sentence: what is this message really asking for?\n' +
-        'B. Risk Check — List anything that should not be disclosed or promised in the reply.\n' +
-        'C. Reply — A polished message ready to send. Warm, concise, non-disclosing.\n' +
-        'D. Short Version — Same reply, half the words.\n' +
-        'E. Final Recommendation — Send now / revise first / slow down / do not send. One sentence explaining why.';
+        'A. Intent Read: One sentence: what is this message really asking for?\n' +
+        'B. Risk Check: List anything that should not be disclosed or promised in the reply.\n' +
+        'C. Reply: A polished message ready to send. Warm, concise, non-disclosing.\n' +
+        'D. Short Version: Same reply, half the words.\n' +
+        'E. Final Recommendation: Send now / revise first / slow down / do not send. One sentence explaining why.';
     }
   }
 

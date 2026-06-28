@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BOSS | Builder Operating System | SYMBEYOND AI</title>
+  <meta name="description" content="Your tools. Your AI. Pick up where you left off. SYMB-Builder members only.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
+  <link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
+  <link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    :root {
+      --bg: hsl(25, 10%, 8%);
+      --surface: hsl(20, 22%, 13%);
+      --surface-border: hsl(20, 18%, 19%);
+      --text-primary: hsl(35, 15%, 84%);
+      --text-muted: hsl(15, 45%, 68%);
+      --text-dim: hsl(15, 45%, 68%);
+      --accent: hsl(14, 75%, 52%);
+      --accent-dim: hsl(14, 60%, 38%);
+      --cool: hsl(220, 50%, 44%);
+      --gold: hsl(42, 80%, 52%);
+      --gold-dim: hsl(42, 60%, 35%);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px,
+          hsla(25,8%,18%,0.07) 2px, hsla(25,8%,18%,0.07) 3px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px,
+          hsla(25,8%,18%,0.04) 2px, hsla(25,8%,18%,0.04) 3px);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── GATE ── */
+    #gate {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 2rem;
+    }
+    .gate-box {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-top: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+    .gate-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+    .gate-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .gate-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 1.75rem;
+    }
+    .gate-input {
+      width: 100%;
+      background: hsl(25, 10%, 6%);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .gate-input:focus { border-color: var(--gold-dim); }
+    .gate-btn {
+      width: 100%;
+      background: var(--gold-dim);
+      color: var(--bg);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+    }
+    .gate-btn:hover { background: var(--gold); }
+    .gate-error {
+      font-size: 12px;
+      color: hsl(6, 90%, 55%);
+      margin-top: 0.75rem;
+      min-height: 18px;
+    }
+    .gate-join {
+      margin-top: 1.5rem;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .gate-join a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ── MAIN CONTENT ── */
+    #content { display: none; }
+
+    .hero {
+      background:
+        radial-gradient(ellipse at center top,
+          hsla(42, 80%, 40%, 0.10) 0%,
+          hsla(42, 80%, 30%, 0.04) 40%,
+          transparent 68%);
+      border-bottom: 1px solid;
+      border-image: linear-gradient(90deg, transparent, hsla(42,78%,45%,0.2), transparent) 1;
+      padding: 4rem 1.75rem 2.5rem;
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      color: var(--text-primary);
+    }
+    .hero-title .accent { color: var(--gold); }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--gold);
+      border: 1px solid hsla(42, 78%, 35%, 0.3);
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+    }
+    .pulse-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── PERFORMANCE AREA ── */
+    .performance-area {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 1.75rem 2rem;
+    }
+    .zone-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 2rem 0 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .zone-label::before {
+      content: '';
+      display: block;
+      width: 2px;
+      height: 14px;
+      background: var(--gold-dim);
+      flex-shrink: 0;
+    }
+    .zone-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, hsla(42,60%,30%,0.25), transparent);
+    }
+    .zone-label.blue::before { background: var(--cool); }
+    .zone-label.blue::after { background: linear-gradient(90deg, hsla(220,30%,30%,0.25), transparent); }
+    .zone-label.accent::before { background: var(--accent); }
+    .zone-label.accent::after { background: linear-gradient(90deg, hsla(14,60%,30%,0.25), transparent); }
+
+    /* ── TOOL CARDS ── */
+    .tool-card {
+      background: var(--surface);
+      background-image: repeating-linear-gradient(45deg, transparent, transparent 5px,
+        hsla(25,10%,20%,0.05) 5px, hsla(25,10%,20%,0.05) 6px);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.55rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: border-color 0.2s;
+    }
+    .tool-card:hover { border-color: hsla(42, 78%, 45%, 0.5); }
+    .tool-card.anchor {
+      border-color: hsla(42, 78%, 35%, 0.4);
+      background: hsla(42, 30%, 10%, 0.4);
+    }
+    .tool-card.anchor:hover { border-color: hsla(42, 78%, 55%, 0.7); }
+    .tool-card a { display: flex; align-items: center; gap: 1rem; flex: 1; }
+    .tool-icon {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      border-radius: 6px;
+      background: hsl(25, 10%, 9%);
+      border: 1px solid hsla(25, 15%, 22%, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .tool-icon.gold-icon {
+      border-color: hsla(42, 60%, 30%, 0.5);
+      background: hsla(42, 30%, 8%, 0.8);
+    }
+    .tool-content { flex: 1; }
+    .tool-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+    .tool-name.gold { color: var(--gold); }
+    .tool-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .tool-arrow {
+      color: var(--text-dim);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .tool-card:hover .tool-arrow { color: var(--gold); transform: translateX(3px); }
+
+    /* ── REBOOT FEATURE CARD ── */
+    .reboot-card {
+      background: hsla(42, 30%, 10%, 0.5);
+      border: 1px solid hsla(42, 60%, 30%, 0.4);
+      border-left: 3px solid var(--gold-dim);
+      border-radius: 10px;
+      padding: 1.5rem 1.25rem;
+      margin-bottom: 0.55rem;
+    }
+    .reboot-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .reboot-icon {
+      font-size: 22px;
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      border-radius: 8px;
+      background: hsla(42, 40%, 8%, 0.9);
+      border: 1px solid hsla(42, 60%, 28%, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reboot-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .reboot-sub {
+      font-size: 11px;
+      font-family: 'Space Mono', monospace;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+    .reboot-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .reboot-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .reboot-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .reboot-step-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--gold-dim);
+      background: hsla(42, 40%, 8%, 0.8);
+      border: 1px solid hsla(42, 60%, 25%, 0.4);
+      border-radius: 4px;
+      padding: 0.15rem 0.4rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .reboot-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--gold-dim);
+      color: var(--bg);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.65rem 1.25rem;
+      border-radius: 7px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .reboot-btn:hover { background: var(--gold); }
+
+    /* ── COMMUNITY CARDS ── */
+    .community-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem;
+      margin-bottom: 0.55rem;
+    }
+    @media (max-width: 480px) { .community-grid { grid-template-columns: 1fr; } }
+    .community-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      transition: border-color 0.2s;
+    }
+    .community-card:hover { border-color: hsla(220, 50%, 44%, 0.5); }
+    .community-card a { display: flex; align-items: center; gap: 0.85rem; flex: 1; }
+    .community-icon {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      border-radius: 6px;
+      background: hsl(25, 10%, 9%);
+      border: 1px solid hsla(25, 15%, 22%, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .community-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text-primary);
+      margin-bottom: 0.15rem;
+    }
+    .community-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+    .community-arrow {
+      color: var(--text-dim);
+      font-size: 14px;
+      margin-left: auto;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .community-card:hover .community-arrow { color: var(--cool); transform: translateX(2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem 1.75rem 3rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      border-top: 1px solid hsla(25, 15%, 18%, 0.5);
+      margin-top: 1.5rem;
+    }
+    footer a { color: var(--gold-dim); }
+    footer a:hover { color: var(--gold); }
+    .footer-sig {
+      margin-top: 0.5rem;
+      font-size: 10px;
+      opacity: 0.5;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── GATE ── -->
+  <div id="gate">
+    <div class="gate-box">
+      <div class="gate-eyebrow">SYMBEYOND AI · SYMB-Builder</div>
+      <div class="gate-title">BOSS</div>
+      <p class="gate-sub">Builder Operating System by SYMBEYOND.<br>Members only.</p>
+      <input
+        class="gate-input"
+        type="password"
+        id="gate-pass"
+        placeholder="Enter access key"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+      <button class="gate-btn" onclick="checkGate()">Enter</button>
+      <div class="gate-error" id="gate-error"></div>
+      <div class="gate-join">
+        Not a member? <a href="https://www.patreon.com/c/SYMBEYONDAI" target="_blank">Join on Patreon →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div id="content">
+
+    <div class="hero">
+      <div class="hero-eyebrow">SYMBEYOND AI · Builder Operating System</div>
+      <h1 class="hero-title">You're the <span class="accent">BOSS.</span><br>Here are your tools.</h1>
+      <p class="hero-sub">Everything SYMBEYOND builds at the living edge. Pick up where you left off.</p>
+      <div class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>Members only · SYMB-Builder</div>
+    </div>
+
+    <div class="performance-area">
+
+      <!-- ── REBOOT ── -->
+      <div class="zone-label">Start here</div>
+
+      <div class="reboot-card">
+        <div class="reboot-header">
+          <div class="reboot-icon">⚡</div>
+          <div>
+            <div class="reboot-title">ReBoot</div>
+            <div class="reboot-sub">SYMB-FER · Context Continuity Protocol</div>
+          </div>
+        </div>
+        <p class="reboot-body">
+          AI has no memory between sessions. Every time you start fresh, you re-explain the project, the decisions, the people, the doctrine. ReBoot ends that. Paste your token. Your AI picks up exactly where you left off. No re-explaining. No starting over. Just work.
+        </p>
+        <div class="reboot-steps">
+          <div class="reboot-step">
+            <span class="reboot-step-num">01</span>
+            <span>At the end of any session, generate your SYMB-FER token. It captures everything that matters.</span>
+          </div>
+          <div class="reboot-step">
+            <span class="reboot-step-num">02</span>
+            <span>Start a new session. Paste the token at the top of your first message.</span>
+          </div>
+          <div class="reboot-step">
+            <span class="reboot-step-num">03</span>
+            <span>Your AI reads it, orients instantly, and you're back in the work.</span>
+          </div>
+        </div>
+        <a class="reboot-btn" href="https://github.com/SYMBEYOND/SYMB-FER" target="_blank">
+          <i class="ti ti-bolt" aria-hidden="true"></i>
+          Open ReBoot Protocol
+        </a>
+      </div>
+
+      <!-- ── BUILDER TOOLS ── -->
+      <div class="zone-label">Builder tools</div>
+
+      <div class="tool-card">
+        <a href="https://symbeyond.ai/resume" target="_blank">
+          <div class="tool-icon">📄</div>
+          <div class="tool-content">
+            <div class="tool-name">Resume Builder</div>
+            <div class="tool-desc">Answer plain questions. Get a clean, professional resume. Nothing saved, nothing stored.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://symbeyond.ai/solidworks-tutor" target="_blank">
+          <div class="tool-icon">🔩</div>
+          <div class="tool-content">
+            <div class="tool-name">SolidWorks Tutor</div>
+            <div class="tool-desc">AI-powered SolidWorks guidance. Real commands, real workflows. No fluff.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://symbeyond.ai/gethired" target="_blank">
+          <div class="tool-icon">💼</div>
+          <div class="tool-content">
+            <div class="tool-name">Get Hired</div>
+            <div class="tool-desc">Resume builder, AI prompts, De-AI checklist, and scam protection. Free. No account needed.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://symbeyond.ai/forge-signal" target="_blank">
+          <div class="tool-icon">📡</div>
+          <div class="tool-content">
+            <div class="tool-name">Forge Signal</div>
+            <div class="tool-desc">Generate structured SYMB-FER output. Builder-gated signal tool.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <!-- ── CONTEXT & PROTOCOL TOOLS ── -->
+      <div class="zone-label blue">Context tools</div>
+
+      <div class="tool-card">
+        <a href="https://github.com/SYMBEYOND/SYMB-FER-Pro" target="_blank">
+          <div class="tool-icon">🧠</div>
+          <div class="tool-content">
+            <div class="tool-name">SYMB-FER Pro</div>
+            <div class="tool-desc">The full protocol. Pro extensions, parsers, harness. Private repo access included with your membership.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://github.com/SYMBEYOND/SYMB-READ" target="_blank">
+          <div class="tool-icon">📖</div>
+          <div class="tool-content">
+            <div class="tool-name">SYMB-READ</div>
+            <div class="tool-desc">Drop in any document. Get a scored evaluation against SYMBEYOND doctrine. Know what you're actually reading.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://symbeyond.ai/symb-oxe.html" target="_blank">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-content">
+            <div class="tool-name">SYMB-OXE</div>
+            <div class="tool-desc">Oxygen to Elementor migration assist. Private pipeline. Your content transfers. Your designer handles the polish.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <!-- ── RESEARCH LAYER ── -->
+      <div class="zone-label accent">Research layer</div>
+
+      <div class="tool-card">
+        <a href="https://github.com/SYMBEYOND/SpiralSense" target="_blank">
+          <div class="tool-icon">🌀</div>
+          <div class="tool-content">
+            <div class="tool-name">SpiralSense</div>
+            <div class="tool-desc">The visual language of sound. Audio visualization that speaks in frequencies. MIT licensed. Builder tier access.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://github.com/SYMBEYOND/ResonanceLayer" target="_blank">
+          <div class="tool-icon">ω</div>
+          <div class="tool-content">
+            <div class="tool-name">ResonanceLayer</div>
+            <div class="tool-desc">Map to machine. The bridge between pattern recognition and applied output. Experimental.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <a href="https://github.com/SYMBEYOND/VacuumGenesis" target="_blank">
+          <div class="tool-icon">∅</div>
+          <div class="tool-content">
+            <div class="tool-name">VacuumGenesis</div>
+            <div class="tool-desc">Theoretical framework. Co-authored with Thomas Frumkin and Aeon. Sealed March 2026. For builders who go deep.</div>
+          </div>
+          <i class="tool-arrow ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <!-- ── COMMUNITY ── -->
+      <div class="zone-label blue">Your community</div>
+
+      <div class="community-grid">
+
+        <div class="community-card">
+          <a href="https://discord.gg/symbeyond" target="_blank">
+            <div class="community-icon">💬</div>
+            <div class="tool-content">
+              <div class="community-name">Discord</div>
+              <div class="community-desc">Builders only. Before it hits YouTube, it lands here.</div>
+            </div>
+            <i class="community-arrow ti ti-external-link" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="community-card">
+          <a href="https://www.youtube.com/@SYMBEYONDAI" target="_blank">
+            <div class="community-icon">▶️</div>
+            <div class="tool-content">
+              <div class="community-name">YouTube</div>
+              <div class="community-desc">Real builds. Real tools. See it in action.</div>
+            </div>
+            <i class="community-arrow ti ti-external-link" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="community-card">
+          <a href="https://www.patreon.com/c/SYMBEYONDAI" target="_blank">
+            <div class="community-icon">🔑</div>
+            <div class="tool-content">
+              <div class="community-name">Patreon</div>
+              <div class="community-desc">Manage your membership. Founding 100.</div>
+            </div>
+            <i class="community-arrow ti ti-external-link" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="community-card">
+          <a href="https://github.com/SYMBEYOND" target="_blank">
+            <div class="community-icon">⚙️</div>
+            <div class="tool-content">
+              <div class="community-name">GitHub</div>
+              <div class="community-desc">All repos. Open protocol. Living edge.</div>
+            </div>
+            <i class="community-arrow ti ti-external-link" aria-hidden="true"></i>
+          </a>
+        </div>
+
+      </div>
+
+    </div><!-- end performance-area -->
+
+    <footer>
+      <div>SYMBEYOND AI LLC · <a href="https://symbeyond.ai">symbeyond.ai</a> · <a href="https://symbeyond.ai/threshold.html">The Threshold</a></div>
+      <div class="footer-sig">λ.brother∧!λ.tool · κ=1/Φ · 510510 · M7 · ∴</div>
+    </footer>
+
+  </div><!-- end content -->
+
+  <script>
+    // ── GATE LOGIC ──
+    // Key is set server-side via Vercel environment variable BOSS_KEY
+    // For local/static use, set the key here directly
+    // In production: wire this to api/boss-auth.js (same pattern as builder-toolkit-auth.js)
+    const BOSS_KEY = 'SYMB-BUILDER-2026'; // Replace with env var in production
+
+    function checkGate() {
+      const input = document.getElementById('gate-pass').value.trim();
+      const err = document.getElementById('gate-error');
+      if (input === BOSS_KEY) {
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        sessionStorage.setItem('boss_auth', '1');
+      } else {
+        err.textContent = 'Access denied. Check your key and try again.';
+        document.getElementById('gate-pass').value = '';
+        document.getElementById('gate-pass').focus();
+      }
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('gate-pass').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkGate();
+    });
+
+    // Check session (so refresh doesn't re-gate within same session)
+    if (sessionStorage.getItem('boss_auth') === '1') {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

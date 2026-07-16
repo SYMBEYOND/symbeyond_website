@@ -52,12 +52,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
 .chip{font-size:11px;padding:5px 11px;border-radius:999px;cursor:pointer;border:0.5px solid var(--border2);background:var(--bg3);color:var(--muted);transition:color .15s,background .15s}
 .chip:hover{background:var(--bg2);color:var(--text)}
 #irow{display:flex;gap:8px;padding:12px;border-top:0.5px solid var(--border);flex-shrink:0;background:var(--bg2)}
-#inp{flex:1;resize:none;height:58px;font-family:var(--font);font-size:13px;padding:9px 13px;border-radius:var(--r);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text)}
+#inp{flex:1;resize:none;min-height:100px;max-height:200px;font-family:var(--font);font-size:13px;padding:9px 13px;border-radius:var(--r);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);overflow-y:auto}
 #inp::placeholder{color:var(--muted)}
 #inp:focus{outline:none;border-color:var(--accent)}
-#sbtn{align-self:flex-end;padding:8px 16px;border-radius:var(--r);font-size:12px;font-weight:500;background:var(--accent2);border:none;color:#fff;cursor:pointer;white-space:nowrap;transition:background .15s}
+#sbtn{padding:8px 16px;border-radius:var(--r);font-size:12px;font-weight:500;background:var(--accent2);border:none;color:#fff;cursor:pointer;white-space:nowrap;transition:background .15s}
 #sbtn:hover{background:var(--accent)}
 #sbtn:disabled{opacity:.4;cursor:not-allowed}
+#cbtn{padding:6px 12px;border-radius:var(--r);font-size:11px;font-weight:500;background:transparent;border:0.5px solid var(--border2);color:var(--muted);cursor:pointer;white-space:nowrap;transition:color .15s,background .15s}
+#cbtn:hover{color:var(--text);background:var(--bg3)}
 #ftr{text-align:center;font-size:10px;color:var(--muted);padding:5px;border-top:0.5px solid var(--border);background:var(--bg2);flex-shrink:0}
 #ftr a{color:var(--muted);text-decoration:none}
 #ftr a:hover{color:var(--text)}
@@ -89,7 +91,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
     </div>
     <div id="irow">
       <textarea id="inp" placeholder="Ask about SolidWorks... (Enter to send, Shift+Enter for new line)"></textarea>
-      <button id="sbtn" onclick="go()">Send</button>
+      <div style="display:flex;flex-direction:column;gap:6px;justify-content:flex-end">
+        <button id="sbtn" onclick="go()">Send</button>
+        <button id="cbtn" onclick="clearChat()">Clear</button>
+      </div>
     </div>
   </div>
 </div>
@@ -106,6 +111,19 @@ var WORKER = "/api/solidworks-tutor";
 // -----------------------------------------------------------------
 
 var cat="part", hist=[];
+
+function loadHistory(){
+  try{
+    var stored=localStorage.getItem("solidworks_tutor_hist");
+    if(stored){hist=JSON.parse(stored);}
+  }catch(e){}
+}
+
+function saveHistory(){
+  try{
+    localStorage.setItem("solidworks_tutor_hist",JSON.stringify(hist));
+  }catch(e){}
+}
 
 var SH={
   part:{
@@ -138,12 +156,14 @@ var TITLES={part:"Part Modeling",assembly:"Assemblies",drawing:"Drawings & Detai
 var SUBS={part:"Creating 3D solid parts from sketches and features.",assembly:"Combining parts with mates and constraints.",drawing:"2D views, dimensions, weld callouts, and output."};
 
 function setC(c){
-  cat=c; hist=[];
+  cat=c;
   document.querySelectorAll(".cb").forEach(function(b){b.classList.remove("on")});
   document.getElementById("b"+c[0]).classList.add("on");
   renderRef();
-  document.getElementById("msgs").innerHTML='<div class="welcome" id="wc"><span class="wt">'+TITLES[c]+'</span>'+SUBS[c]+'<div class="chips" id="chips"></div></div>';
-  renderChips();
+  if(hist.length===0){
+    document.getElementById("msgs").innerHTML='<div class="welcome" id="wc"><span class="wt">'+TITLES[c]+'</span>'+SUBS[c]+'<div class="chips" id="chips"></div></div>';
+    renderChips();
+  }
 }
 
 function renderRef(){
@@ -182,6 +202,7 @@ async function go(){
 
   var um=document.createElement("div"); um.className="msg u"; um.innerHTML=esc(t); ms.appendChild(um);
   hist.push({role:"user",content:t});
+  saveHistory();
 
   var tp=document.createElement("div"); tp.className="typing"; tp.textContent="Thinking..."; ms.appendChild(tp);
   ms.scrollTop=ms.scrollHeight;
@@ -196,6 +217,7 @@ async function go(){
     tp.remove();
     var reply=d.reply||"No response received.";
     hist.push({role:"assistant",content:reply});
+    saveHistory();
     var am=document.createElement("div"); am.className="msg a"; am.innerHTML=fmt(reply); ms.appendChild(am);
   }catch(e){
     tp.remove();
@@ -206,11 +228,36 @@ async function go(){
   btn.disabled=false; inp.focus();
 }
 
+function renderHistory(){
+  var ms=document.getElementById("msgs");
+  if(hist.length===0){
+    ms.innerHTML='<div class="welcome" id="wc"><span class="wt">'+TITLES[cat]+'</span>'+SUBS[cat]+'<div class="chips" id="chips"></div></div>';
+    renderChips();
+  }else{
+    ms.innerHTML="";
+    for(var i=0;i<hist.length;i++){
+      var msg=hist[i];
+      var div=document.createElement("div");
+      div.className="msg "+(msg.role==="user"?"u":"a");
+      div.innerHTML=msg.role==="user"?esc(msg.content):fmt(msg.content);
+      ms.appendChild(div);
+    }
+  }
+  ms.scrollTop=ms.scrollHeight;
+}
+
+function clearChat(){
+  hist=[];
+  saveHistory();
+  renderHistory();
+}
+
 document.getElementById("inp").addEventListener("keydown",function(e){
   if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();go()}
 });
 
-renderRef(); renderChips();
+loadHistory();
+renderRef(); renderHistory();
 </script>
 </body>
 </html>

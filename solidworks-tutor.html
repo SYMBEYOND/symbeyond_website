@@ -110,41 +110,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
 var WORKER = "/api/solidworks-tutor";
 // -----------------------------------------------------------------
 
-var cat="part", hist=[];
+var store={conversations:{},activeId:null};
 
-function loadHistory(){
-  try{
-    var stored=localStorage.getItem("solidworks_tutor_hist");
-    if(stored){hist=JSON.parse(stored);}
-  }catch(e){}
-}
-
-function saveHistory(){
-  try{
-    localStorage.setItem("solidworks_tutor_hist",JSON.stringify(hist));
-  }catch(e){}
-}
-
-var SH={
-  part:{
-    "Navigation":[["Zoom to fit","F"],["Rotate view","MMB drag"],["Pan","Ctrl+MMB"],["Front","Ctrl+1"],["Right","Ctrl+4"],["Top","Ctrl+5"],["Iso","Ctrl+7"],["View orient.","Spacebar"]],
-    "Sketch tools":[["Line","L"],["Rectangle","R"],["Circle","C"],["Arc","A"],["Smart dim.","D"],["Trim","T"],["Mirror","Ctrl+M"],["Exit sketch","Esc"]],
-    "Features":[["S-Key bar","S"],["Extrude","E"],["Undo","Ctrl+Z"],["Save","Ctrl+S"],["Rebuild","Ctrl+B"],["Force rebuild","Ctrl+Q"],["Delete","Delete"],["Suppress","right-click"]],
-    "Tree & UI":[["FeatureManager","left panel"],["PropertyManager","left (active)"],["Toggle tree","Ctrl+F1"]]
-  },
-  assembly:{
-    "Navigation":[["Zoom to fit","F"],["Rotate","MMB drag"],["View orient.","Spacebar"],["Iso","Ctrl+7"]],
-    "Components":[["Insert","drag from tree"],["Copy","Ctrl+drag"],["Move","Alt+drag"],["Hide/Show","Tab"],["Multi-select","Ctrl+click"],["Select chain","Shift+click"]],
-    "Mates":[["Add mate","M"],["Coincident","flat face to flat"],["Concentric","cyl. to cyl."],["Distance","offset faces"],["Angle","rotational"],["Lock","full constraint"]],
-    "States":[["Float / Fix","right-click comp"],["Suppress","right-click → Suppress"],["Rebuild all","Ctrl+Q"]]
-  },
-  drawing:{
-    "Navigation":[["Zoom to fit","F"],["Zoom box","Z"],["Pan","Ctrl+drag"]],
-    "Views":[["Model/Standard","V"],["Projected","right-click view"],["Section","right-click view"],["Detail","right-click view"],["Crop","right-click view"]],
-    "Annotations":[["Smart dim.","D"],["Note","N"],["Centerline","A"],["Weld symbol","Annotations tab"],["Surface finish","Annotations tab"],["Balloon","B (with BOM)"]],
-    "Sheet & Output":[["Add sheet","right-click tab"],["Edit sheet format","right-click → Edit Sheet Format"],["Print / PDF","Ctrl+P"],["DXF/DWG","File → Save As"]]
-  }
-};
+var TITLES={part:"Part Modeling",assembly:"Assemblies",drawing:"Drawings & Detailing"};
+var SUBS={part:"Creating 3D solid parts from sketches and features.",assembly:"Combining parts with mates and constraints.",drawing:"2D views, dimensions, weld callouts, and output."};
 
 var SUGG={
   part:["How do I create my first extrude?","What is the FeatureManager tree?","How do I sketch a tube profile?","What does fully defined mean?"],
@@ -152,33 +121,155 @@ var SUGG={
   drawing:["How do I set up a drawing from a part?","How do I add weld symbols?","How do I create a section view?","How do I control drawing scale?"]
 };
 
-var TITLES={part:"Part Modeling",assembly:"Assemblies",drawing:"Drawings & Detailing"};
-var SUBS={part:"Creating 3D solid parts from sketches and features.",assembly:"Combining parts with mates and constraints.",drawing:"2D views, dimensions, weld callouts, and output."};
+function generateId(){return"conv_"+Date.now()+"_"+Math.random().toString(36).substr(2,9)}
 
-function setC(c){
-  cat=c;
+function loadConversations(){
+  try{
+    var stored=localStorage.getItem("solidworks_tutor_conversations");
+    if(stored){store=JSON.parse(stored)}else{store={conversations:{},activeId:null}}
+  }catch(e){}
+  try{
+    var oldHist=localStorage.getItem("solidworks_tutor_hist");
+    if(oldHist){
+      try{
+        var hist=JSON.parse(oldHist);
+        if(hist&&hist.length>0){
+          var title="New chat";
+          for(var i=0;i<hist.length;i++){if(hist[i].role==="user"){title=hist[i].content.substring(0,40);break}}
+          var conv={id:generateId(),title:title,mode:"part",messages:hist,createdAt:Date.now(),updatedAt:Date.now()};
+          store.conversations[conv.id]=conv;
+          store.activeId=conv.id
+        }
+      }catch(e){}
+      localStorage.removeItem("solidworks_tutor_hist")
+    }
+  }catch(e){}
+}
+
+function saveConversations(){
+  try{
+    localStorage.setItem("solidworks_tutor_conversations",JSON.stringify(store))
+  }catch(e){}
+}
+
+function createConversation(mode){
+  var conv={id:generateId(),title:"New chat",mode:mode,messages:[],createdAt:Date.now(),updatedAt:Date.now()};
+  store.conversations[conv.id]=conv;
+  store.activeId=conv.id;
+  saveConversations();
+  return conv
+}
+
+function getActiveConversation(){
+  return store.activeId?store.conversations[store.activeId]:null
+}
+
+function switchConversation(id){
+  if(store.conversations[id]){
+    store.activeId=id;
+    saveConversations();
+    var conv=store.conversations[id];
+    updateTabHighlight(conv.mode);
+    renderConversation(conv)
+  }
+}
+
+function deleteConversation(id){
+  if(!store.conversations[id])return;
+  delete store.conversations[id];
+  if(store.activeId===id){
+    var ids=Object.keys(store.conversations);
+    store.activeId=ids.length>0?ids[0]:null
+  }
+  saveConversations();
+  renderConversationsList();
+  if(store.activeId){switchConversation(store.activeId)}else{showEmptyState()}
+}
+
+function updateTabHighlight(mode){
   document.querySelectorAll(".cb").forEach(function(b){b.classList.remove("on")});
-  document.getElementById("b"+c[0]).classList.add("on");
-  renderRef();
-  if(hist.length===0){
-    document.getElementById("msgs").innerHTML='<div class="welcome" id="wc"><span class="wt">'+TITLES[c]+'</span>'+SUBS[c]+'<div class="chips" id="chips"></div></div>';
-    renderChips();
-  }
+  var modeToId={part:"bp",assembly:"ba",drawing:"bd"};
+  if(modeToId[mode]){document.getElementById(modeToId[mode]).classList.add("on")}
 }
 
-function renderRef(){
-  var d=SH[cat],h="";
-  for(var s in d){
-    h+='<div class="rh">'+s+'</div>';
-    for(var i=0;i<d[s].length;i++)h+='<div class="sr"><span>'+d[s][i][0]+'</span><span class="key">'+d[s][i][1]+'</span></div>';
+function renderConversation(conv){
+  var ms=document.getElementById("msgs");
+  if(!conv||conv.messages.length===0){
+    var mode=conv?conv.mode:"part";
+    ms.innerHTML='<div class="welcome" id="wc"><span class="wt">'+TITLES[mode]+'</span>'+SUBS[mode]+'<div class="chips" id="chips"></div></div>';
+    if(conv)renderChips(mode)
+  }else{
+    ms.innerHTML="";
+    for(var i=0;i<conv.messages.length;i++){
+      var msg=conv.messages[i];
+      var div=document.createElement("div");
+      div.className="msg "+(msg.role==="user"?"u":"a");
+      div.innerHTML=msg.role==="user"?esc(msg.content):fmt(msg.content);
+      ms.appendChild(div)
+    }
   }
-  document.getElementById("ref").innerHTML=h;
+  ms.scrollTop=ms.scrollHeight
 }
 
-function renderChips(){
+function renderChips(mode){
   var el=document.getElementById("chips");
   if(!el)return;
-  el.innerHTML=SUGG[cat].map(function(s){return'<span class="chip" onclick="ask(\''+s.replace(/'/g,"\\'")+'\')">' +s+'</span>'}).join("");
+  var suggestions=SUGG[mode]||[];
+  el.innerHTML=suggestions.map(function(s){return'<span class="chip" onclick="ask(\''+s.replace(/'/g,"\\'")+'\')">' +s+'</span>'}).join("")
+}
+
+function formatTime(ts){
+  var now=Date.now();
+  var diff=now-ts;
+  var mins=Math.floor(diff/60000);
+  var hours=Math.floor(mins/60);
+  var days=Math.floor(hours/24);
+  if(mins<1)return"now";
+  if(mins<60)return mins+"m";
+  if(hours<24)return hours+"h";
+  if(days<7)return days+"d";
+  var d=new Date(ts);
+  return(d.getMonth()+1)+"/"+d.getDate()
+}
+
+function renderConversationsList(){
+  var ref=document.getElementById("ref");
+  var ids=Object.keys(store.conversations).sort(function(a,b){return store.conversations[b].updatedAt-store.conversations[a].updatedAt});
+  var html='<div style="padding:8px 10px;border-bottom:0.5px solid var(--border)"><button id="newchatbtn" onclick="newChat()" style="width:100%;padding:6px 10px;border-radius:var(--r);font-size:11px;font-weight:500;background:var(--accent2);border:none;color:#fff;cursor:pointer;white-space:nowrap;transition:background .15s">+ New Chat</button></div>';
+  if(ids.length===0){
+    html+='<div style="padding:12px 10px;text-align:center;color:var(--muted);font-size:11px">Start a new chat to begin</div>'
+  }else{
+    html+='<div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:12px 0 8px;padding:0 10px">Conversations</div>';
+    for(var i=0;i<ids.length;i++){
+      var conv=store.conversations[ids[i]];
+      var isActive=store.activeId===ids[i];
+      var modeColor={part:"#3b82f6",assembly:"#06b6d4",drawing:"#8b5cf6"}[conv.mode]||"#6b7280";
+      var truncTitle=conv.title.length>30?conv.title.substring(0,27)+"...":conv.title;
+      var timeStr=formatTime(conv.updatedAt);
+      html+='<div style="display:flex;gap:6px;padding:6px 8px;margin:0 6px 4px;border-radius:var(--r);cursor:pointer;background:'+(isActive?"var(--bg3)":"transparent")+';border:0.5px solid '+(isActive?"var(--accent)":"transparent")+';align-items:center;justify-content:space-between;transition:background .15s" onclick="switchConversation(\''+ids[i]+'\')"><div style="flex:1;min-width:0"><div style="font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+truncTitle+'</div><div style="font-size:9px;color:var(--muted);margin-top:2px;display:flex;gap:6px;align-items:center"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:'+modeColor+'"></span><span>'+timeStr+'</span></div></div><button onclick="event.stopPropagation();if(confirm(\'Delete this conversation?\'))deleteConversation(\''+ids[i]+'\');" style="padding:2px 6px;font-size:10px;background:transparent;border:0.5px solid var(--border2);border-radius:3px;color:var(--muted);cursor:pointer">×</button></div>'
+    }
+  }
+  ref.innerHTML=html
+}
+
+function showEmptyState(){
+  var ms=document.getElementById("msgs");
+  ms.innerHTML='<div class="welcome"><span class="wt">Start a new chat to begin</span>Choose a category above or tap + New Chat to get started.</div>'
+}
+
+function newChat(){
+  var currentMode=getActiveConversation()?getActiveConversation().mode:"part";
+  var conv=createConversation(currentMode);
+  updateTabHighlight(conv.mode);
+  renderConversation(conv);
+  renderConversationsList()
+}
+
+function setC(mode){
+  var conv=createConversation(mode);
+  updateTabHighlight(mode);
+  renderConversation(conv);
+  renderConversationsList()
 }
 
 function ask(t){document.getElementById("inp").value=t;go()}
@@ -195,69 +286,64 @@ async function go(){
   var inp=document.getElementById("inp");
   var t=inp.value.trim();
   if(!t)return;
+  var conv=getActiveConversation();
+  if(!conv){alert("No active conversation. Create a new chat first.");return}
   var btn=document.getElementById("sbtn");
-  btn.disabled=true; inp.value="";
+  btn.disabled=true;inp.value="";
   var ms=document.getElementById("msgs");
-  var wc=document.getElementById("wc"); if(wc)wc.remove();
-
-  var um=document.createElement("div"); um.className="msg u"; um.innerHTML=esc(t); ms.appendChild(um);
-  hist.push({role:"user",content:t});
-  saveHistory();
-
-  var tp=document.createElement("div"); tp.className="typing"; tp.textContent="Thinking..."; ms.appendChild(tp);
+  var wc=document.getElementById("wc");if(wc)wc.remove();
+  if(conv.messages.length===0){conv.title=t.substring(0,40)}
+  var um=document.createElement("div");um.className="msg u";um.innerHTML=esc(t);ms.appendChild(um);
+  conv.messages.push({role:"user",content:t});
+  conv.updatedAt=Date.now();
+  saveConversations();
+  var tp=document.createElement("div");tp.className="typing";tp.textContent="Thinking...";ms.appendChild(tp);
   ms.scrollTop=ms.scrollHeight;
-
   try{
     var r=await fetch(WORKER,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({category:cat,messages:hist})
+      body:JSON.stringify({category:conv.mode,messages:conv.messages})
     });
     var d=await r.json();
     tp.remove();
     var reply=d.reply||"No response received.";
-    hist.push({role:"assistant",content:reply});
-    saveHistory();
-    var am=document.createElement("div"); am.className="msg a"; am.innerHTML=fmt(reply); ms.appendChild(am);
+    conv.messages.push({role:"assistant",content:reply});
+    conv.updatedAt=Date.now();
+    saveConversations();
+    var am=document.createElement("div");am.className="msg a";am.innerHTML=fmt(reply);ms.appendChild(am);
   }catch(e){
     tp.remove();
-    var em=document.createElement("div"); em.className="msg a"; em.textContent="Connection error. Check that WORKER URL is set correctly."; ms.appendChild(em);
-  }
-
-  ms.scrollTop=ms.scrollHeight;
-  btn.disabled=false; inp.focus();
-}
-
-function renderHistory(){
-  var ms=document.getElementById("msgs");
-  if(hist.length===0){
-    ms.innerHTML='<div class="welcome" id="wc"><span class="wt">'+TITLES[cat]+'</span>'+SUBS[cat]+'<div class="chips" id="chips"></div></div>';
-    renderChips();
-  }else{
-    ms.innerHTML="";
-    for(var i=0;i<hist.length;i++){
-      var msg=hist[i];
-      var div=document.createElement("div");
-      div.className="msg "+(msg.role==="user"?"u":"a");
-      div.innerHTML=msg.role==="user"?esc(msg.content):fmt(msg.content);
-      ms.appendChild(div);
-    }
+    var em=document.createElement("div");em.className="msg a";em.textContent="Connection error. Check that WORKER URL is set correctly.";ms.appendChild(em);
   }
   ms.scrollTop=ms.scrollHeight;
+  btn.disabled=false;inp.focus();
+  renderConversationsList();
 }
 
 function clearChat(){
-  hist=[];
-  saveHistory();
-  renderHistory();
+  var conv=getActiveConversation();
+  if(!conv)return;
+  conv.messages=[];
+  conv.updatedAt=Date.now();
+  saveConversations();
+  renderConversation(conv);
+  renderConversationsList();
 }
 
 document.getElementById("inp").addEventListener("keydown",function(e){
   if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();go()}
 });
 
-loadHistory();
-renderRef(); renderHistory();
+loadConversations();
+var activeConv=getActiveConversation();
+if(activeConv){
+  updateTabHighlight(activeConv.mode);
+  renderConversation(activeConv);
+}else{
+  showEmptyState();
+}
+renderConversationsList();
 </script>
 </body>
 </html>

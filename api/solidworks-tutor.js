@@ -1,4 +1,4 @@
-// SYMBEYOND AI SolidWorks Tutor - serverless middleman
+// SYMBEYOND AI CAD Tutor - serverless middleman
 // Lives at: api/solidworks-tutor.js in the symbeyond_website repo root
 // Vercel auto-deploys this as https://symbeyond.ai/api/solidworks-tutor
 // The API key NEVER appears in this file. It lives in Vercel env vars.
@@ -47,6 +47,7 @@ export default async function handler(req, res) {
   body = body || {};
 
   const category = clip(body.category, 30);
+  const software = clip(body.software, 30) || 'solidworks';
   const messages = Array.isArray(body.messages) ? body.messages.slice(-10) : [];
 
   if (!category || messages.length === 0) {
@@ -59,16 +60,23 @@ export default async function handler(req, res) {
     drawing: 'Drawings & Detailing - 2D views, dimensions, weld callouts, and output.'
   };
 
-  const catDesc = categoryDescriptions[category] || 'SolidWorks';
+  const softwareInfo = {
+    solidworks: 'SolidWorks',
+    fusion360: 'Fusion 360',
+    onshape: 'Onshape'
+  };
 
-  const systemPrompt = `You are an expert SolidWorks tutor helping engineers and makers learn CAD. The user is working in: ${catDesc}
+  const catDesc = categoryDescriptions[category] || 'CAD';
+  const softwareName = softwareInfo[software] || 'CAD';
+
+  const systemPrompt = `You are an expert ${softwareName} tutor helping engineers and makers learn CAD. The user is working in: ${catDesc}
 
 Your approach:
 - Answer briefly (2-4 sentences max) unless they ask for detail.
 - Give exact shortcuts and menu paths when relevant.
 - Explain the WHY, not just the HOW.
-- If they ask something outside SolidWorks, redirect politely.
-- Assume they know CAD basics but may not know SolidWorks specifics.
+- If they ask something outside ${softwareName}, redirect politely.
+- Assume they know CAD basics but may not know ${softwareName} specifics.
 
 Be practical, direct, and honest about difficulty.`;
 

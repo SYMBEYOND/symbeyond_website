@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SYMBEYOND CAD Tutor helps users ask practical CAD workflow questions for SolidWorks, Fusion 360 and Onshape.">
 <title>SYMBEYOND CAD Tutor</title>
 
 <!-- Favicons -->
@@ -14,7 +15,7 @@
 :root{
   --bg:#0f1117;--bg2:#181b24;--bg3:#1e2130;
   --border:#2a2f42;--border2:#3a4060;
-  --text:#e8ecf4;--muted:#7a84a0;
+  --text:#e8ecf4;--muted:#a8b2c1;
   --accent:#3b82f6;--accent2:#1d4ed8;
   --user-bg:#1a2a4a;--key-bg:#252a3a;
   --font:'Segoe UI',system-ui,-apple-system,sans-serif;
@@ -91,7 +92,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
   <button class="sb" onclick="setSoftware('onshape')" id="bo">Onshape</button>
 </div>
 
-<div id="body">
+<main id="body">
   <div id="ref"></div>
   <div id="chat">
     <div id="msgs">
@@ -109,10 +110,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
       </div>
     </div>
   </div>
+</main>
+
+<div style="font-size:9px;color:var(--muted);padding:8px 12px;border-top:0.5px solid var(--border);background:var(--bg2);text-align:center;line-height:1.4">
+SOLIDWORKS, Fusion 360 and Onshape are trademarks of their respective owners. SYMBEYOND AI is independent and is not affiliated with, sponsored by or endorsed by Dassault Systèmes, Autodesk or Onshape.
 </div>
 
 <div id="ftr">
-  Powered by Claude &mdash; <a href="https://symbeyond.ai" target="_blank">SYMBEYOND AI</a>
+  Powered by Claude | <a href="https://symbeyond.ai" target="_blank">SYMBEYOND AI</a>
 </div>
 
 <script>

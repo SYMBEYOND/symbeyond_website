@@ -266,7 +266,9 @@ function newChat(){
 }
 
 function setC(mode){
-  var conv=createConversation(mode);
+  var conv=getActiveConversation();
+  if(!conv){conv=createConversation(mode)}
+  else{conv.mode=mode;saveConversations()}
   updateTabHighlight(mode);
   renderConversation(conv);
   renderConversationsList()

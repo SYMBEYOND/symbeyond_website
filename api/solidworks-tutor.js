@@ -89,7 +89,8 @@ Be practical, direct, and honest about difficulty.`;
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 500,
         system: systemPrompt,
-        messages: userMessages
+        messages: userMessages,
+        cache_control: { type: 'ephemeral' }
       })
     });
 

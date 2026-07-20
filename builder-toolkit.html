@@ -228,10 +228,12 @@
     fetch('/api/builder-toolkit-auth', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({code: code})
+      body: JSON.stringify({code: code}),
+      credentials: 'same-origin'
     }).then(function(r){ return r.json(); }).then(function(data){
       btn.disabled = false;
-      if (data.ok) {
+      if (data.ok || data.authenticated) {
+        // Server sets HttpOnly cookie; mark as unlocked locally
         localStorage.setItem(KEY, '1');
         gate.remove();
         grid.style.display = '';

@@ -66,6 +66,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
 #sbtn:disabled{opacity:.4;cursor:not-allowed}
 #cbtn{padding:6px 12px;border-radius:var(--r);font-size:11px;font-weight:500;background:transparent;border:0.5px solid var(--border2);color:var(--muted);cursor:pointer;white-space:nowrap;transition:color .15s,background .15s}
 #cbtn:hover{color:var(--text);background:var(--bg3)}
+#usage{font-size:10px;color:var(--muted);padding:6px 12px;border-top:0.5px solid var(--border);background:var(--bg2);flex-shrink:0;display:none}
+#usage.show{display:block}
+#usage-bar{height:3px;background:var(--border);border-radius:2px;margin:4px 0 2px;overflow:hidden}
+#usage-fill{height:100%;background:var(--accent);transition:width .2s}
+#usage-fill.warn{background:#f59e0b}
+#usage-fill.high{background:#ef4444}
+#usage-text{font-size:9px;margin-top:2px}
 #ftr{text-align:center;font-size:10px;color:var(--muted);padding:5px;border-top:0.5px solid var(--border);background:var(--bg2);flex-shrink:0}
 #ftr a{color:var(--muted);text-decoration:none}
 #ftr a:hover{color:var(--text)}
@@ -111,6 +118,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
     </div>
   </div>
 </main>
+
+<div id="usage">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span id="usage-label"></span>
+    <span id="usage-reset" style="font-size:9px"></span>
+  </div>
+  <div id="usage-bar"><div id="usage-fill"></div></div>
+  <div id="usage-text"></div>
+</div>
 
 <div style="font-size:9px;color:var(--muted);padding:8px 12px;border-top:0.5px solid var(--border);background:var(--bg2);text-align:center;line-height:1.4">
 SOLIDWORKS, Fusion 360 and Onshape are trademarks of their respective owners. SYMBEYOND AI is independent and is not affiliated with, sponsored by or endorsed by Dassault Systèmes, Autodesk or Onshape.
@@ -316,6 +332,43 @@ function fmt(t){
     .replace(/\n/g,"<br>");
 }
 
+function displayUsage(usage){
+  if(!usage)return;
+  var usageEl=document.getElementById("usage");
+  var label=document.getElementById("usage-label");
+  var reset=document.getElementById("usage-reset");
+  var bar=document.getElementById("usage-fill");
+  var text=document.getElementById("usage-text");
+
+  var remaining=usage.remainingCredits||0;
+  var limit=usage.limitCredits||10;
+  var tier=usage.tier||"trial";
+  var percentage=usage.percentage||0;
+
+  label.textContent=remaining+" / "+limit+" credits ("+tier+")";
+
+  var resetAt=usage.resetAt?new Date(usage.resetAt):null;
+  if(resetAt){
+    var hours=resetAt.getHours();var mins=resetAt.getMinutes();
+    var timeStr=(hours<10?"0":"")+hours+":"+(mins<10?"0":"")+mins;
+    reset.textContent="Reset at "+timeStr;
+  }
+
+  bar.style.width=percentage+"%";
+  bar.className="";
+  var warning=usage.warning||"none";
+  if(warning==="high"){bar.classList.add("high")}
+  else if(warning==="approaching"){bar.classList.add("warn")}
+
+  var warningMsg="";
+  if(warning==="approaching"){warningMsg="Approaching limit"}
+  else if(warning==="high"){warningMsg="Warning: high usage"}
+  else if(warning==="exhausted"){warningMsg="Limit reached"}
+
+  text.textContent=warningMsg;
+  usageEl.classList.add("show");
+}
+
 async function go(){
   var inp=document.getElementById("inp");
   var t=inp.value.trim();
@@ -341,11 +394,34 @@ async function go(){
     });
     var d=await r.json();
     tp.remove();
+
+    // Handle fair-use limit response
+    if(!r.ok||d.code==="FAIR_USE_LIMIT"){
+      var em=document.createElement("div");em.className="msg a";em.textContent="Fair-use limit reached. "+d.message;ms.appendChild(em);
+      if(d.usage){displayUsage(d.usage)}
+      ms.scrollTop=ms.scrollHeight;
+      btn.disabled=false;inp.focus();
+      renderConversationsList();
+      return;
+    }
+
+    // Handle other errors
+    if(!r.ok){
+      var em=document.createElement("div");em.className="msg a";em.textContent=d.error||"Error: "+r.status;ms.appendChild(em);
+      if(d.usage){displayUsage(d.usage)}
+      ms.scrollTop=ms.scrollHeight;
+      btn.disabled=false;inp.focus();
+      renderConversationsList();
+      return;
+    }
+
     var reply=d.reply||"No response received.";
     conv.messages.push({role:"assistant",content:reply});
     conv.updatedAt=Date.now();
     saveConversations();
     var am=document.createElement("div");am.className="msg a";am.innerHTML=fmt(reply);ms.appendChild(am);
+
+    if(d.usage){displayUsage(d.usage)}
   }catch(e){
     tp.remove();
     var em=document.createElement("div");em.className="msg a";em.textContent="Connection error. Check that WORKER URL is set correctly.";ms.appendChild(em);

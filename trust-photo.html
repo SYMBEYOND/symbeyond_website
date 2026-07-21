@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYMB-TRUST Photo | SYMBEYOND AI</title>
+<meta name="description" content="Local browser-based JPEG origin-consistency analyzer. No upload, no exposure of private metadata.">
+<link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
+<link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
+<link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
+<style>
+  :root {
+    --bg: hsl(25, 10%, 8%);
+    --surface: hsl(20, 22%, 13%);
+    --surface-border: hsl(20, 18%, 19%);
+    --text-primary: hsl(35, 15%, 84%);
+    --text-muted: hsl(15, 45%, 68%);
+    --text-dim: hsl(15, 35%, 55%);
+    --gold: hsl(42, 80%, 52%);
+    --gold-dim: hsl(42, 60%, 35%);
+    --teal: hsl(168, 70%, 35%);
+    --teal-soft: hsl(168, 40%, 15%);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--bg);
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 2px,
+        hsla(25,8%,18%,0.07) 2px, hsla(25,8%,18%,0.07) 3px),
+      repeating-linear-gradient(90deg, transparent, transparent 2px,
+        hsla(25,8%,18%,0.04) 2px, hsla(25,8%,18%,0.04) 3px);
+    color: var(--text-primary);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+  .back-link {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 1.25rem 0 0;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .back-link:hover, .back-link:focus { color: var(--gold); outline: none; }
+
+  .hero {
+    padding: 2rem 0 2rem;
+    border-bottom: 1px solid var(--surface-border);
+    margin-bottom: 2rem;
+  }
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 0.75rem;
+  }
+  h1 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.6rem;
+    color: var(--text-primary);
+  }
+  .sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 48ch;
+  }
+
+  .privacy-note {
+    background: var(--teal-soft);
+    border: 1px solid hsl(168, 40%, 22%);
+    border-left: 3px solid var(--teal);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.75rem;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .privacy-note strong { color: hsl(168, 60%, 55%); }
+
+  .file-input-wrapper {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .input-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .drop-zone {
+    border: 2px dashed var(--surface-border);
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: hsla(25, 10%, 6%, 0.5);
+  }
+  .drop-zone:hover {
+    border-color: var(--gold-dim);
+    background: hsla(25, 10%, 6%, 0.8);
+  }
+  .drop-zone.active {
+    border-color: var(--teal);
+    background: hsla(168, 40%, 15%, 0.3);
+  }
+  .drop-zone input[type="file"] {
+    display: none;
+  }
+  .drop-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .drop-hint {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .preview-section {
+    margin-bottom: 1.5rem;
+    display: none;
+  }
+  .preview-section.visible {
+    display: block;
+  }
+  .preview-img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    border: 1px solid var(--surface-border);
+    margin-bottom: 0.75rem;
+  }
+
+  .btn-row { display: flex; gap: 0.65rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+  .btn {
+    border: none;
+    border-radius: 7px;
+    padding: 0.7rem 1.25rem;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+    outline: none;
+  }
+  .btn:focus {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .btn-primary { background: var(--gold-dim); color: hsl(25, 10%, 8%); }
+  .btn-primary:hover { background: var(--gold); }
+  .btn-primary:disabled {
+    background: var(--surface-border);
+    color: var(--text-dim);
+    cursor: not-allowed;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--surface-border);
+  }
+  .btn-ghost:hover { border-color: var(--gold-dim); color: var(--text-primary); }
+  .btn-ghost:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .verdict-panel {
+    margin-top: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: none;
+  }
+  .verdict-panel.visible { display: block; }
+  .verdict-header {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 0.75rem;
+  }
+  .verdict-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: hsla(42, 30%, 8%, 0.6);
+    border-radius: 6px;
+    border-left: 3px solid var(--gold-dim);
+  }
+  .summary-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  .evidence-section {
+    margin-bottom: 1.5rem;
+  }
+  .evidence-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.75rem;
+    font-family: 'Courier New', monospace;
+  }
+  .evidence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .evidence-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 13px;
+    padding: 0.5rem 0.75rem;
+    background: hsla(25, 10%, 6%, 0.5);
+    border-radius: 6px;
+    border-left: 2px solid var(--surface-border);
+  }
+  .evidence-item.pass {
+    border-left-color: hsl(140, 50%, 40%);
+  }
+  .evidence-item.present {
+    border-left-color: var(--teal);
+  }
+  .evidence-item.absent {
+    border-left-color: var(--text-dim);
+  }
+  .evidence-item.review {
+    border-left-color: var(--gold-dim);
+  }
+  .evidence-status {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    background: hsla(25, 10%, 8%, 0.6);
+    min-width: 45px;
+    text-align: center;
+  }
+  .evidence-item.pass .evidence-status {
+    color: hsl(140, 60%, 50%);
+  }
+  .evidence-item.present .evidence-status {
+    color: var(--teal);
+  }
+  .evidence-item.absent .evidence-status {
+    color: var(--text-dim);
+  }
+  .evidence-item.review .evidence-status {
+    color: var(--gold);
+  }
+  .evidence-detail {
+    color: var(--text-muted);
+    flex: 1;
+  }
+
+  .limitations-section {
+    background: hsla(168, 40%, 15%, 0.2);
+    border: 1px solid hsl(168, 40%, 22%);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-top: 1.5rem;
+  }
+  .limitations-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.75rem;
+    font-family: 'Courier New', monospace;
+  }
+  .limitations-list {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding-left: 1.5rem;
+  }
+  .limitations-list li {
+    margin-bottom: 0.5rem;
+  }
+
+  .aria-live {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 0 1rem 3rem; }
+    .btn-row { gap: 0.5rem; }
+    .btn { padding: 0.6rem 1rem; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="/builder-toolkit" class="back-link">← Back to BOSS</a>
+
+  <div class="hero">
+    <div class="eyebrow">SYMBEYOND AI · SYMB-TRUST Photo</div>
+    <h1>JPEG Origin Consistency</h1>
+    <p class="sub">Local browser analysis of metadata evidence. No upload. No exposure of private data.</p>
+  </div>
+
+  <div class="privacy-note">
+    <strong>Privacy first:</strong> Your photo never leaves your device. We analyze only structural and metadata evidence without uploading anything or exposing exact GPS, timestamps, or camera serial numbers.
+  </div>
+
+  <div class="file-input-wrapper">
+    <label for="fileInput" class="input-label">Select JPEG File</label>
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-text">Drop a JPEG here or click to browse</div>
+      <div class="drop-hint">.jpg, .jpeg files only</div>
+      <input type="file" id="fileInput" accept=".jpg,.jpeg,image/jpeg" aria-label="Upload JPEG file">
+    </div>
+  </div>
+
+  <div class="preview-section" id="previewSection">
+    <img id="previewImg" class="preview-img" alt="Preview of selected JPEG">
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="analyzeBtn" disabled>Analyze Locally</button>
+    <button class="btn btn-ghost" id="resetBtn" disabled>Reset</button>
+  </div>
+
+  <div class="verdict-panel" id="verdictPanel">
+    <div class="verdict-header">Analysis Result</div>
+    <div class="verdict-text" id="verdictText"></div>
+    <div class="summary-text" id="summaryText"></div>
+
+    <div class="evidence-section">
+      <div class="evidence-label">Evidence Checklist</div>
+      <div class="evidence-list" id="evidenceList"></div>
+    </div>
+
+    <div class="limitations-section">
+      <div class="limitations-title">What This Cannot Tell You</div>
+      <ul class="limitations-list">
+        <li><strong>Metadata is supporting evidence, not proof of truth.</strong> This analysis does not prove the depicted scene actually occurred.</li>
+        <li><strong>This is not an AI image detector.</strong> No machine learning involved.</li>
+        <li><strong>Metadata can be edited or transplanted</strong> between files without advanced forensics detection.</li>
+        <li><strong>Absence of metadata</strong> does not indicate manipulation; many legitimate sources strip EXIF.</li>
+        <li><strong>Verification of unedited pixels</strong> requires specialized forensic techniques beyond this scope.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="aria-live" id="ariaLive" aria-live="polite" aria-atomic="true"></div>
+
+</div>
+
+<script src="js/trust-photo.js"></script>
+<script>
+  const fileInput = document.getElementById('fileInput');
+  const dropZone = document.getElementById('dropZone');
+  const previewSection = document.getElementById('previewSection');
+  const previewImg = document.getElementById('previewImg');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const verdictPanel = document.getElementById('verdictPanel');
+  const verdictText = document.getElementById('verdictText');
+  const summaryText = document.getElementById('summaryText');
+  const evidenceList = document.getElementById('evidenceList');
+  const ariaLive = document.getElementById('ariaLive');
+
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
+
+  let selectedFile = null;
+  let selectedObjectUrl = null;
+
+  dropZone.setAttribute('tabindex', '0');
+  dropZone.setAttribute('role', 'button');
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInput.click();
+    }
+  });
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('active');
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('active');
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('active');
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      processFile(file);
+    }
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      processFile(e.target.files[0]);
+    }
+  });
+
+  function processFile(file) {
+    if (!file.type.match('image/jpeg') && !file.name.match(/\.(jpg|jpeg)$/i)) {
+      alert('Please select a JPEG file');
+      fileInput.value = '';
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      alert('File is too large. Maximum size is 50 MiB.');
+      fileInput.value = '';
+      return;
+    }
+
+    clearResults();
+
+    selectedFile = file;
+    analyzeBtn.disabled = false;
+    resetBtn.disabled = false;
+
+    if (selectedObjectUrl) {
+      URL.revokeObjectURL(selectedObjectUrl);
+    }
+
+    selectedObjectUrl = URL.createObjectURL(file);
+    previewImg.src = selectedObjectUrl;
+    previewSection.classList.add('visible');
+    ariaLive.textContent = `File selected: ${file.name}`;
+  }
+
+  function clearResults() {
+    verdictPanel.classList.remove('visible');
+    verdictText.textContent = '';
+    summaryText.textContent = '';
+    evidenceList.textContent = '';
+  }
+
+  analyzeBtn.addEventListener('click', () => {
+    if (!selectedFile) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const arrayBuffer = e.target.result;
+        const result = analyzeJpeg(arrayBuffer);
+
+        verdictText.textContent = result.verdict;
+        summaryText.textContent = result.summary;
+
+        evidenceList.textContent = '';
+        result.evidence.forEach((ev) => {
+          const item = document.createElement('div');
+          const statusClass = ev.status.toLowerCase();
+          item.className = `evidence-item ${statusClass}`;
+
+          const status = document.createElement('div');
+          status.className = 'evidence-status';
+          status.textContent = ev.status;
+          item.appendChild(status);
+
+          const detail = document.createElement('div');
+          const checkSpan = document.createElement('strong');
+          checkSpan.textContent = ev.check + ':';
+          detail.appendChild(checkSpan);
+          detail.appendChild(document.createTextNode(' ' + ev.detail));
+          detail.className = 'evidence-detail';
+          item.appendChild(detail);
+
+          evidenceList.appendChild(item);
+        });
+
+        verdictPanel.classList.add('visible');
+        ariaLive.textContent = `Analysis complete: ${result.verdict}. ${result.summary}`;
+      } catch (err) {
+        alert(`Analysis error: ${err.message}`);
+        ariaLive.textContent = `Analysis error: ${err.message}`;
+      }
+    };
+    reader.readAsArrayBuffer(selectedFile);
+  });
+
+  resetBtn.addEventListener('click', () => {
+    selectedFile = null;
+    if (selectedObjectUrl) {
+      URL.revokeObjectURL(selectedObjectUrl);
+      selectedObjectUrl = null;
+    }
+    fileInput.value = '';
+    previewSection.classList.remove('visible');
+    previewImg.src = '';
+    clearResults();
+    analyzeBtn.disabled = true;
+    resetBtn.disabled = true;
+    ariaLive.textContent = 'Analysis reset. File and results cleared.';
+  });
+
+  window.addEventListener('pagehide', () => {
+    if (selectedObjectUrl) {
+      URL.revokeObjectURL(selectedObjectUrl);
+    }
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if (selectedObjectUrl) {
+      URL.revokeObjectURL(selectedObjectUrl);
+    }
+  });
+</script>
+</body>
+</html>

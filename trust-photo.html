@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SYMB-TRUST Photo | SYMBEYOND AI</title>
-<meta name="description" content="Local browser-based JPEG origin-consistency analyzer. No upload, no exposure of private metadata.">
+<meta name="description" content="Local browser-based JPEG metadata-consistency analyzer. No upload and no display of sensitive metadata values.">
 <link rel="icon" type="image/x-icon" href="assets/icons/SYMBEYOND_logo_pc.ico">
 <link rel="icon" type="image/png" href="assets/icons/SYMBEYOND_logo_linux.png">
 <link rel="apple-touch-icon" href="assets/icons/SYMBEYOND_logo_mac.png">
@@ -211,6 +211,20 @@
     color: var(--text-muted);
     margin-bottom: 1.25rem;
   }
+  .provenance-status {
+    margin-bottom: 1.25rem;
+    padding: 0.8rem 1rem;
+    background: hsla(14, 55%, 16%, 0.45);
+    border: 1px solid hsla(14, 75%, 52%, 0.45);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 13px;
+  }
+  .provenance-status strong {
+    color: hsl(14, 75%, 62%);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.05em;
+  }
 
   .evidence-section {
     margin-bottom: 1.5rem;
@@ -325,8 +339,8 @@
 
   <div class="hero">
     <div class="eyebrow">SYMBEYOND AI · SYMB-TRUST Photo</div>
-    <h1>JPEG Origin Consistency</h1>
-    <p class="sub">Local browser analysis of metadata evidence. No upload. No exposure of private data.</p>
+    <h1>JPEG Metadata Consistency</h1>
+    <p class="sub">Local browser analysis of structural and metadata evidence. No upload. Sensitive metadata values are not displayed.</p>
   </div>
 
   <div class="privacy-note">
@@ -352,9 +366,13 @@
   </div>
 
   <div class="verdict-panel" id="verdictPanel">
-    <div class="verdict-header">Analysis Result</div>
+    <div class="verdict-header">Metadata Analysis</div>
     <div class="verdict-text" id="verdictText"></div>
     <div class="summary-text" id="summaryText"></div>
+    <div class="provenance-status">
+      <strong>PROVENANCE: <span id="provenanceText">NOT VERIFIED</span></strong><br>
+      This tool cannot establish where the pixels or metadata came from.
+    </div>
 
     <div class="evidence-section">
       <div class="evidence-label">Evidence Checklist</div>
@@ -388,6 +406,7 @@
   const verdictPanel = document.getElementById('verdictPanel');
   const verdictText = document.getElementById('verdictText');
   const summaryText = document.getElementById('summaryText');
+  const provenanceText = document.getElementById('provenanceText');
   const evidenceList = document.getElementById('evidenceList');
   const ariaLive = document.getElementById('ariaLive');
 
@@ -478,6 +497,7 @@
 
         verdictText.textContent = result.verdict;
         summaryText.textContent = result.summary;
+        provenanceText.textContent = result.provenance;
 
         evidenceList.textContent = '';
         result.evidence.forEach((ev) => {
@@ -502,7 +522,7 @@
         });
 
         verdictPanel.classList.add('visible');
-        ariaLive.textContent = `Analysis complete: ${result.verdict}. ${result.summary}`;
+        ariaLive.textContent = `Analysis complete: ${result.verdict}. Provenance ${result.provenance}. ${result.summary}`;
       } catch (err) {
         alert(`Analysis error: ${err.message}`);
         ariaLive.textContent = `Analysis error: ${err.message}`;

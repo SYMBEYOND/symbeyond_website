@@ -1,15 +1,15 @@
-# SYMB-TRUST Photo v0.1 MVP
+# SYMB-TRUST Photo v0.2 Truth-Language Hardening
 
 ## Purpose
 
-SYMB-TRUST Photo v0.1 is a **local browser-based JPEG origin-consistency analyzer**. It inspects structural and metadata evidence without uploading files or exposing private metadata.
+SYMB-TRUST Photo v0.2 is a **local browser-based JPEG metadata-consistency analyzer**. It inspects structural and metadata evidence without uploading files or displaying sensitive metadata values.
 
 **What it does:**
 - Validates JPEG file structure including SOS (Start of Scan) entropy-coded data
 - Safely handles FF00 stuffed bytes and restart markers in scan data
 - Extracts EXIF metadata from Exif-tagged APP1 segments
 - Parses nested TIFF IFDs with bounds checking (IFD0, ExifIFD, GPS IFD)
-- Classifies evidence consistency with camera-origin capture
+- Classifies the internal consistency of camera-style metadata
 - Reports evidence while protecting privacy (no GPS coordinates, exact timestamps, or serial numbers)
 
 **What it does NOT do:**
@@ -78,9 +78,18 @@ SYMB-TRUST Photo v0.1 is a **local browser-based JPEG origin-consistency analyze
 - Do not integrate cloud analysis
 - Do not expose raw metadata strings in output
 
+## Result Model
+
+Every result contains two deliberately separate statements:
+
+1. A metadata verdict describing the evidence found in the JPEG.
+2. `PROVENANCE: NOT VERIFIED`, because this analyzer cannot establish where the pixels or metadata came from.
+
+Metadata consistency must never be presented as authenticity, originality, chain of custody, or scene truth.
+
 ## Verdict Definitions
 
-### LIKELY ORIGINAL CAMERA CAPTURE
+### CAMERA METADATA CONSISTENT
 
 Returned **only when** all required evidence is present and coherent:
 
@@ -92,7 +101,7 @@ Returned **only when** all required evidence is present and coherent:
 ✓ **No** editor/export signature contradiction
 ✓ **No** structural or offset malformations
 
-**Important:** This verdict means "metadata is consistent with a camera-origin JPEG." It does NOT mean:
+**Important:** This verdict means the required camera-style metadata is internally consistent. It does NOT mean:
 - The depicted scene is real or unmanipulated
 - The file has never been edited
 - The image is trustworthy or authentic
@@ -107,9 +116,9 @@ Returned when evidence is valid but insufficient:
 - Partial camera metadata (only Make, or only timestamp, or missing one required element)
 - Coherent but sparse evidence
 - No structural malformations
-- No editor contradiction, but insufficient camera evidence for "Likely Original"
+- No editor contradiction, but insufficient camera-style metadata for `CAMERA METADATA CONSISTENT`
 
-**This verdict means:** We found some evidence, but not enough to classify as "likely original camera capture." Absence of evidence is not evidence of manipulation.
+**This verdict means:** We found some evidence, but not enough to classify the required metadata as internally consistent. Absence of evidence is not evidence of manipulation.
 
 ### REVIEW NEEDED
 
@@ -175,7 +184,7 @@ Each analysis returns an **evidence array** with items describing specific check
 
 ### Invariant
 
-- If verdict is `LIKELY ORIGINAL`, evidence must contain zero `REVIEW` items.
+- If verdict is `CAMERA METADATA CONSISTENT`, evidence must contain zero `REVIEW` items.
 - If verdict is `REVIEW NEEDED`, evidence must contain at least one `REVIEW` item.
 
 ## Test Matrix
@@ -193,7 +202,7 @@ All tests use Node.js v24.1.0 native test runner (`node:test`, `node:assert/stri
    - Parse JPEG from Uint8Array with nonzero byteOffset ✓
 
 3. **Strict classification:**
-   - Coherent required evidence → exactly `LIKELY ORIGINAL` ✓
+   - Coherent required evidence → exactly `CAMERA METADATA CONSISTENT` ✓
    - Insufficient evidence → exactly `INCONCLUSIVE` ✓
    - Editor signature → exactly `REVIEW NEEDED` ✓
    - Future timestamp → exactly `REVIEW NEEDED` ✓
@@ -214,7 +223,7 @@ All tests use Node.js v24.1.0 native test runner (`node:test`, `node:assert/stri
    - Limitations array present ✓
    - Summary field always string ✓
    - Privacy object all booleans ✓
-   - No `REVIEW` evidence with `LIKELY ORIGINAL` verdict ✓
+   - No `REVIEW` evidence with `CAMERA METADATA CONSISTENT` verdict ✓
 
 7. **Verdict coverage:**
    - Returns only approved verdicts ✓
@@ -252,7 +261,7 @@ All tests use Node.js v24.1.0 native test runner (`node:test`, `node:assert/stri
 node --test tests/*.test.js
 ```
 
-**Total:** 69 passing tests (42 SYMB-TRUST + 27 baseline CAD).
+**Verified on Node.js v18.20.8:** 72 passing tests (45 SYMB-TRUST + 27 baseline CAD), 0 failures.
 
 ## Known Limitations
 
@@ -262,7 +271,7 @@ node --test tests/*.test.js
 - **Absence of metadata is not proof of tampering.** Many legitimate sources (screenshots, social media, instant cameras) have no EXIF.
 
 ### Analysis Scope
-- **Only camera-origin evidence is assessed.** We do not analyze pixel content, compression artifacts, or visual forensics.
+- **Only camera-style metadata evidence is assessed.** We do not analyze pixel content, compression artifacts, or visual forensics.
 - **Editor signatures are basic.** Only Software field and obvious export markers are checked; advanced editing may leave no trace.
 - **Timestamp plausibility is simple.** We check format and rough date sanity (1990–now+1), not cryptographic chain-of-custody.
 
@@ -279,12 +288,12 @@ node --test tests/*.test.js
 
 ### No Authenticity Guarantee
 - This tool is **not an authenticator.** A REVIEW NEEDED verdict does not prove fraud; it flags inconsistencies.
-- A LIKELY ORIGINAL verdict is **not a certification.** Metadata consistency is supporting evidence, not proof of truth.
+- A CAMERA METADATA CONSISTENT verdict is **not a certification.** Metadata consistency is supporting evidence, not proof of truth.
 - **No promise of finding all manipulation.** Sophisticated forgers can craft plausible EXIF; this tool finds only naive inconsistencies.
 
 ## Verdict Requirements (Precise)
 
-### LIKELY ORIGINAL CAMERA CAPTURE (requires ALL):
+### CAMERA METADATA CONSISTENT (requires ALL):
 1. JPEG structure valid → `PASS`
 2. EXIF present → `PRESENT`
 3. Camera Make present → `PRESENT`
@@ -294,10 +303,10 @@ node --test tests/*.test.js
 7. No `REVIEW` status anywhere in evidence
 8. No structural errors
 
-### INCONCLUSIVE (default if not LIKELY ORIGINAL or REVIEW NEEDED)
+### INCONCLUSIVE (default if not CAMERA METADATA CONSISTENT or REVIEW NEEDED)
 - At least `PASS` or `PRESENT` evidence
 - No `REVIEW` status
-- Missing one or more required elements for LIKELY ORIGINAL
+- Missing one or more required elements for CAMERA METADATA CONSISTENT
 
 ### REVIEW NEEDED (if ANY):
 - Structural JPEG error
@@ -317,25 +326,26 @@ node --test tests/*.test.js
 4. All documentation matches actual behavior
 5. Independent code review completes
 
-v0.1 is intentionally isolated to gather feedback and identify edge cases. Promotion to main Toolkit should follow validation, not precede it.
+v0.2 remains intentionally isolated to gather feedback and identify edge cases. Promotion to main Toolkit should follow validation, not precede it.
 
 ## Module Contract
 
 For Node.js or JavaScript environments:
 
 ```javascript
-import { VERDICTS, analyzeJpeg, parseJpegStructure, inspectExif } from './js/trust-photo.js';
+import { VERDICTS, PROVENANCE, analyzeJpeg, parseJpegStructure, inspectExif } from './js/trust-photo.js';
 
 // Constants
-VERDICTS.LIKELY_ORIGINAL    // "LIKELY ORIGINAL CAMERA CAPTURE"
-VERDICTS.INCONCLUSIVE       // "INCONCLUSIVE"
-VERDICTS.REVIEW_NEEDED      // "REVIEW NEEDED"
+VERDICTS.METADATA_CONSISTENT // "CAMERA METADATA CONSISTENT"
+VERDICTS.INCONCLUSIVE        // "INCONCLUSIVE"
+VERDICTS.REVIEW_NEEDED       // "REVIEW NEEDED"
+PROVENANCE.NOT_VERIFIED      // "NOT VERIFIED"
 
 // Main analyzer
 const result = analyzeJpeg(input, options);
 // input: ArrayBuffer or typed array view (byteOffset respected)
 // options.now: optional year for timestamp plausibility (default: current year)
-// result: { verdict, summary, evidence[], limitations[], privacy }
+// result: { verdict, provenance, summary, evidence[], limitations[], privacy }
 
 // Structure parser
 const structure = parseJpegStructure(input);
@@ -349,6 +359,18 @@ const exif = inspectExif(input, structure, options);
 All functions are safe for untrusted input; none throw uncaught exceptions on malformed JPEG or EXIF.
 
 ## Changelog
+
+### v0.2 (2026-07-22, truth-language and adversarial hardening)
+
+- Replaced `LIKELY ORIGINAL CAMERA CAPTURE` with `CAMERA METADATA CONSISTENT`
+- Added an explicit, permanent `PROVENANCE: NOT VERIFIED` result
+- Removed positive-result language implying original capture
+- Added a fabricated coherent-EXIF adversarial fixture
+- Added an EXIF-transplant fixture across distinct scan payloads
+- Replaced the generic editor-contradiction summary with evidence-specific review language
+- Verified the complete 72-test repository suite on Node.js v18.20.8 (45 SYMB-TRUST + 27 baseline CAD)
+- Added explicit ES-module boundaries for `tests/` and `api/_lib/` so Node.js 18 executes the existing module syntax deterministically
+- Preserved the v0.1 parsing, privacy, and review behavior
 
 ### v0.1 (2026-07-21, final micro-correction pass)
 

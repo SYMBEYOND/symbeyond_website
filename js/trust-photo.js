@@ -1,7 +1,11 @@
 const VERDICTS = {
-  LIKELY_ORIGINAL: 'LIKELY ORIGINAL CAMERA CAPTURE',
+  METADATA_CONSISTENT: 'CAMERA METADATA CONSISTENT',
   INCONCLUSIVE: 'INCONCLUSIVE',
   REVIEW_NEEDED: 'REVIEW NEEDED',
+};
+
+const PROVENANCE = {
+  NOT_VERIFIED: 'NOT VERIFIED',
 };
 
 function createByteView(input) {
@@ -627,12 +631,13 @@ function detectComEditorSignature(comSegments, view, length) {
 function analyzeJpeg(input, options = {}) {
   const result = {
     verdict: VERDICTS.INCONCLUSIVE,
+    provenance: PROVENANCE.NOT_VERIFIED,
     summary: '',
     evidence: [],
     limitations: [
       'Metadata can be edited or transplanted',
       'This analysis does not prove the depicted scene is true',
-      'Only camera-origin metadata consistency is evaluated',
+      'Only camera-style metadata consistency is evaluated',
     ],
     privacy: {
       hasGPS: false,
@@ -715,7 +720,7 @@ function analyzeJpeg(input, options = {}) {
   let hasModel = false;
   let hasPlausibleTimestamp = false;
   let hasSupportingSignal = false;
-  let hasEditorContradiction = false;
+  const reviewSignals = new Set();
 
   if (meta.hasCameraMake) {
     result.evidence.push({
@@ -754,7 +759,7 @@ function analyzeJpeg(input, options = {}) {
         status: 'REVIEW',
         detail: 'Capture timestamp format or values are implausible',
       });
-      hasEditorContradiction = true;
+      reviewSignals.add('timestamp');
     } else if (exifResult.timestampStatus === 'plausible') {
       result.evidence.push({
         check: 'Capture Time',
@@ -819,15 +824,21 @@ function analyzeJpeg(input, options = {}) {
       status: 'REVIEW',
       detail: 'Known editor/export signature detected',
     });
-    hasEditorContradiction = true;
+    reviewSignals.add('editor');
   }
 
-  if (hasEditorContradiction) {
+  if (reviewSignals.size > 0) {
     result.verdict = VERDICTS.REVIEW_NEEDED;
-    result.summary = 'Editor/export contradiction detected';
+    if (reviewSignals.size > 1) {
+      result.summary = 'Multiple metadata review signals detected';
+    } else if (reviewSignals.has('editor')) {
+      result.summary = 'Editor/export signature detected';
+    } else {
+      result.summary = 'Capture timestamp requires review';
+    }
   } else if (hasMake && hasModel && hasPlausibleTimestamp && hasSupportingSignal) {
-    result.verdict = VERDICTS.LIKELY_ORIGINAL;
-    result.summary = 'Coherent camera metadata consistent with original capture';
+    result.verdict = VERDICTS.METADATA_CONSISTENT;
+    result.summary = 'Required camera-style metadata is internally consistent; origin remains unverified';
   } else if (hasMake || hasModel || hasPlausibleTimestamp) {
     result.verdict = VERDICTS.INCONCLUSIVE;
     result.summary = 'Partial but incomplete camera evidence';
@@ -842,6 +853,7 @@ function analyzeJpeg(input, options = {}) {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     VERDICTS,
+    PROVENANCE,
     analyzeJpeg,
     parseJpegStructure,
     inspectExif,

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { VERDICTS, analyzeJpeg, parseJpegStructure, inspectExif } from '../js/trust-photo.js';
+import { VERDICTS, PROVENANCE, analyzeJpeg, parseJpegStructure, inspectExif } from '../js/trust-photo.js';
 
 function createRealJpeg() {
   const buf = new Uint8Array(512);
@@ -113,6 +113,24 @@ function createJpegWithApp1(exifData) {
   }
   arr[6 + exifData.length] = 0xFF;
   arr[6 + exifData.length + 1] = 0xD9;
+  return arr.buffer;
+}
+
+function createJpegWithApp1AndScan(exifData, scanBytes) {
+  const app1Length = exifData.length + 2;
+  const sosHeader = [0xFF, 0xDA, 0x00, 0x08, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00];
+  const arr = new Uint8Array(2 + 4 + exifData.length + sosHeader.length + scanBytes.length + 2);
+  let pos = 0;
+
+  arr[pos++] = 0xFF; arr[pos++] = 0xD8;
+  arr[pos++] = 0xFF; arr[pos++] = 0xE1;
+  arr[pos++] = (app1Length >> 8) & 0xFF;
+  arr[pos++] = app1Length & 0xFF;
+  arr.set(exifData, pos); pos += exifData.length;
+  arr.set(sosHeader, pos); pos += sosHeader.length;
+  arr.set(scanBytes, pos); pos += scanBytes.length;
+  arr[pos++] = 0xFF; arr[pos++] = 0xD9;
+
   return arr.buffer;
 }
 
@@ -288,7 +306,7 @@ test('parseJpegStructure: handles Uint8Array with byteOffset', () => {
   assert.equal(result.valid, true, 'Should parse JPEG from subarray offset');
 });
 
-test('analyzeJpeg: coherent required evidence yields exactly LIKELY_ORIGINAL', () => {
+test('analyzeJpeg: coherent required evidence yields exactly METADATA_CONSISTENT', () => {
   const exif = createLittleEndianExif({
     Make: 'Canon',
     Model: 'Canon EOS',
@@ -297,8 +315,39 @@ test('analyzeJpeg: coherent required evidence yields exactly LIKELY_ORIGINAL', (
   });
   const jpegData = createJpegWithApp1(exif);
   const result = analyzeJpeg(jpegData);
-  assert.equal(result.verdict, VERDICTS.LIKELY_ORIGINAL);
-  assert.equal(result.evidence.some((e) => e.status === 'REVIEW'), false, 'No REVIEW status with LIKELY_ORIGINAL');
+  assert.equal(result.verdict, VERDICTS.METADATA_CONSISTENT);
+  assert.equal(result.evidence.some((e) => e.status === 'REVIEW'), false, 'No REVIEW status with METADATA_CONSISTENT');
+});
+
+test('analyzeJpeg: fabricated coherent EXIF never verifies provenance', () => {
+  const fabricatedExif = createLittleEndianExif({
+    Make: 'Imaginary Camera Company',
+    Model: 'Fabricated Model 1',
+    DateTimeOriginal: '2024:04:12 08:15:30',
+    ExposureTime: 'invented-but-structured',
+  });
+  const result = analyzeJpeg(createJpegWithApp1(fabricatedExif));
+
+  assert.equal(result.verdict, VERDICTS.METADATA_CONSISTENT);
+  assert.equal(result.provenance, PROVENANCE.NOT_VERIFIED);
+  assert.doesNotMatch(result.verdict, /original|authentic|verified/i);
+  assert.doesNotMatch(result.summary, /original capture|authentic|provenance verified/i);
+});
+
+test('analyzeJpeg: transplanted EXIF across distinct scan payloads never verifies provenance', () => {
+  const transplantedExif = createLittleEndianExif({
+    Make: 'Canon',
+    Model: 'EOS Example',
+    DateTimeOriginal: '2024:06:15 10:30:45',
+    ExposureTime: 'present',
+  });
+  const first = analyzeJpeg(createJpegWithApp1AndScan(transplantedExif, new Uint8Array([0x11, 0x22])));
+  const second = analyzeJpeg(createJpegWithApp1AndScan(transplantedExif, new Uint8Array([0x33, 0x44, 0x55])));
+
+  assert.equal(first.verdict, VERDICTS.METADATA_CONSISTENT);
+  assert.equal(second.verdict, VERDICTS.METADATA_CONSISTENT);
+  assert.equal(first.provenance, PROVENANCE.NOT_VERIFIED);
+  assert.equal(second.provenance, PROVENANCE.NOT_VERIFIED);
 });
 
 test('analyzeJpeg: insufficient evidence yields exactly INCONCLUSIVE', () => {
@@ -321,6 +370,7 @@ test('analyzeJpeg: editor signature yields exactly REVIEW_NEEDED', () => {
   const jpegData = createJpegWithApp1(exif);
   const result = analyzeJpeg(jpegData);
   assert.equal(result.verdict, VERDICTS.REVIEW_NEEDED);
+  assert.equal(result.summary, 'Editor/export signature detected');
   assert.ok(result.evidence.some((e) => e.check === 'Edit Software' && e.status === 'REVIEW'));
 });
 
@@ -334,6 +384,7 @@ test('analyzeJpeg: future timestamp yields REVIEW_NEEDED', () => {
   const jpegData = createJpegWithApp1(exif);
   const result = analyzeJpeg(jpegData);
   assert.equal(result.verdict, VERDICTS.REVIEW_NEEDED);
+  assert.equal(result.summary, 'Capture timestamp requires review');
   assert.ok(result.evidence.some((e) => e.check === 'Capture Time' && e.status === 'REVIEW'));
 });
 
@@ -413,7 +464,7 @@ test('analyzeJpeg: performs no storage operation', () => {
   });
 });
 
-test('analyzeJpeg: no REVIEW evidence with LIKELY_ORIGINAL verdict', () => {
+test('analyzeJpeg: no REVIEW evidence with METADATA_CONSISTENT verdict', () => {
   const exif = createLittleEndianExif({
     Make: 'Nikon',
     Model: 'Nikon Z6',
@@ -422,9 +473,9 @@ test('analyzeJpeg: no REVIEW evidence with LIKELY_ORIGINAL verdict', () => {
   });
   const jpegData = createJpegWithApp1(exif);
   const result = analyzeJpeg(jpegData);
-  if (result.verdict === VERDICTS.LIKELY_ORIGINAL) {
+  if (result.verdict === VERDICTS.METADATA_CONSISTENT) {
     const hasReview = result.evidence.some((e) => e.status === 'REVIEW');
-    assert.equal(hasReview, false, 'No REVIEW evidence with LIKELY_ORIGINAL');
+    assert.equal(hasReview, false, 'No REVIEW evidence with METADATA_CONSISTENT');
   }
 });
 
@@ -484,7 +535,7 @@ test('analyzeJpeg: metadata signals are sanitized (no raw Make/Model)', () => {
   assert.doesNotMatch(resultStr, /Canon EOS 5D/, 'Raw Model not exposed');
 });
 
-test('analyzeJpeg: nested DateTimeOriginal with exposure yields LIKELY_ORIGINAL', () => {
+test('analyzeJpeg: nested DateTimeOriginal with exposure yields METADATA_CONSISTENT', () => {
   const exif = createLittleEndianExif({
     Make: 'Nikon',
     Model: 'Z6',
@@ -493,7 +544,7 @@ test('analyzeJpeg: nested DateTimeOriginal with exposure yields LIKELY_ORIGINAL'
   });
   const jpegData = createJpegWithApp1(exif);
   const result = analyzeJpeg(jpegData);
-  assert.equal(result.verdict, VERDICTS.LIKELY_ORIGINAL);
+  assert.equal(result.verdict, VERDICTS.METADATA_CONSISTENT);
 });
 
 test('analyzeJpeg: lens data counts as supporting signal', () => {
@@ -506,7 +557,7 @@ test('analyzeJpeg: lens data counts as supporting signal', () => {
   const jpegData = createJpegWithApp1(exif);
   const result = analyzeJpeg(jpegData);
   assert.ok(result.evidence.some((e) => e.check === 'Lens Data' && e.status === 'PRESENT'));
-  assert.equal(result.verdict, VERDICTS.LIKELY_ORIGINAL);
+  assert.equal(result.verdict, VERDICTS.METADATA_CONSISTENT);
 });
 
 test('timestamp validation: February 30 yields REVIEW_NEEDED', () => {
@@ -542,7 +593,7 @@ test('timestamp validation: leap day 2024 is plausible', () => {
   });
   const jpegData = createJpegWithApp1(exif);
   const result = analyzeJpeg(jpegData);
-  assert.equal(result.verdict, VERDICTS.LIKELY_ORIGINAL);
+  assert.equal(result.verdict, VERDICTS.METADATA_CONSISTENT);
   assert.ok(result.evidence.some((e) => e.check === 'Capture Time' && e.status === 'PRESENT'));
 });
 
@@ -689,7 +740,7 @@ test('analyzeJpeg: XMP before EXIF does not block EXIF discovery', () => {
   assert.equal(dataView.getUint8(app1Segments[1].offset + 5), 0x78, 'Second APP1 second byte is x');
 
   const result = analyzeJpeg(jpegDataWithXmpAndExif);
-  assert.equal(result.verdict, VERDICTS.LIKELY_ORIGINAL);
+  assert.equal(result.verdict, VERDICTS.METADATA_CONSISTENT);
   assert.ok(result.evidence.some((e) => e.check === 'EXIF Metadata' && e.status === 'PRESENT'));
 });
 
@@ -703,7 +754,7 @@ test('analyzeJpeg: timestamp within 24-hour tolerance is plausible', () => {
   });
   const jpegData = createJpegWithApp1(exif);
   const result = analyzeJpeg(jpegData, { now });
-  assert.equal(result.verdict, VERDICTS.LIKELY_ORIGINAL);
+  assert.equal(result.verdict, VERDICTS.METADATA_CONSISTENT);
 });
 
 test('analyzeJpeg: timestamp 25 hours in future exceeds tolerance and yields REVIEW_NEEDED', () => {
@@ -794,7 +845,7 @@ test('analyzeJpeg: nested ExifIFD fixture exercises createExifWithNestedIfd', ()
   assert.equal(exifView.getUint32(nestedIfdStart + 22, true), 160, 'ExposureTime points to offset 160');
 
   const result = analyzeJpeg(jpegData);
-  assert.equal(result.verdict, VERDICTS.LIKELY_ORIGINAL, 'nested fixture yields LIKELY_ORIGINAL');
+  assert.equal(result.verdict, VERDICTS.METADATA_CONSISTENT, 'nested fixture yields METADATA_CONSISTENT');
   const captureTimeEvidence = result.evidence.find(e => e.check === 'Capture Time');
   assert.ok(captureTimeEvidence, 'Capture Time evidence present');
   assert.equal(captureTimeEvidence.status, 'PRESENT', 'Capture Time status is PRESENT');

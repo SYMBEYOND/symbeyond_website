@@ -116,6 +116,146 @@ function createJpegWithApp1(exifData) {
   return arr.buffer;
 }
 
+function createJpegWithXmpBeforeExif(exifData) {
+  const benignXmp = new TextEncoder().encode('<?xml version="1.0"?><x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/></x:xmpmeta>');
+  const xmpLen = benignXmp.length + 2;
+  const exifLen = exifData.length + 2;
+
+  const totalSize =
+    2 +
+    2 + 2 + benignXmp.length +
+    2 + 2 + exifData.length +
+    2;
+
+  const arr = new Uint8Array(totalSize);
+  let pos = 0;
+
+  arr[pos++] = 0xFF; arr[pos++] = 0xD8;
+
+  arr[pos++] = 0xFF; arr[pos++] = 0xE1;
+  arr[pos++] = (xmpLen >> 8) & 0xFF; arr[pos++] = xmpLen & 0xFF;
+  for (let i = 0; i < benignXmp.length; i++) arr[pos++] = benignXmp[i];
+
+  arr[pos++] = 0xFF; arr[pos++] = 0xE1;
+  arr[pos++] = (exifLen >> 8) & 0xFF; arr[pos++] = exifLen & 0xFF;
+  for (let i = 0; i < exifData.length; i++) arr[pos++] = exifData[i];
+
+  arr[pos++] = 0xFF; arr[pos++] = 0xD9;
+
+  return arr.buffer;
+}
+
+function createExifWithGpsIfd() {
+  const buf = new Uint8Array(1024);
+  const view = new DataView(buf.buffer);
+  let pos = 0;
+
+  buf[pos++] = 0x45; buf[pos++] = 0x78; buf[pos++] = 0x69;
+  buf[pos++] = 0x66; buf[pos++] = 0x00; buf[pos++] = 0x00;
+
+  const tiffBase = pos;
+  buf[pos++] = 0x49; buf[pos++] = 0x49; buf[pos++] = 0x2A; buf[pos++] = 0x00;
+  view.setUint32(pos, 8, true); pos += 4;
+
+  const ifd0Start = pos - tiffBase;
+  view.setUint16(pos, 3, true); pos += 2;
+
+  view.setUint16(pos, 0x010F, true); pos += 2;
+  view.setUint16(pos, 2, true); pos += 2;
+  view.setUint32(pos, 5, true); pos += 4;
+  view.setUint32(pos, 60, true); pos += 4;
+
+  view.setUint16(pos, 0x0110, true); pos += 2;
+  view.setUint16(pos, 2, true); pos += 2;
+  view.setUint32(pos, 7, true); pos += 4;
+  view.setUint32(pos, 65, true); pos += 4;
+
+  view.setUint16(pos, 0x8825, true); pos += 2;
+  view.setUint16(pos, 4, true); pos += 2;
+  view.setUint32(pos, 1, true); pos += 4;
+  view.setUint32(pos, 100, true); pos += 4;
+
+  view.setUint32(pos, 0, true); pos += 4;
+
+  const makeStr = new TextEncoder().encode('Canon\x00');
+  for (let i = 0; i < makeStr.length; i++) buf[tiffBase + 60 + i] = makeStr[i];
+
+  const modelStr = new TextEncoder().encode('EOS 5D\x00');
+  for (let i = 0; i < modelStr.length; i++) buf[tiffBase + 65 + i] = modelStr[i];
+
+  const gpsIfdOffset = 100;
+  view.setUint16(tiffBase + gpsIfdOffset, 0, true);
+  view.setUint32(tiffBase + gpsIfdOffset + 2, 0, true);
+
+  return buf.slice(0, tiffBase + gpsIfdOffset + 6);
+}
+
+function createExifWithNestedIfd() {
+  const buf = new Uint8Array(1024);
+  const view = new DataView(buf.buffer);
+  let pos = 0;
+
+  buf[pos++] = 0x45; buf[pos++] = 0x78; buf[pos++] = 0x69;
+  buf[pos++] = 0x66; buf[pos++] = 0x00; buf[pos++] = 0x00;
+
+  const tiffBase = pos;
+  buf[pos++] = 0x49; buf[pos++] = 0x49; buf[pos++] = 0x2A; buf[pos++] = 0x00;
+  view.setUint32(pos, 8, true); pos += 4;
+
+  const ifd0Offset = pos - tiffBase;
+  view.setUint16(pos, 3, true); pos += 2;
+
+  view.setUint16(pos, 0x010F, true); pos += 2;
+  view.setUint16(pos, 2, true); pos += 2;
+  view.setUint32(pos, 6, true); pos += 4;
+  view.setUint32(pos, 80, true); pos += 4;
+
+  view.setUint16(pos, 0x0110, true); pos += 2;
+  view.setUint16(pos, 2, true); pos += 2;
+  view.setUint32(pos, 3, true); pos += 4;
+  view.setUint32(pos, 85, true); pos += 4;
+
+  view.setUint16(pos, 0x8769, true); pos += 2;
+  view.setUint16(pos, 4, true); pos += 2;
+  view.setUint32(pos, 1, true); pos += 4;
+  view.setUint32(pos, 100, true); pos += 4;
+
+  view.setUint32(pos, 0, true); pos += 4;
+
+  const makeStr = new TextEncoder().encode('Nikon\x00');
+  for (let i = 0; i < makeStr.length; i++) buf[tiffBase + 80 + i] = makeStr[i];
+
+  const modelStr = new TextEncoder().encode('Z6\x00');
+  for (let i = 0; i < modelStr.length; i++) buf[tiffBase + 85 + i] = modelStr[i];
+
+  const exifIfdOffset = 100;
+  const exifIfdStart = tiffBase + exifIfdOffset;
+
+  view.setUint16(exifIfdStart, 2, true);
+
+  view.setUint16(exifIfdStart + 2, 0x9003, true);
+  view.setUint16(exifIfdStart + 4, 2, true);
+  view.setUint32(exifIfdStart + 6, 20, true);
+  view.setUint32(exifIfdStart + 10, 140, true);
+
+  view.setUint16(exifIfdStart + 14, 0x829A, true);
+  view.setUint16(exifIfdStart + 16, 5, true);
+  view.setUint32(exifIfdStart + 18, 1, true);
+  view.setUint32(exifIfdStart + 22, 160, true);
+
+  view.setUint32(exifIfdStart + 26, 0, true);
+
+  const dateStr = new TextEncoder().encode('2024:06:15 10:30:45\x00');
+  for (let i = 0; i < dateStr.length; i++) {
+    buf[tiffBase + 140 + i] = dateStr[i];
+  }
+
+  view.setUint32(tiffBase + 160, 1, true);
+  view.setUint32(tiffBase + 164, 100, true);
+
+  return buf.slice(0, tiffBase + 168);
+}
+
 test('parseJpegStructure: handles real SOS entropy data', () => {
   const realJpeg = createRealJpeg();
   const result = parseJpegStructure(realJpeg);
@@ -535,9 +675,22 @@ test('analyzeJpeg: XMP before EXIF does not block EXIF discovery', () => {
     DateTimeOriginal: '2024:06:15 10:30:45',
     ExposureTime: 'present',
   });
-  const jpegDataWithExif = createJpegWithApp1(exif);
-  const result = analyzeJpeg(jpegDataWithExif);
-  assert.equal(result.evidence.some((e) => e.check === 'EXIF Metadata' && e.status === 'PRESENT'), true);
+  const jpegDataWithXmpAndExif = createJpegWithXmpBeforeExif(exif);
+  const view = new Uint8Array(jpegDataWithXmpAndExif);
+  assert.equal(view[view.length - 2], 0xFF, 'JPEG ends with FF');
+  assert.equal(view[view.length - 1], 0xD9, 'JPEG ends with D9');
+
+  const structure = parseJpegStructure(jpegDataWithXmpAndExif);
+  const app1Segments = structure.segments.filter(s => s.marker === 0xFFE1);
+  assert.ok(app1Segments.length >= 2, 'XMP + EXIF has at least two APP1 segments');
+  const dataView = new DataView(jpegDataWithXmpAndExif);
+  assert.equal(dataView.getUint8(app1Segments[0].offset + 4), 0x3C, 'First APP1 starts with < (XMP)');
+  assert.equal(dataView.getUint8(app1Segments[1].offset + 4), 0x45, 'Second APP1 starts with E (Exif)');
+  assert.equal(dataView.getUint8(app1Segments[1].offset + 5), 0x78, 'Second APP1 second byte is x');
+
+  const result = analyzeJpeg(jpegDataWithXmpAndExif);
+  assert.equal(result.verdict, VERDICTS.LIKELY_ORIGINAL);
+  assert.ok(result.evidence.some((e) => e.check === 'EXIF Metadata' && e.status === 'PRESENT'));
 });
 
 test('analyzeJpeg: timestamp within 24-hour tolerance is plausible', () => {
@@ -583,36 +736,136 @@ test('analyzeJpeg: out-of-bounds GPS IFD yields REVIEW_NEEDED', () => {
 });
 
 test('analyzeJpeg: valid GPS pointer produces hasGPS boolean without coordinates', () => {
-  const exif = createLittleEndianExif({
-    Make: 'Canon',
-    Model: 'Canon EOS',
-  });
+  const exif = createExifWithGpsIfd();
   const jpegData = createJpegWithApp1(exif);
   const structure = parseJpegStructure(jpegData);
+
+  const view = new DataView(exif.buffer, exif.byteOffset);
+  const tiffStart = 6;
+  const ifd0OffsetPos = tiffStart + 4;
+  const ifd0Offset = view.getUint32(ifd0OffsetPos, true);
+  const ifd0Start = tiffStart + ifd0Offset;
+  const entryCount = view.getUint16(ifd0Start, true);
+  let found8825 = false;
+  for (let i = 0; i < entryCount; i++) {
+    const entryOffset = ifd0Start + 2 + i * 12;
+    const tag = view.getUint16(entryOffset, true);
+    if (tag === 0x8825) {
+      found8825 = true;
+      break;
+    }
+  }
+  assert.equal(found8825, true, 'GPS pointer tag 0x8825 present in IFD0');
+
   const result = inspectExif(jpegData, structure);
+  assert.equal(result.privacy.hasGPS, true);
   const resultStr = JSON.stringify(result);
   assert.doesNotMatch(resultStr, /\d+\.\d+/, 'No GPS coordinates in output');
 });
 
-test('analyzeJpeg: plausible DateTime + inconsistent nested DateTimeOriginal yields REVIEW_NEEDED', () => {
-  const buf = new Uint8Array([
-    0xFF, 0xD8,
-    0xFF, 0xE1, 0x00, 0x80,
-    0x45, 0x78, 0x69, 0x66, 0x00, 0x00,
-    0x49, 0x49, 0x2A, 0x00,
-    0x08, 0x00, 0x00, 0x00,
-    0x03, 0x00,
-    0x0F, 0x01, 0x02, 0x00, 0x06, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00, 0x00,
-    0x10, 0x01, 0x02, 0x00, 0x08, 0x00, 0x00, 0x00, 0x38, 0x00, 0x00, 0x00,
-    0x32, 0x01, 0x02, 0x00, 0x14, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00,
-    0x69, 0x87, 0x04, 0x00, 0x01, 0x00, 0x00, 0x00, 0x54, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00,
-    0x43, 0x61, 0x6E, 0x6F, 0x6E, 0x00, 0x00, 0x00,
-    0x43, 0x61, 0x6E, 0x6F, 0x6E, 0x20, 0x45, 0x4F,
-    0x32, 0x30, 0x32, 0x34, 0x3A, 0x30, 0x36, 0x3A, 0x31, 0x35, 0x20, 0x31, 0x30, 0x3A, 0x33, 0x30, 0x3A, 0x34, 0x35, 0x00,
-    0x01, 0x00, 0x03, 0x00, 0x02, 0x00, 0x00, 0x00, 0x9F, 0x01, 0x00, 0x00, 0x00, 0x00,
-    0xFF, 0xD9,
-  ]);
-  const result = analyzeJpeg(buf.buffer);
-  assert.equal(result.verdict, VERDICTS.REVIEW_NEEDED);
+test('analyzeJpeg: nested ExifIFD fixture exercises createExifWithNestedIfd', () => {
+  const exif = createExifWithNestedIfd();
+  assert.ok(exif.length > 0, 'createExifWithNestedIfd produces valid fixture');
+  const jpegData = createJpegWithApp1(exif);
+  const view = new Uint8Array(jpegData);
+  assert.equal(view[view.length - 2], 0xFF, 'JPEG ends with FF D9');
+  assert.equal(view[view.length - 1], 0xD9, 'JPEG ends with D9');
+
+  const exifView = new DataView(exif.buffer, exif.byteOffset);
+  const tiffStart = 6;
+  const ifd0OffsetPos = tiffStart + 4;
+  const ifd0Offset = exifView.getUint32(ifd0OffsetPos, true);
+  const ifd0Start = tiffStart + ifd0Offset;
+  const entryCount = exifView.getUint16(ifd0Start, true);
+  let exifIfdPointer = null;
+  for (let i = 0; i < entryCount; i++) {
+    const entryOffset = ifd0Start + 2 + i * 12;
+    const tag = exifView.getUint16(entryOffset, true);
+    if (tag === 0x8769) {
+      exifIfdPointer = exifView.getUint32(entryOffset + 8, true);
+      break;
+    }
+  }
+  assert.equal(exifIfdPointer, 100, 'ExifIFD pointer tag 0x8769 points to nested IFD');
+  const nestedIfdStart = tiffStart + exifIfdPointer;
+  assert.equal(exifView.getUint16(nestedIfdStart + 2, true), 0x9003, 'Nested entry is DateTimeOriginal');
+  assert.equal(exifView.getUint32(nestedIfdStart + 10, true), 140, 'DateTimeOriginal points to offset 140');
+  assert.equal(exifView.getUint16(nestedIfdStart + 14, true), 0x829A, 'Nested entry is ExposureTime');
+  assert.equal(exifView.getUint32(nestedIfdStart + 22, true), 160, 'ExposureTime points to offset 160');
+
+  const result = analyzeJpeg(jpegData);
+  assert.equal(result.verdict, VERDICTS.LIKELY_ORIGINAL, 'nested fixture yields LIKELY_ORIGINAL');
+  const captureTimeEvidence = result.evidence.find(e => e.check === 'Capture Time');
+  assert.ok(captureTimeEvidence, 'Capture Time evidence present');
+  assert.equal(captureTimeEvidence.status, 'PRESENT', 'Capture Time status is PRESENT');
+  const exposureEvidence = result.evidence.find(e => e.check === 'Exposure Metadata');
+  assert.ok(exposureEvidence, 'Exposure Metadata evidence present');
+  assert.equal(exposureEvidence.status, 'PRESENT', 'Exposure Metadata status is PRESENT');
+});
+
+test('analyzeJpeg: plausible IFD0 DateTime + inconsistent nested DateTimeOriginal yields REVIEW_NEEDED', () => {
+  const buf = new Uint8Array(1024);
+  const view = new DataView(buf.buffer);
+  let pos = 0;
+
+  buf[pos++] = 0x45; buf[pos++] = 0x78; buf[pos++] = 0x69;
+  buf[pos++] = 0x66; buf[pos++] = 0x00; buf[pos++] = 0x00;
+
+  const tiffBase = pos;
+  buf[pos++] = 0x49; buf[pos++] = 0x49; buf[pos++] = 0x2A; buf[pos++] = 0x00;
+  view.setUint32(pos, 8, true); pos += 4;
+
+  view.setUint16(pos, 4, true); pos += 2;
+
+  view.setUint16(pos, 0x010F, true); pos += 2;
+  view.setUint16(pos, 2, true); pos += 2;
+  view.setUint32(pos, 5, true); pos += 4;
+  view.setUint32(pos, 100, true); pos += 4;
+
+  view.setUint16(pos, 0x0110, true); pos += 2;
+  view.setUint16(pos, 2, true); pos += 2;
+  view.setUint32(pos, 6, true); pos += 4;
+  view.setUint32(pos, 105, true); pos += 4;
+
+  view.setUint16(pos, 0x0132, true); pos += 2;
+  view.setUint16(pos, 2, true); pos += 2;
+  view.setUint32(pos, 20, true); pos += 4;
+  view.setUint32(pos, 111, true); pos += 4;
+
+  view.setUint16(pos, 0x8769, true); pos += 2;
+  view.setUint16(pos, 4, true); pos += 2;
+  view.setUint32(pos, 1, true); pos += 4;
+  view.setUint32(pos, 150, true); pos += 4;
+
+  view.setUint32(pos, 0, true); pos += 4;
+
+  const makeStr = new TextEncoder().encode('Sony\x00');
+  for (let i = 0; i < makeStr.length; i++) buf[tiffBase + 100 + i] = makeStr[i];
+
+  const modelStr = new TextEncoder().encode('A7III\x00');
+  for (let i = 0; i < modelStr.length; i++) buf[tiffBase + 105 + i] = modelStr[i];
+
+  const dateStr = new TextEncoder().encode('2024:06:15 10:30:45\x00');
+  for (let i = 0; i < dateStr.length; i++) buf[tiffBase + 111 + i] = dateStr[i];
+
+  const exifIfdStart = tiffBase + 150;
+  view.setUint16(exifIfdStart, 1, true);
+
+  view.setUint16(exifIfdStart + 2, 0x9003, true);
+  view.setUint16(exifIfdStart + 4, 2, true);
+  view.setUint32(exifIfdStart + 6, 20, true);
+  view.setUint32(exifIfdStart + 10, 200, true);
+
+  view.setUint32(exifIfdStart + 14, 0, true);
+
+  const futureStr = new TextEncoder().encode('2099:12:31 23:59:59\x00');
+  for (let i = 0; i < futureStr.length; i++) buf[tiffBase + 200 + i] = futureStr[i];
+
+  const exif = buf.slice(0, tiffBase + 220);
+  const jpegData = createJpegWithApp1(exif);
+  const result = analyzeJpeg(jpegData);
+  assert.equal(result.verdict, VERDICTS.REVIEW_NEEDED, 'precedence fixture yields REVIEW_NEEDED');
+  const captureTimeEvidence = result.evidence.find(e => e.check === 'Capture Time');
+  assert.ok(captureTimeEvidence, 'Capture Time evidence present in precedence test');
+  assert.equal(captureTimeEvidence.status, 'REVIEW', 'Capture Time status is REVIEW due to inconsistency');
 });

@@ -22,15 +22,12 @@ export default async function handler(req, res) {
         body: JSON.stringify(['PING']),
       });
 
+      const data = await response.json();
       checks.upstash = {
         status: response.status,
         ok: response.ok,
+        response: data,
       };
-
-      if (response.ok) {
-        const data = await response.json();
-        checks.upstash.result = data.result;
-      }
     } catch (err) {
       checks.upstash = {
         error: err.message,

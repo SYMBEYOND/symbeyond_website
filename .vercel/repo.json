@@ -1,0 +1,11 @@
+{
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_BvMWL6YJ2m2cNyu8LMYcwDXzKVVL",
+      "name": "symbeyond-website",
+      "directory": ".",
+      "orgId": "team_8cWXZkfhmGN0oD87c4xlmWR2"
+    }
+  ]
+}

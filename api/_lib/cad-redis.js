@@ -421,3 +421,92 @@ export async function atomicRefund(sessionDigest, estimatedCredits) {
   const [ok, usageData] = result;
   return { ok: ok === 1, usageAfter: usageData };
 }
+
+/**
+ * Atomically increment global daily and monthly guardrail counters.
+ * Returns current totals after increment for guardrail checks.
+ *
+ * @param {number} microUsd - Micro-USD cost to add
+ * @returns {Promise<Object>} { dailyMicroUsd, monthlyMicroUsd }
+ */
+export async function atomicIncrementGuardrail(microUsd) {
+  const redis = getRedisClient();
+  const nowMs = Date.now();
+
+  // Format: YYYY-MM-DD and YYYY-MM
+  const date = new Date(nowMs);
+  const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD
+  const monthString = dateString.slice(0, 7); // YYYY-MM
+
+  const dailyKey = `cad:guardrail:daily:${dateString}`;
+  const monthlyKey = `cad:guardrail:monthly:${monthString}`;
+
+  // Lua script: atomically increment both and set TTLs
+  const script = `
+    local dailyKey = KEYS[1]
+    local monthlyKey = KEYS[2]
+    local microUsd = tonumber(ARGV[1])
+    local dailyTtl = tonumber(ARGV[2])
+    local monthlyTtl = tonumber(ARGV[3])
+
+    local dailyTotal = redis.call('INCRBY', dailyKey, microUsd)
+    redis.call('EXPIRE', dailyKey, dailyTtl)
+
+    local monthlyTotal = redis.call('INCRBY', monthlyKey, microUsd)
+    redis.call('EXPIRE', monthlyKey, monthlyTtl)
+
+    return {dailyTotal, monthlyTotal}
+  `;
+
+  const dailyTtlSeconds = Math.ceil(REDIS_TTL.globalDaily / 1000);
+  const monthlyTtlSeconds = Math.ceil(REDIS_TTL.globalMonthly / 1000);
+
+  const result = await redis.eval(script, 2, [
+    dailyKey,
+    monthlyKey,
+    microUsd.toString(),
+    dailyTtlSeconds.toString(),
+    monthlyTtlSeconds.toString(),
+  ]);
+
+  if (!result || result.length < 2) {
+    throw new Error('Failed to increment guardrail');
+  }
+
+  return {
+    dailyMicroUsd: parseInt(result[0], 10),
+    monthlyMicroUsd: parseInt(result[1], 10),
+  };
+}
+
+/**
+ * Read current guardrail totals without incrementing.
+ * @returns {Promise<Object>} { dailyMicroUsd, monthlyMicroUsd }
+ */
+export async function getGuardrailTotals() {
+  const redis = getRedisClient();
+  const nowMs = Date.now();
+
+  const date = new Date(nowMs);
+  const dateString = date.toISOString().split('T')[0];
+  const monthString = dateString.slice(0, 7);
+
+  const dailyKey = `cad:guardrail:daily:${dateString}`;
+  const monthlyKey = `cad:guardrail:monthly:${monthString}`;
+
+  try {
+    const dailyValue = await redis.get(dailyKey);
+    const monthlyValue = await redis.get(monthlyKey);
+
+    return {
+      dailyMicroUsd: parseInt(dailyValue || '0', 10),
+      monthlyMicroUsd: parseInt(monthlyValue || '0', 10),
+    };
+  } catch (err) {
+    console.error('Failed to read guardrail totals:', err);
+    return {
+      dailyMicroUsd: 0,
+      monthlyMicroUsd: 0,
+    };
+  }
+}

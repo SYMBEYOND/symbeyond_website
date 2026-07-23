@@ -10,15 +10,21 @@ import {
 } from './_lib/cad-session.js';
 import {
   initializeSession,
+  getSession,
   atomicReserve,
   atomicSettle,
   atomicRefund,
+  atomicIncrementGuardrail,
+  getGuardrailTotals,
 } from './_lib/cad-redis.js';
 import {
   calculateCredits,
   estimateReservationCredits,
+  estimateMicroUsd,
   buildUsageMetadata,
   isExhausted,
+  wouldExceedDailyGuardrail,
+  wouldExceedMonthlyGuardrail,
   formatTimestamp,
 } from './_lib/cad-usage.js';
 
@@ -184,13 +190,25 @@ Be practical, direct, and honest about difficulty.`;
     content: clip(m.content, 2000),
   }));
 
+  // Read tier from Redis session record
+  let sessionTier = 'trial';
+  try {
+    const sessionRecord = await getSession(session.digest);
+    if (sessionRecord && sessionRecord.tier) {
+      sessionTier = sessionRecord.tier;
+    }
+  } catch (err) {
+    console.error('Failed to read session tier:', err);
+    return res.status(503).json({ error: 'Fair-use system unavailable. Try again.' });
+  }
+
   // Reserve credits before calling Anthropic
   const estimatedCredits = estimateReservationCredits();
   let reservationResult;
   try {
     reservationResult = await atomicReserve(
       session.digest,
-      'trial', // TODO: read from session data in production
+      sessionTier,
       estimatedCredits
     );
   } catch (err) {
@@ -200,7 +218,7 @@ Be practical, direct, and honest about difficulty.`;
   if (!reservationResult.allowed) {
     // Check if exhausted
     const usageMetadata = buildUsageMetadata(reservationResult.usageAfter || {});
-    if (isExhausted(usageMetadata.usedCredits, 'trial')) {
+    if (isExhausted(usageMetadata.usedCredits, sessionTier)) {
       if (setCookieHeader) {
         res.setHeader('Set-Cookie', setCookieHeader);
       }
@@ -217,6 +235,42 @@ Be practical, direct, and honest about difficulty.`;
       res.setHeader('Set-Cookie', setCookieHeader);
     }
     return res.status(503).json({ error: 'Fair-use system unavailable. Try again.' });
+  }
+
+  // Check global guardrails before calling Anthropic
+  const estimatedMicroUsd = estimateMicroUsd(
+    estimateReservationCredits() * 80, // rough estimate: 11 credits * ~80 micro-USD per credit
+    estimateReservationCredits() * 25  // output estimate
+  );
+
+  let guardrailTotals;
+  try {
+    guardrailTotals = await getGuardrailTotals();
+  } catch (err) {
+    console.error('Failed to check guardrails:', err);
+    return res.status(503).json({ error: 'Fair-use system unavailable. Try again.' });
+  }
+
+  if (wouldExceedDailyGuardrail(guardrailTotals.dailyMicroUsd, estimatedMicroUsd)) {
+    if (setCookieHeader) {
+      res.setHeader('Set-Cookie', setCookieHeader);
+    }
+    return res.status(429).json({
+      ok: false,
+      code: 'DAILY_GUARDRAIL_EXCEEDED',
+      message: 'Daily service limit reached. Try again tomorrow.',
+    });
+  }
+
+  if (wouldExceedMonthlyGuardrail(guardrailTotals.monthlyMicroUsd, estimatedMicroUsd)) {
+    if (setCookieHeader) {
+      res.setHeader('Set-Cookie', setCookieHeader);
+    }
+    return res.status(429).json({
+      ok: false,
+      code: 'MONTHLY_GUARDRAIL_EXCEEDED',
+      message: 'Monthly service limit reached. Try again next month.',
+    });
   }
 
   // Call Anthropic
@@ -322,6 +376,15 @@ Be practical, direct, and honest about difficulty.`;
 
   // Build response
   const usageMetadata = buildUsageMetadata(settlementResult.usageAfter);
+
+  // Increment global guardrails with actual usage
+  const actualMicroUsd = estimateMicroUsd(inputTokens, outputTokens);
+  try {
+    await atomicIncrementGuardrail(actualMicroUsd);
+  } catch (err) {
+    console.error('Failed to increment guardrails:', err);
+    // Non-blocking: guardrail increment failure doesn't fail the response
+  }
 
   if (setCookieHeader) {
     res.setHeader('Set-Cookie', setCookieHeader);

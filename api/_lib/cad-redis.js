@@ -318,7 +318,7 @@ export async function atomicSettle(sessionDigest, estimatedCredits, actualCredit
     local usageKey = KEYS[1]
     local estimatedCredits = tonumber(ARGV[1])
     local actualCredits = tonumber(ARGV[2])
-    local nowMs = ARGV[3]
+    local nowMs = tostring(ARGV[3])
 
     local usage = redis.call('HGETALL', usageKey)
     local usageMap = {}
@@ -379,7 +379,7 @@ export async function atomicRefund(sessionDigest, estimatedCredits) {
   const script = `
     local usageKey = KEYS[1]
     local estimatedCredits = tonumber(ARGV[1])
-    local nowMs = ARGV[2]
+    local nowMs = tostring(ARGV[2])
 
     local usage = redis.call('HGETALL', usageKey)
     local usageMap = {}
@@ -449,11 +449,11 @@ export async function atomicIncrementGuardrail(microUsd) {
     local dailyTtl = tonumber(ARGV[2])
     local monthlyTtl = tonumber(ARGV[3])
 
-    local dailyTotal = redis.call('INCRBY', dailyKey, microUsd)
-    redis.call('EXPIRE', dailyKey, dailyTtl)
+    local dailyTotal = redis.call('INCRBY', dailyKey, tostring(microUsd))
+    redis.call('EXPIRE', dailyKey, tostring(dailyTtl))
 
-    local monthlyTotal = redis.call('INCRBY', monthlyKey, microUsd)
-    redis.call('EXPIRE', monthlyKey, monthlyTtl)
+    local monthlyTotal = redis.call('INCRBY', monthlyKey, tostring(microUsd))
+    redis.call('EXPIRE', monthlyKey, tostring(monthlyTtl))
 
     return {dailyTotal, monthlyTotal}
   `;

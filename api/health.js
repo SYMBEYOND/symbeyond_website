@@ -10,6 +10,9 @@ export default async function handler(req, res) {
   };
 
   // Test Upstash connection
+  checks.upstash_url = process.env.CAD_TUTOR_USAGE_KV_REST_API_URL || 'MISSING';
+  checks.upstash_token_set = !!process.env.CAD_TUTOR_USAGE_KV_REST_API_TOKEN;
+
   if (process.env.CAD_TUTOR_USAGE_KV_REST_API_URL && process.env.CAD_TUTOR_USAGE_KV_REST_API_TOKEN) {
     const testCommands = [
       { name: 'PING', cmd: ['PING'] },

@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
     for (const test of testCommands) {
       try {
-        const url = `${process.env.CAD_TUTOR_USAGE_KV_REST_API_URL}/exec`;
+        const url = process.env.CAD_TUTOR_USAGE_KV_REST_API_URL;
         const response = await fetch(url, {
           method: 'POST',
           headers: {

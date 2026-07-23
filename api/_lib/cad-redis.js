@@ -23,7 +23,7 @@ export class RedisClient {
    * @returns {Promise<any>}
    */
   async command(command) {
-    const url = `${this.baseUrl}/exec`;
+    const url = this.baseUrl;
     const response = await fetch(url, {
       method: 'POST',
       headers: {

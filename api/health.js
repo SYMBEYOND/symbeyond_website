@@ -11,34 +11,46 @@ export default async function handler(req, res) {
 
   // Test Upstash connection
   if (process.env.CAD_TUTOR_USAGE_KV_REST_API_URL && process.env.CAD_TUTOR_USAGE_KV_REST_API_TOKEN) {
-    try {
-      const url = `${process.env.CAD_TUTOR_USAGE_KV_REST_API_URL}/exec`;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${process.env.CAD_TUTOR_USAGE_KV_REST_API_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(['PING']),
-      });
+    const testCommands = [
+      { name: 'PING', cmd: ['PING'] },
+      { name: 'SET', cmd: ['SET', 'health-test', 'ok'] },
+      { name: 'INCRBY', cmd: ['INCRBY', 'health-counter', '1'] },
+      { name: 'EVAL', cmd: ['EVAL', 'return 42', '0'] },
+    ];
 
-      let data;
+    checks.upstash_commands = {};
+
+    for (const test of testCommands) {
       try {
-        data = await response.json();
-      } catch {
-        data = await response.text();
-      }
+        const url = `${process.env.CAD_TUTOR_USAGE_KV_REST_API_URL}/exec`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.CAD_TUTOR_USAGE_KV_REST_API_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(test.cmd),
+          timeout: 5000,
+        });
 
-      checks.upstash = {
-        status: response.status,
-        ok: response.ok,
-        url: process.env.CAD_TUTOR_USAGE_KV_REST_API_URL,
-        response: data,
-      };
-    } catch (err) {
-      checks.upstash = {
-        error: err.message,
-      };
+        let data;
+        try {
+          data = await response.json();
+        } catch {
+          data = { error: 'Failed to parse response' };
+        }
+
+        checks.upstash_commands[test.name] = {
+          status: response.status,
+          ok: response.ok,
+          error: data.error,
+          result: data.result,
+        };
+      } catch (err) {
+        checks.upstash_commands[test.name] = {
+          error: err.message,
+        };
+      }
     }
   } else {
     checks.upstash = { error: 'Credentials not set' };

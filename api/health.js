@@ -22,10 +22,17 @@ export default async function handler(req, res) {
         body: JSON.stringify(['PING']),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        data = await response.text();
+      }
+
       checks.upstash = {
         status: response.status,
         ok: response.ok,
+        url: process.env.CAD_TUTOR_USAGE_KV_REST_API_URL,
         response: data,
       };
     } catch (err) {

@@ -194,7 +194,6 @@ Be practical, direct, and honest about difficulty.`;
   let sessionTier = 'trial';
   try {
     const sessionRecord = await getSession(session.digest);
-    console.log('[DEBUG] getSession returned:', JSON.stringify(sessionRecord), 'type:', typeof sessionRecord, 'keys:', sessionRecord ? Object.keys(sessionRecord) : 'N/A');
     if (sessionRecord && sessionRecord.tier) {
       sessionTier = sessionRecord.tier;
     }

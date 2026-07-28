@@ -395,19 +395,14 @@ async function go(){
     var d=await r.json();
     tp.remove();
 
-    // Handle fair-use limit response
-    if(!r.ok||d.code==="FAIR_USE_LIMIT"){
-      var em=document.createElement("div");em.className="msg a";em.textContent="Fair-use limit reached. "+d.message;ms.appendChild(em);
-      if(d.usage){displayUsage(d.usage)}
-      ms.scrollTop=ms.scrollHeight;
-      btn.disabled=false;inp.focus();
-      renderConversationsList();
-      return;
-    }
-
-    // Handle other errors
     if(!r.ok){
-      var em=document.createElement("div");em.className="msg a";em.textContent=d.error||"Error: "+r.status;ms.appendChild(em);
+      var em=document.createElement("div");em.className="msg a";
+      if(d.code==="FAIR_USE_LIMIT"){
+        em.textContent=d.message||"You have reached your current fair-use limit.";
+      }else{
+        em.textContent=d.message||d.error||"Tutor request failed (error "+r.status+").";
+      }
+      ms.appendChild(em);
       if(d.usage){displayUsage(d.usage)}
       ms.scrollTop=ms.scrollHeight;
       btn.disabled=false;inp.focus();

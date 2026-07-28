@@ -49,6 +49,15 @@ function clip(s, max) {
   return (typeof s === 'string' ? s : '').slice(0, max).trim();
 }
 
+export function buildTutorError(code, message, extra = {}) {
+  return {
+    ok: false,
+    code,
+    message,
+    ...extra,
+  };
+}
+
 /**
  * Resolve or create a session.
  */
@@ -305,7 +314,10 @@ Be practical, direct, and honest about difficulty.`;
       if (setCookieHeader) {
         res.setHeader('Set-Cookie', setCookieHeader);
       }
-      return res.status(502).json({ error: 'Tutor service had a hiccup. Try again.' });
+      return res.status(502).json(buildTutorError(
+        'TUTOR_UPSTREAM_ERROR',
+        'Tutor service had a hiccup. Try again.'
+      ));
     }
 
     anthropicResponse = await r.json();

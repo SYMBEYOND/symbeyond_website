@@ -338,6 +338,15 @@
       max-width: 580px;
     }
 
+    /* ══════ SYMB-QUENCH — power-word scroll effect ══════
+       Native rose-gold-family start, tempers through the site's
+       own red/blue brand accents as the heading rises through
+       the viewport. Rest state (no scroll) is always the native
+       start color — see script at bottom. */
+    .symb-quench {
+      transition: color 0.05s linear;
+    }
+
     .section-lead {
       font-size: 0.95rem;
       color: var(--mid);
@@ -1369,7 +1378,7 @@
   <!-- ═══════ SERVICES ═══════ -->
   <section id="services" aria-labelledby="services-title">
     <p class="eyebrow">// What I Do</p>
-    <h2 class="section-title" id="services-title">Systems, automation, and AI workflow consulting.</h2>
+    <h2 class="section-title symb-quench" id="services-title">Systems, automation, and AI workflow consulting.</h2>
     <p class="section-lead">Professional consulting for real systems, real equipment, and real business risk. Discovery is paid. Build work is scoped. Production-critical work is priced accordingly.</p>
 
     <div class="services-grid reveal">
@@ -1464,7 +1473,7 @@
     <div class="approach-grid">
       <div>
         <p class="eyebrow">// How It Works</p>
-        <h2 class="section-title" id="approach-title">Three steps. No surprises.</h2>
+        <h2 class="section-title symb-quench" id="approach-title">Three steps. No surprises.</h2>
         <p class="section-lead">Every engagement follows the same honest process - from first call to final fix.</p>
         <div class="steps">
           <div class="step approach-step">
@@ -1512,7 +1521,7 @@
   <!-- ═══════ SERVICE AREA ═══════ -->
   <section id="area" aria-labelledby="area-title">
     <p class="eyebrow">// Where I Work</p>
-    <h2 class="section-title" id="area-title">Southern Utah &amp; Northern Arizona.</h2>
+    <h2 class="section-title symb-quench" id="area-title">Southern Utah &amp; Northern Arizona.</h2>
     <p class="section-lead">Based in Colorado City, AZ - a border community with dual-state access and minimal competition for real technical expertise.</p>
 
     <div class="area-grid reveal">
@@ -1597,7 +1606,7 @@
   <section id="about" aria-labelledby="about-title">
     <div class="about-text">
       <p class="eyebrow">// The Founder</p>
-      <h2 class="section-title" id="about-title">John DuCrest.<br/>Self-taught. Proven.</h2>
+      <h2 class="section-title symb-quench" id="about-title">John DuCrest.<br/>Self-taught. Proven.</h2>
       <p class="section-lead">John DuCrest is an early practitioner and documenter of human-AI collaboration methodology. Since 2010, he has developed SYMBEYOND, a framework treating AI as a collaborative partner rather than a tool, producing a versioned protocol, a published academic paper, and a body of real industrial and research work that predates the mainstream conversation by more than a decade. He is also a self-taught embedded systems engineer whose automation work has been running in daily production for years.</p>
       <div class="founder-quote">
         "I can fix black paint to look <span class="plaid-word">plaid</span>."
@@ -1859,6 +1868,50 @@ window.addEventListener('load', () => {
     pricelessStat.addEventListener('touchstart', revealPriceless);
   }
 });
+
+// ════ SYMB-QUENCH — power-word scroll color effect ════
+// Applied to: services-title, approach-title, area-title, about-title
+(function () {
+  var native = [26, 26, 26];    // var(--ink) — rest state, always first
+  var mid    = [192, 57, 43];   // var(--red) — brand accent, mid-travel
+  var end    = [46, 109, 164];  // var(--blue) — brand accent, top of travel
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function lerpColor(c1, c2, t) {
+    return [
+      Math.round(lerp(c1[0], c2[0], t)),
+      Math.round(lerp(c1[1], c2[1], t)),
+      Math.round(lerp(c1[2], c2[2], t))
+    ];
+  }
+  function toRgb(c) { return 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')'; }
+  function colorFor(t) {
+    t = Math.max(0, Math.min(1, t));
+    if (t <= 0.5) return lerpColor(native, mid, t / 0.5);
+    return lerpColor(mid, end, (t - 0.5) / 0.5);
+  }
+
+  var elements = document.querySelectorAll('.symb-quench');
+
+  function update() {
+    if (window.scrollY <= 0) {
+      elements.forEach(function (el) { el.style.color = toRgb(native); });
+      return;
+    }
+    var vh = window.innerHeight;
+    elements.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      var center = r.top + r.height / 2;
+      var t = 1 - (center / vh);
+      el.style.color = toRgb(colorFor(t));
+    });
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  window.addEventListener('load', update);
+  update();
+})();
   </script>
 
 </body>

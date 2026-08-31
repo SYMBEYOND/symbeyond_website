@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYMB-SIGN</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root {
+    --bg: #0b0d10; --panel: #14171c; --border: #2a2f37; --text: #e8eaed;
+    --muted: #8a9099; --accent: #7dd3fc; --accent2: #a78bfa; --good: #4ade80;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: radial-gradient(circle at 20% 0%, #131722 0%, var(--bg) 55%);
+    color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    min-height: 100vh; padding: 32px 16px 80px;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 28px; }
+  header .mark {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent);
+    border: 1px dashed var(--accent); display: inline-block; padding: 4px 12px;
+    border-radius: 999px; margin-bottom: 14px; opacity: 0.85;
+  }
+  h1 { font-size: 22px; margin: 0 0 6px; font-weight: 600; }
+  header p { color: var(--muted); font-size: 14px; margin: 0; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px; margin-bottom: 18px;
+  }
+  .card h2 {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted);
+    margin: 0 0 14px; font-weight: 600;
+  }
+  .drop {
+    border: 1.5px dashed var(--border); border-radius: 10px; padding: 26px 16px;
+    text-align: center; color: var(--muted); font-size: 14px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .drop:hover, .drop.drag { border-color: var(--accent); background: rgba(125,211,252,0.05); }
+  .drop input { display: none; }
+  .filename { margin-top: 10px; font-size: 13px; color: var(--good); word-break: break-all; }
+  .hashline { margin-top: 6px; font-size: 11px; color: var(--muted); word-break: break-all; font-family: monospace; }
+  label.field { display: block; font-size: 13px; color: var(--muted); margin: 14px 0 6px; }
+  input[type="text"] {
+    width: 100%; background: #0e1116; border: 1px solid var(--border); color: var(--text);
+    padding: 11px 12px; border-radius: 8px; font-size: 15px;
+  }
+  input[type="text"]:focus { outline: none; border-color: var(--accent); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .role-row { display: flex; gap: 8px; margin-bottom: 4px; }
+  .role-btn {
+    flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
+    background: #0e1116; color: var(--muted); font-size: 13px; cursor: pointer; text-align: center;
+  }
+  .role-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(125,211,252,0.08); }
+
+  .field-row {
+    display: flex; justify-content: space-between; align-items: center; background: #0e1116;
+    border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px;
+  }
+  .field-row .flabel { font-size: 13px; color: var(--text); }
+  .field-row .flabel .req { color: #f87171; font-size: 10px; margin-left: 4px; }
+  .field-row .fval { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .place-btn {
+    background: none; border: 1px solid var(--border); color: var(--muted); padding: 6px 12px;
+    border-radius: 6px; font-size: 12px; cursor: pointer; white-space: nowrap;
+  }
+  .place-btn.armed { border-color: var(--accent); color: var(--accent); background: rgba(125,211,252,0.08); }
+  .place-btn.placed { border-color: var(--good); color: var(--good); }
+
+  .pad-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .pad-row button {
+    background: none; border: 1px solid var(--border); color: var(--muted); padding: 6px 12px;
+    border-radius: 6px; font-size: 12px; cursor: pointer;
+  }
+  .pad-row button:hover { color: var(--text); border-color: var(--muted); }
+  .pad-hint { font-size: 12px; color: var(--muted); }
+  canvas#pad {
+    width: 100%; height: 130px; background: #fff; border-radius: 8px; touch-action: none;
+    cursor: crosshair; display: block;
+  }
+  .consent {
+    display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--muted);
+    line-height: 1.5; margin-top: 16px;
+  }
+  .consent input { margin-top: 3px; }
+
+  #pageWrap { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  #pageCanvas { width: 100%; display: block; cursor: crosshair; }
+  .marker { position: absolute; border: 1.5px dashed #f87171; background: rgba(248,113,113,0.12); pointer-events: none; }
+  .marker.placed { border-color: var(--good); background: rgba(74,222,128,0.12); }
+  .marker-label {
+    position: absolute; font-size: 9px; color: #fff; background: rgba(0,0,0,0.6); padding: 1px 4px;
+    border-radius: 3px; pointer-events: none; white-space: nowrap;
+  }
+  .place-hint {
+    background: rgba(125,211,252,0.08); border: 1px solid var(--accent); color: var(--accent);
+    font-size: 12px; padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; display: none;
+  }
+
+  .signer-list { margin-top: 14px; }
+  .signer-item {
+    display: flex; justify-content: space-between; align-items: center; background: #0e1116;
+    border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; font-size: 13px;
+  }
+  .signer-item .who { font-weight: 600; }
+  .signer-item .role-tag { color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .signer-item button { background: none; border: none; color: #f87171; cursor: pointer; font-size: 12px; }
+
+  button#addSigner, button#generate {
+    width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 15px; font-weight: 700;
+    cursor: pointer; margin-top: 20px; letter-spacing: 0.3px;
+  }
+  button#addSigner { background: #1c2128; color: var(--accent); border: 1px solid var(--accent); }
+  button#generate { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #0b0d10; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button:not(:disabled):hover { filter: brightness(1.08); }
+
+  #status { text-align: center; font-size: 13px; color: var(--muted); margin-top: 14px; min-height: 18px; }
+  #status.ok { color: var(--good); }
+  #status.err { color: #f87171; }
+  .result { display: none; }
+  .result a.dl {
+    display: block; text-align: center; background: var(--good); color: #0b0d10; font-weight: 700;
+    padding: 14px; border-radius: 10px; text-decoration: none; margin-top: 10px;
+  }
+  .result .next { margin-top: 14px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .result a.mail { color: var(--accent); text-decoration: underline; }
+  footer { text-align: center; color: #555b65; font-size: 11px; margin-top: 28px; letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">λ.brother ∧ !λ.tool</div>
+    <h1>SYMB-SIGN</h1>
+    <p>Fill in each field, place it on the page, generate. Nothing left blank by accident.</p>
+  </header>
+
+  <div class="card">
+    <h2>1 · Document</h2>
+    <div class="drop" id="drop">
+      <input type="file" id="file" accept="application/pdf" />
+      <div id="dropText">Click or drop the agreement PDF here</div>
+      <div class="filename" id="filename"></div>
+      <div class="hashline" id="hashline"></div>
+    </div>
+  </div>
+
+  <div class="card" id="placeCard" style="display:none;">
+    <h2>2 · Add a Signer</h2>
+
+    <label class="field">Signing as</label>
+    <div class="role-row">
+      <div class="role-btn active" data-role="Service Provider">Service Provider</div>
+      <div class="role-btn" data-role="Client">Client</div>
+    </div>
+
+    <label class="field">Full legal name</label>
+    <input type="text" id="name" placeholder="e.g. Troy Mattson" />
+
+    <div class="two-col">
+      <div>
+        <label class="field">Date</label>
+        <input type="text" id="dateVal" />
+      </div>
+      <div>
+        <label class="field">Title</label>
+        <input type="text" id="titleVal" placeholder="e.g. Owner" />
+      </div>
+    </div>
+    <label class="field">Contact</label>
+    <input type="text" id="contactVal" placeholder="phone or email" />
+
+    <label class="field" style="margin-top:20px;">Signature — draw with mouse or finger</label>
+    <canvas id="pad" width="1000" height="210"></canvas>
+    <div class="pad-row">
+      <span class="pad-hint">Sign inside the white box</span>
+      <button id="clear" type="button">Clear</button>
+    </div>
+
+    <label class="field">Place each field on the document</label>
+    <div id="fieldChecklist"></div>
+
+    <div class="place-hint" id="placeHint">Click the page below to place this field.</div>
+    <div class="pad-row" style="margin-top:0; margin-bottom:10px;">
+      <button id="prevPage" type="button">‹ Prev</button>
+      <span class="pad-hint" id="pageIndicator">Page 1 / 1</span>
+      <button id="nextPage" type="button">Next ›</button>
+    </div>
+    <div id="pageWrap">
+      <canvas id="pageCanvas"></canvas>
+      <div id="pendingMarker" class="marker" style="display:none;"></div>
+    </div>
+
+    <div class="consent">
+      <input type="checkbox" id="consent" />
+      <label for="consent">I intend this as my legal signature and consent to sign this document electronically, under the U.S. ESIGN Act.</label>
+    </div>
+
+    <button id="addSigner" disabled>+ Add This Signature</button>
+    <div class="signer-list" id="signerList"></div>
+  </div>
+
+  <button id="generate" style="display:none;" disabled>Generate Signed Document</button>
+  <div id="status"></div>
+
+  <div class="card result" id="result">
+    <h2>3 · Signed Document</h2>
+    <a class="dl" id="downloadLink" download="signed-agreement.pdf">Download Signed PDF</a>
+    <div class="next">Save this file, then send it back so it's on record. <a class="mail" id="mailLink" href="#">jd@symbeyond.ai</a>.</div>
+  </div>
+
+  <footer>SYMBEYOND AI LLC · we bend, we do not break</footer>
+</div>
+
+<script>
+const { PDFDocument, rgb, StandardFonts } = PDFLib;
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+let pdfBytes = null, pdfFilename = "agreement.pdf", originalHash = "";
+let pdfjsDoc = null, currentPageNum = 1, totalPages = 1, renderScale = 1;
+let selectedRole = "Service Provider";
+let signers = [];
+let capturedIP = "unavailable";
+
+fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => { capturedIP = d.ip; }).catch(() => {});
+
+const SIG_TARGET_HEIGHT = 16;
+const SIG_ASPECT = 1000 / 210;
+const SIG_TARGET_WIDTH = SIG_TARGET_HEIGHT * SIG_ASPECT;
+const TEXT_HEIGHT = 12; // approximate footprint (pt) for a placed text field, used for the preview box
+
+// Field definitions. 'signature' is an image; the rest are text pulled from the inputs above.
+const FIELD_DEFS = [
+  { key: 'signature', label: 'Signature', type: 'image', required: true },
+  { key: 'printedName', label: 'Printed Name', type: 'text', required: false },
+  { key: 'date', label: 'Date', type: 'text', required: false },
+  { key: 'title', label: 'Title', type: 'text', required: false },
+  { key: 'contact', label: 'Contact', type: 'text', required: false },
+];
+
+// Which fields actually need to be placed, per role. Service Provider's
+// Printed Name/Title/Contact are already printed statically on most
+// SYMBEYOND documents — only the blank Signature and Date lines need filling.
+// Client documents are fully blank, so all five apply.
+const ROLE_FIELD_SCOPE = {
+  'Service Provider': ['signature', 'date'],
+  'Client': ['signature', 'printedName', 'date', 'title', 'contact'],
+};
+const ROLE_DEFAULTS = {
+  'Service Provider': { name: 'John Thomas DuCrest', title: 'Founder', contact: '(435) 229-8946' },
+  'Client': { name: '', title: '', contact: '' },
+};
+
+let armedField = null;              // which field is currently waiting for a page click
+let placements = {};                // key -> { pageNum, pdfX, pdfY } — for the role currently being edited
+
+// Per-role in-progress drafts, so switching roles back and forth never loses
+// or bleeds one signer's partial entries into the other's.
+let roleDrafts = {
+  'Service Provider': { name: ROLE_DEFAULTS['Service Provider'].name, title: ROLE_DEFAULTS['Service Provider'].title, contact: ROLE_DEFAULTS['Service Provider'].contact, dateVal: '', placements: {} },
+  'Client': { name: '', title: '', contact: '', dateVal: '', placements: {} },
+};
+
+function todayStr() {
+  const d = new Date();
+  return (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear();
+}
+roleDrafts['Service Provider'].dateVal = todayStr();
+roleDrafts['Client'].dateVal = todayStr();
+// Prefill the visible form with Service Provider's defaults on first load
+document.getElementById('name').value = roleDrafts['Service Provider'].name;
+document.getElementById('titleVal').value = roleDrafts['Service Provider'].title;
+document.getElementById('contactVal').value = roleDrafts['Service Provider'].contact;
+document.getElementById('dateVal').value = roleDrafts['Service Provider'].dateVal;
+
+function saveCurrentDraft() {
+  roleDrafts[selectedRole] = {
+    name: document.getElementById('name').value,
+    title: document.getElementById('titleVal').value,
+    contact: document.getElementById('contactVal').value,
+    dateVal: document.getElementById('dateVal').value,
+    placements: JSON.parse(JSON.stringify(placements)),
+  };
+}
+function loadDraft(role) {
+  const d = roleDrafts[role];
+  document.getElementById('name').value = d.name;
+  document.getElementById('titleVal').value = d.title;
+  document.getElementById('contactVal').value = d.contact;
+  document.getElementById('dateVal').value = d.dateVal;
+  placements = JSON.parse(JSON.stringify(d.placements));
+  armedField = null;
+  document.getElementById('placeHint').style.display = 'none';
+}
+
+// ---------- Upload ----------
+const drop = document.getElementById('drop');
+const fileInput = document.getElementById('file');
+drop.addEventListener('click', () => fileInput.click());
+['dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('drag'); }));
+['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('drag'); }));
+drop.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) handleFile(f); });
+fileInput.addEventListener('change', e => { const f = e.target.files[0]; if (f) handleFile(f); });
+
+async function sha256Hex(bytes) {
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function handleFile(f) {
+  if (f.type !== 'application/pdf') { setStatus('Please upload a PDF file.', 'err'); return; }
+  pdfFilename = f.name;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    pdfBytes = new Uint8Array(reader.result);
+    originalHash = await sha256Hex(pdfBytes);
+    document.getElementById('filename').textContent = "Loaded: " + f.name;
+    document.getElementById('hashline').textContent = "SHA-256: " + originalHash.slice(0, 24) + "…";
+    document.getElementById('placeCard').style.display = 'block';
+    document.getElementById('generate').style.display = 'block';
+    await loadPdfJs(pdfBytes.slice());
+    renderChecklist();
+  };
+  reader.readAsArrayBuffer(f);
+}
+
+// ---------- PDF page rendering ----------
+async function loadPdfJs(bytesCopy) {
+  pdfjsDoc = await pdfjsLib.getDocument({ data: bytesCopy }).promise;
+  totalPages = pdfjsDoc.numPages;
+  currentPageNum = totalPages;
+  await renderCurrentPage();
+}
+async function renderCurrentPage() {
+  const page = await pdfjsDoc.getPage(currentPageNum);
+  const viewport = page.getViewport({ scale: 2 });
+  const canvas = document.getElementById('pageCanvas');
+  const ctx2 = canvas.getContext('2d');
+  canvas.width = viewport.width; canvas.height = viewport.height;
+  renderScale = viewport.scale;
+  await page.render({ canvasContext: ctx2, viewport }).promise;
+  document.getElementById('pageIndicator').textContent = 'Page ' + currentPageNum + ' / ' + totalPages;
+  redrawAllMarkers();
+}
+document.getElementById('prevPage').addEventListener('click', async () => { if (currentPageNum > 1) { currentPageNum--; await renderCurrentPage(); } });
+document.getElementById('nextPage').addEventListener('click', async () => { if (currentPageNum < totalPages) { currentPageNum++; await renderCurrentPage(); } });
+
+document.getElementById('pageCanvas').addEventListener('click', (e) => {
+  if (!armedField) return; // clicking the page does nothing unless a field is armed via its "Place" button
+  const canvas = document.getElementById('pageCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const px = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const py = (e.clientY - rect.top) * (canvas.height / rect.height);
+  placements[armedField] = { pageNum: currentPageNum, pdfX: px / renderScale, pdfY: (canvas.height - py) / renderScale };
+  armedField = null;
+  document.getElementById('placeHint').style.display = 'none';
+  renderChecklist();
+  redrawAllMarkers();
+  checkAddReady();
+});
+
+function pdfPointToScreen(pdfX, pdfY) {
+  const canvas = document.getElementById('pageCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const px = pdfX * renderScale, py = canvas.height - (pdfY * renderScale);
+  return { x: px * (rect.width / canvas.width), y: py * (rect.height / canvas.height) };
+}
+function boxFor(pdfX, pdfY, w, h) {
+  const top = pdfPointToScreen(pdfX, pdfY + h);
+  const bottom = pdfPointToScreen(pdfX + w, pdfY);
+  return { left: top.x, top: top.y, width: bottom.x - top.x, height: bottom.y - top.y };
+}
+function fieldFootprint(key) {
+  if (key === 'signature') return { w: SIG_TARGET_WIDTH, h: SIG_TARGET_HEIGHT };
+  const val = valueFor(key) || 'XXXXXXXXXX';
+  return { w: Math.max(40, val.length * 5.5), h: TEXT_HEIGHT };
+}
+function redrawAllMarkers() {
+  document.querySelectorAll('.placed-marker, .placed-label').forEach(el => el.remove());
+  const wrap = document.getElementById('pageWrap');
+  // already-added signers' fields
+  signers.forEach(s => {
+    Object.keys(s.placements).forEach(key => {
+      const p = s.placements[key];
+      if (p.pageNum !== currentPageNum) return;
+      const fp = key === 'signature' ? { w: SIG_TARGET_WIDTH, h: SIG_TARGET_HEIGHT } : { w: Math.max(40, (s.values[key]||'').length * 5.5), h: TEXT_HEIGHT };
+      const b = boxFor(p.pdfX, p.pdfY, fp.w, fp.h);
+      const m = document.createElement('div');
+      m.className = 'marker placed placed-marker';
+      m.style.left = b.left+'px'; m.style.top = b.top+'px'; m.style.width = b.width+'px'; m.style.height = b.height+'px';
+      wrap.appendChild(m);
+      const l = document.createElement('div');
+      l.className = 'marker-label placed-label';
+      l.textContent = s.role + ' · ' + key;
+      l.style.left = b.left+'px'; l.style.top = (b.top-14)+'px';
+      wrap.appendChild(l);
+    });
+  });
+  // current in-progress signer's placements
+  Object.keys(placements).forEach(key => {
+    const p = placements[key];
+    if (p.pageNum !== currentPageNum) return;
+    const fp = fieldFootprint(key);
+    const b = boxFor(p.pdfX, p.pdfY, fp.w, fp.h);
+    const m = document.createElement('div');
+    m.className = 'marker placed placed-marker';
+    m.style.left = b.left+'px'; m.style.top = b.top+'px'; m.style.width = b.width+'px'; m.style.height = b.height+'px';
+    wrap.appendChild(m);
+    const l = document.createElement('div');
+    l.className = 'marker-label placed-label';
+    l.textContent = key;
+    l.style.left = b.left+'px'; l.style.top = (b.top-14)+'px';
+    wrap.appendChild(l);
+  });
+  const pending = document.getElementById('pendingMarker');
+  pending.style.display = 'none';
+}
+
+// ---------- Role toggle ----------
+document.querySelectorAll('.role-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.role === selectedRole) return; // no-op, already on this role
+    saveCurrentDraft();               // don't lose what was entered for the role we're leaving
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedRole = btn.dataset.role;
+    loadDraft(selectedRole);          // restore this role's own in-progress entries
+    renderChecklist();
+    redrawAllMarkers();
+    checkAddReady();
+  });
+});
+
+// ---------- Field checklist ----------
+function valueFor(key) {
+  if (key === 'printedName') return document.getElementById('name').value.trim();
+  if (key === 'date') return document.getElementById('dateVal').value.trim();
+  if (key === 'title') return document.getElementById('titleVal').value.trim();
+  if (key === 'contact') return document.getElementById('contactVal').value.trim();
+  return '';
+}
+function renderChecklist() {
+  const box = document.getElementById('fieldChecklist');
+  box.innerHTML = '';
+  const scope = ROLE_FIELD_SCOPE[selectedRole] || FIELD_DEFS.map(d => d.key);
+  FIELD_DEFS.filter(def => scope.includes(def.key)).forEach(def => {
+    const row = document.createElement('div');
+    row.className = 'field-row';
+    const left = document.createElement('div');
+    left.innerHTML = '<div class="flabel">' + def.label + (def.required ? '<span class="req">required</span>' : '') + '</div>';
+    row.appendChild(left);
+    const btn = document.createElement('button');
+    btn.className = 'place-btn';
+    const placed = !!placements[def.key];
+    if (armedField === def.key) { btn.classList.add('armed'); btn.textContent = 'Click the page →'; }
+    else if (placed) { btn.classList.add('placed'); btn.textContent = '✓ Placed — Change'; }
+    else { btn.textContent = 'Place on page'; }
+    btn.addEventListener('click', () => {
+      armedField = (armedField === def.key) ? null : def.key;
+      document.getElementById('placeHint').style.display = armedField ? 'block' : 'none';
+      document.getElementById('placeHint').textContent = armedField ? ('Click the page below to place ' + def.label + '.') : '';
+      renderChecklist();
+    });
+    row.appendChild(btn);
+    box.appendChild(row);
+  });
+}
+['name','dateVal','titleVal','contactVal'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => { renderChecklist(); redrawAllMarkers(); checkAddReady(); });
+});
+
+// ---------- Signature pad ----------
+const canvas = document.getElementById('pad');
+const ctx = canvas.getContext('2d');
+ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#111';
+let drawing = false, hasSignature = false;
+function pos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return { x: (t.clientX - rect.left) * (canvas.width / rect.width), y: (t.clientY - rect.top) * (canvas.height / rect.height) };
+}
+function start(e) { drawing = true; hasSignature = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); checkAddReady(); e.preventDefault(); }
+function move(e) { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
+function end() { drawing = false; }
+canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); window.addEventListener('mouseup', end);
+canvas.addEventListener('touchstart', start, { passive: false }); canvas.addEventListener('touchmove', move, { passive: false }); canvas.addEventListener('touchend', end);
+document.getElementById('clear').addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); hasSignature = false; checkAddReady(); });
+function padHasInk() {
+  const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+  for (let i = 3; i < data.length; i += 4) if (data[i] !== 0) return true;
+  return false;
+}
+
+const consentBox = document.getElementById('consent');
+consentBox.addEventListener('change', checkAddReady);
+function checkAddReady() {
+  const nameOk = document.getElementById('name').value.trim().length > 1;
+  document.getElementById('addSigner').disabled = !(pdfBytes && placements.signature && nameOk && hasSignature && consentBox.checked);
+}
+function setStatus(msg, cls) { const el = document.getElementById('status'); el.textContent = msg; el.className = cls || ''; }
+
+// ---------- Add signer ----------
+document.getElementById('addSigner').addEventListener('click', () => {
+  if (!padHasInk()) { setStatus('The signature box looks empty — please draw a signature.', 'err'); hasSignature = false; checkAddReady(); return; }
+  const values = {
+    printedName: valueFor('printedName'),
+    date: valueFor('date'),
+    title: valueFor('title'),
+    contact: valueFor('contact'),
+  };
+  signers.push({
+    role: selectedRole,
+    name: document.getElementById('name').value.trim(),
+    values,
+    placements: JSON.parse(JSON.stringify(placements)),
+    sigDataUrl: canvas.toDataURL('image/png'),
+    timestamp: new Date().toUTCString(),
+    ip: capturedIP
+  });
+  renderSignerList();
+  // reset for next signer — including this role's saved draft, so switching
+  // away and back doesn't reload the entries that were just submitted
+  ctx.clearRect(0, 0, canvas.width, canvas.height); hasSignature = false;
+  const fresh = selectedRole === 'Service Provider'
+    ? { name: ROLE_DEFAULTS['Service Provider'].name, title: ROLE_DEFAULTS['Service Provider'].title, contact: ROLE_DEFAULTS['Service Provider'].contact, dateVal: todayStr(), placements: {} }
+    : { name: '', title: '', contact: '', dateVal: todayStr(), placements: {} };
+  roleDrafts[selectedRole] = fresh;
+  document.getElementById('name').value = fresh.name;
+  document.getElementById('titleVal').value = fresh.title;
+  document.getElementById('contactVal').value = fresh.contact;
+  document.getElementById('dateVal').value = fresh.dateVal;
+  consentBox.checked = false;
+  placements = {}; armedField = null;
+  document.getElementById('placeHint').style.display = 'none';
+  renderChecklist(); redrawAllMarkers(); checkAddReady();
+  document.getElementById('generate').disabled = signers.length === 0;
+  setStatus('Signature added.', 'ok');
+});
+
+function renderSignerList() {
+  const list = document.getElementById('signerList');
+  list.innerHTML = '';
+  signers.forEach((s, i) => {
+    const row = document.createElement('div');
+    row.className = 'signer-item';
+    row.innerHTML = '<div><div class="who">' + s.name + '</div><div class="role-tag">' + s.role + '</div></div>';
+    const rm = document.createElement('button');
+    rm.textContent = 'Remove';
+    rm.addEventListener('click', () => { signers.splice(i, 1); renderSignerList(); redrawAllMarkers(); document.getElementById('generate').disabled = signers.length === 0; });
+    row.appendChild(rm);
+    list.appendChild(row);
+  });
+}
+
+// ---------- Generate ----------
+document.getElementById('generate').addEventListener('click', async () => {
+  setStatus('Generating signed document...');
+  try {
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    const pages = pdfDoc.getPages();
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    for (const s of signers) {
+      // signature image
+      if (s.placements.signature) {
+        const p = s.placements.signature;
+        const targetPage = pages[p.pageNum - 1];
+        const sigImageBytes = await fetch(s.sigDataUrl).then(r => r.arrayBuffer());
+        const sigImage = await pdfDoc.embedPng(sigImageBytes);
+        targetPage.drawImage(sigImage, { x: p.pdfX, y: p.pdfY + 1, width: SIG_TARGET_WIDTH, height: SIG_TARGET_HEIGHT });
+      }
+      // text fields
+      const textFields = { printedName: s.values.printedName, date: s.values.date, title: s.values.title, contact: s.values.contact };
+      for (const key of Object.keys(textFields)) {
+        const val = textFields[key];
+        const p = s.placements[key];
+        if (!p || !val) continue;
+        const targetPage = pages[p.pageNum - 1];
+        targetPage.drawText(val, { x: p.pdfX, y: p.pdfY + 2, size: 10, font, color: rgb(0.1,0.1,0.1) });
+      }
+    }
+
+    // Certificate of Completion
+    const certPage = pdfDoc.addPage([612, 792]);
+    const certW = 612;
+    let cy = 792 - 80;
+    certPage.drawText('Certificate of Completion', { x: 50, y: cy, size: 18, font: fontBold, color: rgb(0.1,0.1,0.1) });
+    cy -= 30;
+    certPage.drawLine({ start: { x: 50, y: cy }, end: { x: certW - 50, y: cy }, thickness: 1, color: rgb(0.8,0.8,0.8) });
+    cy -= 30;
+    const line = (label, value, size = 11) => {
+      certPage.drawText(label, { x: 50, y: cy, size: 9, font, color: rgb(0.5,0.5,0.5) }); cy -= 14;
+      certPage.drawText(String(value), { x: 50, y: cy, size, font: fontBold, color: rgb(0.1,0.1,0.1) }); cy -= 22;
+    };
+    line('Document', pdfFilename);
+    line('Original document SHA-256', originalHash, 8);
+    cy -= 8;
+
+    for (const s of signers) {
+      certPage.drawLine({ start: { x: 50, y: cy }, end: { x: certW - 50, y: cy }, thickness: 0.5, color: rgb(0.9,0.9,0.9) });
+      cy -= 20;
+      certPage.drawText(s.role.toUpperCase(), { x: 50, y: cy, size: 9, font, color: rgb(0.4,0.6,0.8) }); cy -= 16;
+      certPage.drawText(s.name, { x: 50, y: cy, size: 13, font: fontBold, color: rgb(0.1,0.1,0.1) }); cy -= 16;
+      const details = [s.values.title, s.values.contact].filter(Boolean).join('  ·  ');
+      if (details) { certPage.drawText(details, { x: 50, y: cy, size: 9, font, color: rgb(0.4,0.4,0.4) }); cy -= 14; }
+      certPage.drawText('Signed ' + s.timestamp + '  ·  IP ' + s.ip, { x: 50, y: cy, size: 8, font, color: rgb(0.5,0.5,0.5) }); cy -= 16;
+      certPage.drawText('Consent: intent to sign electronically under the U.S. ESIGN Act, affirmed at signing.', { x: 50, y: cy, size: 8, font, color: rgb(0.5,0.5,0.5) }); cy -= 28;
+      const sigBytes = await fetch(s.sigDataUrl).then(r => r.arrayBuffer());
+      const sigImg = await pdfDoc.embedPng(sigBytes);
+      const w = 130, h = sigImg.height * (w / sigImg.width);
+      certPage.drawImage(sigImg, { x: 50, y: cy - h, width: w, height: h });
+      cy -= (h + 20);
+    }
+
+    const signedBytes = await pdfDoc.save();
+    const finalHash = await sha256Hex(signedBytes);
+    const blob = new Blob([signedBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const outName = pdfFilename.replace(/\.pdf$/i, '') + '-signed.pdf';
+    const link = document.getElementById('downloadLink');
+    link.href = url; link.download = outName;
+    const mailLink = document.getElementById('mailLink');
+    const signerNames = signers.map(s => s.name).join(', ');
+    mailLink.href = 'mailto:jd@symbeyond.ai?subject=' + encodeURIComponent('Signed: ' + pdfFilename) +
+      '&body=' + encodeURIComponent('Signed by ' + signerNames + '. Final document SHA-256: ' + finalHash + '. Signed PDF attached.');
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+    setStatus('Signed successfully — ' + signers.length + ' signature(s) applied.', 'ok');
+  } catch (err) {
+    console.error(err);
+    setStatus('Something went wrong: ' + ((err && err.message) ? err.message : String(err)), 'err');
+  }
+});
+</script>
+</body>
+</html>

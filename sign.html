@@ -34,6 +34,10 @@
     font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted);
     margin: 0 0 14px; font-weight: 600;
   }
+  .notice {
+    background: rgba(125,211,252,0.08); border: 1px solid var(--accent); color: var(--accent);
+    font-size: 12px; padding: 8px 12px; border-radius: 8px; margin-bottom: 14px; display: none;
+  }
   .drop {
     border: 1.5px dashed var(--border); border-radius: 10px; padding: 26px 16px;
     text-align: center; color: var(--muted); font-size: 14px; cursor: pointer;
@@ -110,6 +114,13 @@
   .signer-item .role-tag { color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
   .signer-item button { background: none; border: none; color: #f87171; cursor: pointer; font-size: 12px; }
 
+  .history-list { margin-top: 10px; }
+  .history-item {
+    font-size: 12px; color: var(--muted); background: #0e1116; border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 12px; margin-bottom: 6px;
+  }
+  .history-item .who { color: var(--good); font-weight: 600; }
+
   button#addSigner, button#generate {
     width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 15px; font-weight: 700;
     cursor: pointer; margin-top: 20px; letter-spacing: 0.3px;
@@ -142,12 +153,14 @@
 
   <div class="card">
     <h2>1 · Document</h2>
+    <div class="notice" id="priorNotice"></div>
     <div class="drop" id="drop">
       <input type="file" id="file" accept="application/pdf" />
       <div id="dropText">Click or drop the agreement PDF here</div>
       <div class="filename" id="filename"></div>
       <div class="hashline" id="hashline"></div>
     </div>
+    <div class="history-list" id="historyList"></div>
   </div>
 
   <div class="card" id="placeCard" style="display:none;">
@@ -160,7 +173,7 @@
     </div>
 
     <label class="field">Full legal name</label>
-    <input type="text" id="name" placeholder="e.g. Troy Mattson" />
+    <input type="text" id="name" placeholder="e.g. Jane Doe" />
 
     <div class="two-col">
       <div>
@@ -221,10 +234,15 @@
 const { PDFDocument, rgb, StandardFonts } = PDFLib;
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+const MANIFEST_MARKER = 'SYMBSIGN:v1:';
+
 let pdfBytes = null, pdfFilename = "agreement.pdf", originalHash = "";
 let pdfjsDoc = null, currentPageNum = 1, totalPages = 1, renderScale = 1;
 let selectedRole = "Service Provider";
-let signers = [];
+let signers = [];                 // signers added THIS session (full data incl. signature image)
+let priorHistory = [];            // signers from earlier sessions, read back out of the PDF's own metadata (no image)
+let priorCertPageIndex = -1;      // 0-based index of an existing SYMB-SIGN certificate page found in the uploaded PDF, or -1
+let priorOriginalHash = "";       // the true original document hash, carried forward from the manifest if present
 let capturedIP = "unavailable";
 
 fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => { capturedIP = d.ip; }).catch(() => {});
@@ -232,21 +250,16 @@ fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => { captu
 const SIG_TARGET_HEIGHT = 16;
 const SIG_ASPECT = 1000 / 210;
 const SIG_TARGET_WIDTH = SIG_TARGET_HEIGHT * SIG_ASPECT;
-const TEXT_HEIGHT = 12; // approximate footprint (pt) for a placed text field, used for the preview box
+const TEXT_HEIGHT = 12;
 
-// Field definitions. 'signature' is an image; the rest are text pulled from the inputs above.
 const FIELD_DEFS = [
   { key: 'signature', label: 'Signature', type: 'image', required: true },
-  { key: 'printedName', label: 'Printed Name', type: 'text', required: false },
   { key: 'date', label: 'Date', type: 'text', required: false },
+  { key: 'printedName', label: 'Printed Name', type: 'text', required: false },
   { key: 'title', label: 'Title', type: 'text', required: false },
   { key: 'contact', label: 'Contact', type: 'text', required: false },
 ];
 
-// Which fields actually need to be placed, per role. Service Provider's
-// Printed Name/Title/Contact are already printed statically on most
-// SYMBEYOND documents — only the blank Signature and Date lines need filling.
-// Client documents are fully blank, so all five apply.
 const ROLE_FIELD_SCOPE = {
   'Service Provider': ['signature', 'date'],
   'Client': ['signature', 'printedName', 'date', 'title', 'contact'],
@@ -256,11 +269,9 @@ const ROLE_DEFAULTS = {
   'Client': { name: '', title: '', contact: '' },
 };
 
-let armedField = null;              // which field is currently waiting for a page click
-let placements = {};                // key -> { pageNum, pdfX, pdfY } — for the role currently being edited
+let armedField = null;
+let placements = {};
 
-// Per-role in-progress drafts, so switching roles back and forth never loses
-// or bleeds one signer's partial entries into the other's.
 let roleDrafts = {
   'Service Provider': { name: ROLE_DEFAULTS['Service Provider'].name, title: ROLE_DEFAULTS['Service Provider'].title, contact: ROLE_DEFAULTS['Service Provider'].contact, dateVal: '', placements: {} },
   'Client': { name: '', title: '', contact: '', dateVal: '', placements: {} },
@@ -272,7 +283,6 @@ function todayStr() {
 }
 roleDrafts['Service Provider'].dateVal = todayStr();
 roleDrafts['Client'].dateVal = todayStr();
-// Prefill the visible form with Service Provider's defaults on first load
 document.getElementById('name').value = roleDrafts['Service Provider'].name;
 document.getElementById('titleVal').value = roleDrafts['Service Provider'].title;
 document.getElementById('contactVal').value = roleDrafts['Service Provider'].contact;
@@ -311,6 +321,47 @@ async function sha256Hex(bytes) {
   const digest = await crypto.subtle.digest('SHA-256', bytes);
   return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
+
+// Reads back any SYMB-SIGN manifest hidden in the PDF's own Subject metadata field.
+// This is what makes the document itself remember who's already signed it,
+// instead of relying on the browser tab that happened to generate it.
+async function readManifest(bytes) {
+  try {
+    const doc = await PDFDocument.load(bytes);
+    const subject = doc.getSubject() || '';
+    const idx = subject.indexOf(MANIFEST_MARKER);
+    if (idx === -1) return { history: [], certPageIndex: -1, originalHash: '' };
+    const json = subject.slice(idx + MANIFEST_MARKER.length);
+    const parsed = JSON.parse(json);
+    const pageCount = doc.getPageCount();
+    return {
+      history: Array.isArray(parsed.signers) ? parsed.signers : [],
+      certPageIndex: pageCount - 1,   // the manifest is only ever written on the same generate pass that appends the cert page, so it's always last
+      originalHash: parsed.originalHash || '',
+    };
+  } catch (e) {
+    return { history: [], certPageIndex: -1, originalHash: '' };
+  }
+}
+
+function renderHistoryList() {
+  const box = document.getElementById('historyList');
+  const notice = document.getElementById('priorNotice');
+  box.innerHTML = '';
+  if (priorHistory.length === 0) {
+    notice.style.display = 'none';
+    return;
+  }
+  notice.style.display = 'block';
+  notice.textContent = 'This document already has ' + priorHistory.length + ' signature(s) on it. They\'ll stay exactly where they are — you\'re adding to it, not starting over.';
+  priorHistory.forEach(h => {
+    const el = document.createElement('div');
+    el.className = 'history-item';
+    el.innerHTML = '<span class="who">' + h.name + '</span> · ' + h.role + ' · signed ' + h.timestamp;
+    box.appendChild(el);
+  });
+}
+
 function handleFile(f) {
   if (f.type !== 'application/pdf') { setStatus('Please upload a PDF file.', 'err'); return; }
   pdfFilename = f.name;
@@ -318,10 +369,22 @@ function handleFile(f) {
   reader.onload = async () => {
     pdfBytes = new Uint8Array(reader.result);
     originalHash = await sha256Hex(pdfBytes);
+
+    // Always start this session's in-progress signer list clean — a fresh upload
+    // never inherits stale in-memory state from whatever was here before.
+    signers = [];
+
+    const manifest = await readManifest(pdfBytes);
+    priorHistory = manifest.history;
+    priorCertPageIndex = manifest.certPageIndex;
+    priorOriginalHash = manifest.originalHash;
+
     document.getElementById('filename').textContent = "Loaded: " + f.name;
     document.getElementById('hashline').textContent = "SHA-256: " + originalHash.slice(0, 24) + "…";
     document.getElementById('placeCard').style.display = 'block';
     document.getElementById('generate').style.display = 'block';
+    renderHistoryList();
+    renderSignerList();
     await loadPdfJs(pdfBytes.slice());
     renderChecklist();
   };
@@ -332,7 +395,8 @@ function handleFile(f) {
 async function loadPdfJs(bytesCopy) {
   pdfjsDoc = await pdfjsLib.getDocument({ data: bytesCopy }).promise;
   totalPages = pdfjsDoc.numPages;
-  currentPageNum = totalPages;
+  // Land on the real content, not on a certificate page left over from a prior signing.
+  currentPageNum = (priorCertPageIndex === totalPages - 1 && totalPages > 1) ? totalPages - 1 : totalPages;
   await renderCurrentPage();
 }
 async function renderCurrentPage() {
@@ -350,7 +414,7 @@ document.getElementById('prevPage').addEventListener('click', async () => { if (
 document.getElementById('nextPage').addEventListener('click', async () => { if (currentPageNum < totalPages) { currentPageNum++; await renderCurrentPage(); } });
 
 document.getElementById('pageCanvas').addEventListener('click', (e) => {
-  if (!armedField) return; // clicking the page does nothing unless a field is armed via its "Place" button
+  if (!armedField) return;
   const canvas = document.getElementById('pageCanvas');
   const rect = canvas.getBoundingClientRect();
   const px = (e.clientX - rect.left) * (canvas.width / rect.width);
@@ -382,7 +446,6 @@ function fieldFootprint(key) {
 function redrawAllMarkers() {
   document.querySelectorAll('.placed-marker, .placed-label').forEach(el => el.remove());
   const wrap = document.getElementById('pageWrap');
-  // already-added signers' fields
   signers.forEach(s => {
     Object.keys(s.placements).forEach(key => {
       const p = s.placements[key];
@@ -400,7 +463,6 @@ function redrawAllMarkers() {
       wrap.appendChild(l);
     });
   });
-  // current in-progress signer's placements
   Object.keys(placements).forEach(key => {
     const p = placements[key];
     if (p.pageNum !== currentPageNum) return;
@@ -423,12 +485,12 @@ function redrawAllMarkers() {
 // ---------- Role toggle ----------
 document.querySelectorAll('.role-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    if (btn.dataset.role === selectedRole) return; // no-op, already on this role
-    saveCurrentDraft();               // don't lose what was entered for the role we're leaving
+    if (btn.dataset.role === selectedRole) return;
+    saveCurrentDraft();
     document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedRole = btn.dataset.role;
-    loadDraft(selectedRole);          // restore this role's own in-progress entries
+    loadDraft(selectedRole);
     renderChecklist();
     redrawAllMarkers();
     checkAddReady();
@@ -522,8 +584,6 @@ document.getElementById('addSigner').addEventListener('click', () => {
     ip: capturedIP
   });
   renderSignerList();
-  // reset for next signer — including this role's saved draft, so switching
-  // away and back doesn't reload the entries that were just submitted
   ctx.clearRect(0, 0, canvas.width, canvas.height); hasSignature = false;
   const fresh = selectedRole === 'Service Provider'
     ? { name: ROLE_DEFAULTS['Service Provider'].name, title: ROLE_DEFAULTS['Service Provider'].title, contact: ROLE_DEFAULTS['Service Provider'].contact, dateVal: todayStr(), placements: {} }
@@ -561,31 +621,36 @@ document.getElementById('generate').addEventListener('click', async () => {
   setStatus('Generating signed document...');
   try {
     const pdfDoc = await PDFDocument.load(pdfBytes);
-    const pages = pdfDoc.getPages();
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
+    // Draw this session's new signatures/fields onto the real content pages.
     for (const s of signers) {
-      // signature image
       if (s.placements.signature) {
         const p = s.placements.signature;
-        const targetPage = pages[p.pageNum - 1];
+        const targetPage = pdfDoc.getPage(p.pageNum - 1);
         const sigImageBytes = await fetch(s.sigDataUrl).then(r => r.arrayBuffer());
         const sigImage = await pdfDoc.embedPng(sigImageBytes);
         targetPage.drawImage(sigImage, { x: p.pdfX, y: p.pdfY + 1, width: SIG_TARGET_WIDTH, height: SIG_TARGET_HEIGHT });
       }
-      // text fields
+      const font0 = await pdfDoc.embedFont(StandardFonts.Helvetica);
       const textFields = { printedName: s.values.printedName, date: s.values.date, title: s.values.title, contact: s.values.contact };
       for (const key of Object.keys(textFields)) {
         const val = textFields[key];
         const p = s.placements[key];
         if (!p || !val) continue;
-        const targetPage = pages[p.pageNum - 1];
-        targetPage.drawText(val, { x: p.pdfX, y: p.pdfY + 2, size: 10, font, color: rgb(0.1,0.1,0.1) });
+        const targetPage = pdfDoc.getPage(p.pageNum - 1);
+        targetPage.drawText(val, { x: p.pdfX, y: p.pdfY + 2, size: 10, font: font0, color: rgb(0.1,0.1,0.1) });
       }
     }
 
-    // Certificate of Completion
+    // Replace any existing SYMB-SIGN certificate page rather than stacking a new one on top.
+    if (priorCertPageIndex !== -1 && priorCertPageIndex < pdfDoc.getPageCount()) {
+      pdfDoc.removePage(priorCertPageIndex);
+    }
+
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    const trueOriginalHash = priorOriginalHash || originalHash;
+
     const certPage = pdfDoc.addPage([612, 792]);
     const certW = 612;
     let cy = 792 - 80;
@@ -598,9 +663,19 @@ document.getElementById('generate').addEventListener('click', async () => {
       certPage.drawText(String(value), { x: 50, y: cy, size, font: fontBold, color: rgb(0.1,0.1,0.1) }); cy -= 22;
     };
     line('Document', pdfFilename);
-    line('Original document SHA-256', originalHash, 8);
+    line('Original document SHA-256', trueOriginalHash, 8);
     cy -= 8;
 
+    // Historical signers first (from a prior session — no signature thumbnail available, mark stays on the actual page), then this session's.
+    for (const h of priorHistory) {
+      certPage.drawLine({ start: { x: 50, y: cy }, end: { x: certW - 50, y: cy }, thickness: 0.5, color: rgb(0.9,0.9,0.9) });
+      cy -= 20;
+      certPage.drawText(h.role.toUpperCase() + '  (signed previously)', { x: 50, y: cy, size: 9, font, color: rgb(0.4,0.6,0.8) }); cy -= 16;
+      certPage.drawText(h.name, { x: 50, y: cy, size: 13, font: fontBold, color: rgb(0.1,0.1,0.1) }); cy -= 16;
+      const details = [h.title, h.contact].filter(Boolean).join('  ·  ');
+      if (details) { certPage.drawText(details, { x: 50, y: cy, size: 9, font, color: rgb(0.4,0.4,0.4) }); cy -= 14; }
+      certPage.drawText('Signed ' + h.timestamp + '  ·  IP ' + h.ip, { x: 50, y: cy, size: 8, font, color: rgb(0.5,0.5,0.5) }); cy -= 28;
+    }
     for (const s of signers) {
       certPage.drawLine({ start: { x: 50, y: cy }, end: { x: certW - 50, y: cy }, thickness: 0.5, color: rgb(0.9,0.9,0.9) });
       cy -= 20;
@@ -616,6 +691,15 @@ document.getElementById('generate').addEventListener('click', async () => {
       certPage.drawImage(sigImg, { x: 50, y: cy - h, width: w, height: h });
       cy -= (h + 20);
     }
+
+    // Write the updated manifest back into the document's own metadata so the
+    // NEXT person to open this file (any device, any session) picks up right where this left off.
+    const combinedHistory = priorHistory.concat(signers.map(s => ({
+      name: s.name, role: s.role, title: s.values.title, contact: s.values.contact,
+      timestamp: s.timestamp, ip: s.ip,
+    })));
+    const manifestJson = JSON.stringify({ originalHash: trueOriginalHash, signers: combinedHistory });
+    pdfDoc.setSubject(MANIFEST_MARKER + manifestJson);
 
     const signedBytes = await pdfDoc.save();
     const finalHash = await sha256Hex(signedBytes);

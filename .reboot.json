@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "repository": {
-    "purpose": "Repository state and orientation management",
-    "audience": "Builders, maintainers, and AI collaborators",
-    "status": "Production"
+    "purpose": "Maintain the symbeyond.ai public website, including SYMBEYOND AI LLC business pages, the SYMBEYOND research portal, public tools, class materials, and related ecosystem pages.",
+    "audience": "Website maintainers, content owners, release operators, and human or AI collaborators working on symbeyond.ai.",
+    "status": "Public website source. Existing legacy REPO_BOOT content records a June 2026 operational snapshot; dated deployment and page-state claims should be reverified when material."
   },
   "orientation": {
     "important_files": [],

@@ -156,7 +156,7 @@ Engine: `1.0.0-rc1`
 Configuration schema: `1`
 Managed-output schema: `1`
 Branch: `main`
-Meaningful source commit: `1986ff8c08fab505d96ff0b9d2eb43d3f2eb63fd`
+Meaningful source commit: `2c837f9338fbff83f05fbde601adbf5fe5712c44`
 Working tree dirty: `NO`
 
 ### Human-approved repository context

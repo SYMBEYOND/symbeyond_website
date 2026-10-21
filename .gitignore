@@ -35,3 +35,8 @@ npm-debug.log*
 
 # Legacy experiments and archived code
 legacy/
+
+# Local environment files (Vercel CLI pulls tokens here)
+.env
+.env.local
+.env.*.local

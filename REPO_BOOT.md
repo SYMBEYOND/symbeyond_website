@@ -143,6 +143,12 @@ without an account. Edit a file, push to main, and it's live.
 ```
 
 
+## Current site state — October 26, 2026 (human-reviewed handoff)
+
+The dated June 2026 orientation retained above is historical and **does not describe the current live tool inventory**. On October 26, 2026, Builder Toolkit and its authorization route, Resume Builder, SolidWorks Tutor, Forge Signal, and their dedicated application API routes were retired from the public website after their source was preserved in the private `SYMBEYOND/symbeyond-dev` repository (`development/website-tools/source-snapshot-2026-10-26/`, source commit `62982912f8f2b23086f806fe89ea730fedb8650d`). Production HTTP verification reported retired pages as 404, while Get Hired, Ecosystem Map, and BOSS continued returning 200. An HTTP response alone does not confirm functional correctness.
+
+BOSS and `api/boss-auth.js` remain independent; `gethired*`, `ecosystem.html`, and their dependencies remain site features. CAD-specific helper libraries and historical tests should be assessed for removal separately. Do not restore deprecated Builder-era endpoints without an explicit human decision. The managed auto-generated block below is not edited by this note.
+
 ## ReBoot V1 managed state
 
 The legacy v0.1 orientation above is preserved as human-authored repository context. ReBoot V1 manages only the block below.
